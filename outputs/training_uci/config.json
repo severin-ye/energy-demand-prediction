@@ -1,0 +1,41 @@
+{
+  "sequence_length": 20,
+  "feature_cols": [
+    "Global_reactive_power",
+    "Voltage",
+    "Global_intensity"
+  ],
+  "target_col": "EDP",
+  "cnn_filters": [
+    64,
+    32
+  ],
+  "lstm_units": 64,
+  "attention_units": 25,
+  "dropout_rate": 0.2,
+  "learning_rate": 0.001,
+  "epochs": 20,
+  "batch_size": 64,
+  "validation_split": 0.2,
+  "n_states": 3,
+  "state_names": [
+    "Lower",
+    "Normal",
+    "Peak"
+  ],
+  "n_bins": 4,
+  "bin_labels": [
+    "Low",
+    "Medium",
+    "High",
+    "VeryHigh"
+  ],
+  "n_cam_clusters": 3,
+  "n_attention_clusters": 3,
+  "min_support": 0.05,
+  "min_confidence": 0.6,
+  "min_lift": 1.2,
+  "bn_score_fn": "bic",
+  "bn_max_iter": 50,
+  "bn_estimator": "mle"
+}

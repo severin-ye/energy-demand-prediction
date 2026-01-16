@@ -42,17 +42,24 @@ data/uci/raw/
 data/uci/processed/
 data/uci/splits/
 
-# 临时文件
-*.tmp
+# 训练日志文件
+logs/
 *.log
-*.cache
 
-# 训练输出文件（模型和结果可能很大）
-outputs/
+# 训练输出文件（模型和结果）
+outputs/training_*/models/
+outputs/training_*/results/
+outputs/inference*/
+
+# 模型文件
 *.h5
 *.keras
 *.pkl
 *.bif
+
+# 临时文件
+*.tmp
+*.cache
 
 # 系统文件
 .DS_Store
@@ -69,3 +76,9 @@ docs/_build/
 # 环境变量
 .env
 .env.local
+
+# 保留重要的输出文档（不忽略）
+!outputs/training_*/TRAINING_REPORT.md
+!outputs/training_*/config.json
+!outputs/inference*/INFERENCE_SUMMARY.md
+!outputs/inference*/HTML_VISUALIZATION_GUIDE.md

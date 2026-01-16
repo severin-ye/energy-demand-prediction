@@ -319,5 +319,5 @@ report = pipeline.predict_single(new_data, verbose=True)
 ---
 
 **生成时间**: 2026-01-16 15:35  
-**作者**: GitHub Copilot  
+**作者**: Severin YE  
 **版本**: v1.0.0
