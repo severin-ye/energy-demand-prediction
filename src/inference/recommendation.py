@@ -240,7 +240,14 @@ class RecommendationEngine:
         
         # 预测值
         if prediction is not None:
-            report += f"\n【预测负荷】\n  {prediction:.2f} kWh\n"
+            # 处理 numpy 数组
+            if hasattr(prediction, 'item'):
+                pred_value = prediction.item()
+            elif hasattr(prediction, '__getitem__'):
+                pred_value = float(prediction[0])
+            else:
+                pred_value = float(prediction)
+            report += f"\n【预测负荷】\n  {pred_value:.2f} kWh\n"
         
         # 建议
         if recommendations:
