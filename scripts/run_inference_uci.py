@@ -23,16 +23,35 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def load_test_data(test_file, n_samples=100):
+def load_test_data(test_file, n_samples=100, min_samples=50):
     """
     加载测试集数据
     
     Args:
         test_file: 测试集文件路径
         n_samples: 使用多少样本进行测试
+        min_samples: 最小样本数要求（默认50，对应sequence_length=20）
     """
     logger.info(f"加载测试数据: {test_file}")
     df = pd.read_csv(test_file)
+    
+    # 检查样本数是否足够
+    actual_samples = min(len(df), n_samples)
+    if actual_samples < min_samples:
+        logger.error(f"\n❌ 样本数不足！")
+        logger.error(f"   当前样本数: {actual_samples}")
+        logger.error(f"   最小要求: {min_samples}")
+        logger.error(f"\n原因: 模型使用序列长度=20，需要至少50个样本才能生成足够的序列")
+        logger.error(f"计算公式: 序列数 = 样本数 - 20")
+        logger.error(f"   • 样本数=20 → 序列数=0  ❌")
+        logger.error(f"   • 样本数=30 → 序列数=10 ⚠️")
+        logger.error(f"   • 样本数=50 → 序列数=30 ✅")
+        logger.error(f"\n解决方案:")
+        logger.error(f"   python scripts/run_inference_uci.py \\")
+        logger.error(f"     --model-dir {Path(test_file).parent.parent}/training/26-01-16/models \\")
+        logger.error(f"     --test-data {test_file} \\")
+        logger.error(f"     --n-samples {min_samples}  # 或更多")
+        raise ValueError(f"样本数({actual_samples})少于最小要求({min_samples})，无法生成序列")
     
     # 只取前n_samples个样本以加快推理速度
     if len(df) > n_samples:
