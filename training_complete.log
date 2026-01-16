@@ -1,0 +1,135 @@
+INFO: ================================================================================
+INFO:                     完整训练流水线                    
+INFO: ================================================================================
+INFO: 
+[步骤 1] 加载训练数据...
+INFO: ✅ 数据加载成功: (2000, 7)
+INFO: 特征列: ['Temperature', 'Humidity', 'WindSpeed', 'EDP', 'Hour', 'DayOfWeek', 'Month']
+INFO: 
+[步骤 2] 配置训练参数...
+INFO: 训练配置: epochs=10, batch_size=32
+INFO: 
+[步骤 3] 创建训练流水线...
+INFO: TrainPipeline initialized with output_dir=./outputs/training_run_1
+INFO: 
+[步骤 4] 开始训练...
+
+INFO: ============================================================
+INFO: Starting Training Pipeline
+INFO: ============================================================
+INFO: 
+[Step 1/9] Data Preprocessing...
+INFO: 开始数据预处理...
+INFO: 开始数据清洗...
+/home/severin/Codelib/YS/src/preprocessing/data_preprocessor.py:53: FutureWarning: DataFrame.fillna with 'method' is deprecated and will raise in a future version. Use obj.ffill() or obj.bfill() instead.
+  df = df.fillna(method='ffill').fillna(method='bfill')
+INFO: 数据清洗完成，样本数: 2000
+INFO: 提取时间特征...
+INFO: 预处理完成，序列数: 1980, 特征维度: (1980, 20, 3)
+INFO:   Train: X=(1980, 20, 3), y=(1980,)
+INFO: 
+[Step 2/9] Training Parallel CNN-LSTM-Attention Model...
+2026-01-16 16:51:16.205588: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-01-16 16:51:16.251041: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI AVX_VNNI_INT8 AVX_NE_CONVERT FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-01-16 16:51:17.111270: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-01-16 16:51:17.401107: E external/local_xla/xla/stream_executor/cuda/cuda_platform.cc:51] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+INFO: 模型构建完成
+INFO: 参数量: 20,307
+Epoch 1/10
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m1:27[0m 1s/step - loss: 21475.1953 - mae: 146.0042[1m 9/62[0m [32m━━[0m[37m━━━━━━━━━━━━━━━━━━[0m [1m0s[0m 6ms/step - loss: 21482.0922 - mae: 145.9636 [1m19/62[0m [32m━━━━━━[0m[37m━━━━━━━━━━━━━━[0m [1m0s[0m 6ms/step - loss: 21526.9972 - mae: 146.0535[1m31/62[0m [32m━━━━━━━━━━[0m[37m━━━━━━━━━━[0m [1m0s[0m 5ms/step - loss: 21331.8814 - mae: 145.3310[1m44/62[0m [32m━━━━━━━━━━━━━━[0m[37m━━━━━━[0m [1m0s[0m 5ms/step - loss: 20860.3846 - mae: 143.5546[1m58/62[0m [32m━━━━━━━━━━━━━━━━━━[0m[37m━━[0m [1m0s[0m 5ms/step - loss: 19904.6508 - mae: 139.2753[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m2s[0m 5ms/step - loss: 14427.3018 - mae: 111.2286
+Epoch 2/10
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m1s[0m 19ms/step - loss: 2331.8560 - mae: 40.6057[1m13/62[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1998.2112 - mae: 35.9120 [1m26/62[0m [32m━━━━━━━━[0m[37m━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1904.5861 - mae: 34.8840[1m37/62[0m [32m━━━━━━━━━━━[0m[37m━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1856.7233 - mae: 34.4721[1m49/62[0m [32m━━━━━━━━━━━━━━━[0m[37m━━━━━[0m [1m0s[0m 4ms/step - loss: 1825.0038 - mae: 34.2045[1m61/62[0m [32m━━━━━━━━━━━━━━━━━━━[0m[37m━[0m [1m0s[0m 4ms/step - loss: 1801.1517 - mae: 34.0028[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 4ms/step - loss: 1662.1187 - mae: 32.6844
+Epoch 3/10
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m1s[0m 19ms/step - loss: 1285.7864 - mae: 28.6363[1m13/62[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1339.1851 - mae: 29.2621 [1m24/62[0m [32m━━━━━━━[0m[37m━━━━━━━━━━━━━[0m [1m0s[0m 5ms/step - loss: 1355.8117 - mae: 29.2639[1m35/62[0m [32m━━━━━━━━━━━[0m[37m━━━━━━━━━[0m [1m0s[0m 5ms/step - loss: 1364.1063 - mae: 29.3782[1m48/62[0m [32m━━━━━━━━━━━━━━━[0m[37m━━━━━[0m [1m0s[0m 4ms/step - loss: 1372.7514 - mae: 29.5052[1m60/62[0m [32m━━━━━━━━━━━━━━━━━━━[0m[37m━[0m [1m0s[0m 4ms/step - loss: 1376.1422 - mae: 29.5821[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 5ms/step - loss: 1383.1431 - mae: 29.7740
+Epoch 4/10
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m1s[0m 18ms/step - loss: 1882.5684 - mae: 37.7055[1m13/62[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m0s[0m 5ms/step - loss: 1433.8911 - mae: 30.7830 [1m25/62[0m [32m━━━━━━━━[0m[37m━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1350.4431 - mae: 29.7007[1m37/62[0m [32m━━━━━━━━━━━[0m[37m━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1330.3852 - mae: 29.4176[1m49/62[0m [32m━━━━━━━━━━━━━━━[0m[37m━━━━━[0m [1m0s[0m 4ms/step - loss: 1326.5168 - mae: 29.3563[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 4ms/step - loss: 1294.2747 - mae: 29.0435
+Epoch 5/10
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m1s[0m 17ms/step - loss: 836.3562 - mae: 23.0567[1m13/62[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1073.2078 - mae: 26.3499[1m26/62[0m [32m━━━━━━━━[0m[37m━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1141.2712 - mae: 27.0431[1m38/62[0m [32m━━━━━━━━━━━━[0m[37m━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1168.9714 - mae: 27.3097[1m51/62[0m [32m━━━━━━━━━━━━━━━━[0m[37m━━━━[0m [1m0s[0m 4ms/step - loss: 1173.9625 - mae: 27.3477[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 4ms/step - loss: 1184.8026 - mae: 27.3974
+Epoch 6/10
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m0s[0m 16ms/step - loss: 1235.4041 - mae: 28.0987[1m14/62[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1208.9268 - mae: 27.9132 [1m28/62[0m [32m━━━━━━━━━[0m[37m━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1192.6740 - mae: 27.6652[1m42/62[0m [32m━━━━━━━━━━━━━[0m[37m━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1177.9897 - mae: 27.4145[1m56/62[0m [32m━━━━━━━━━━━━━━━━━━[0m[37m━━[0m [1m0s[0m 4ms/step - loss: 1167.5053 - mae: 27.2141[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 4ms/step - loss: 1140.0623 - mae: 26.7758
+Epoch 7/10
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m1s[0m 17ms/step - loss: 743.9879 - mae: 21.3499[1m14/62[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1026.1583 - mae: 25.3235[1m28/62[0m [32m━━━━━━━━━[0m[37m━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1073.7072 - mae: 26.0866[1m42/62[0m [32m━━━━━━━━━━━━━[0m[37m━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1104.4904 - mae: 26.5765[1m57/62[0m [32m━━━━━━━━━━━━━━━━━━[0m[37m━━[0m [1m0s[0m 4ms/step - loss: 1120.1693 - mae: 26.8609[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 4ms/step - loss: 1151.7045 - mae: 27.5595
+Epoch 8/10
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m1s[0m 17ms/step - loss: 984.7060 - mae: 26.6295[1m15/62[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1017.8385 - mae: 25.7108[1m29/62[0m [32m━━━━━━━━━[0m[37m━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1012.3655 - mae: 25.4197[1m41/62[0m [32m━━━━━━━━━━━━━[0m[37m━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1012.2240 - mae: 25.3376[1m55/62[0m [32m━━━━━━━━━━━━━━━━━[0m[37m━━━[0m [1m0s[0m 4ms/step - loss: 1015.5597 - mae: 25.3613[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 4ms/step - loss: 1065.1825 - mae: 25.9475
+Epoch 9/10
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m1s[0m 17ms/step - loss: 985.8699 - mae: 24.1972[1m15/62[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1033.2364 - mae: 25.2756[1m29/62[0m [32m━━━━━━━━━[0m[37m━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1051.1419 - mae: 25.5354[1m42/62[0m [32m━━━━━━━━━━━━━[0m[37m━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1038.1904 - mae: 25.4625[1m56/62[0m [32m━━━━━━━━━━━━━━━━━━[0m[37m━━[0m [1m0s[0m 4ms/step - loss: 1027.3247 - mae: 25.3993[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 4ms/step - loss: 1013.7739 - mae: 25.3915
+Epoch 10/10
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m1s[0m 17ms/step - loss: 1054.4008 - mae: 24.7227[1m14/62[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1065.0104 - mae: 25.2576 [1m27/62[0m [32m━━━━━━━━[0m[37m━━━━━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1059.8822 - mae: 25.3883[1m40/62[0m [32m━━━━━━━━━━━━[0m[37m━━━━━━━━[0m [1m0s[0m 4ms/step - loss: 1052.9227 - mae: 25.4221[1m54/62[0m [32m━━━━━━━━━━━━━━━━━[0m[37m━━━[0m [1m0s[0m 4ms/step - loss: 1058.4235 - mae: 25.5341[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 4ms/step - loss: 1084.5110 - mae: 25.9423
+INFO:   Final train loss: 1084.5110
+INFO: 
+[Step 3/9] Extracting Deep Learning Parameters (CAM & Attention)...
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m2s[0m 33ms/step[1m57/62[0m [32m━━━━━━━━━━━━━━━━━━[0m[37m━━[0m [1m0s[0m 899us/step[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 1ms/step  
+[1m 1/62[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m4s[0m 72ms/step[1m34/62[0m [32m━━━━━━━━━━[0m[37m━━━━━━━━━━[0m [1m0s[0m 2ms/step [1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 3ms/step[1m62/62[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m0s[0m 3ms/step
+INFO:   CAM: (1980, 10)
+INFO:   Attention: (1980, 20)
+INFO: 
+[Step 4/9] Clustering DLP Features...
+INFO: CAM 聚类拟合...
+INFO: CAM 聚类完成，聚类数: 3
+INFO: Attention权重聚类拟合...
+INFO: Attention聚类完成，聚类: ['Early', 'Early', 'Other']
+INFO:   CAM clusters: [659 461 860]
+INFO:   Attention types: {'Early': 1609, 'Other': 371}
+INFO: 
+[Step 5/9] Sn State Classification...
+INFO: 计算Sn尺度估计器...
+INFO: 中位数: 146.2809, Sn尺度: 14.4536
+INFO: K-means聚类...
+INFO: 聚类中心: [-1.03924579  1.5286441   0.11955863]
+INFO: 状态映射: {np.int64(0): 'Lower', np.int64(2): 'Normal', np.int64(1): 'Peak'}
+INFO:   State distribution: {'Normal': 885, 'Lower': 615, 'Peak': 480}
+INFO: 
+[Step 6/9] Feature Discretization...
+INFO: 拟合离散化器，特征数: 3
+/home/severin/Codelib/YS/.venv/lib/python3.12/site-packages/sklearn/preprocessing/_discretization.py:304: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+/home/severin/Codelib/YS/.venv/lib/python3.12/site-packages/sklearn/preprocessing/_discretization.py:304: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+/home/severin/Codelib/YS/.venv/lib/python3.12/site-packages/sklearn/preprocessing/_discretization.py:304: FutureWarning: The current default behavior, quantile_method='linear', will be changed to quantile_method='averaged_inverted_cdf' in scikit-learn version 1.9 to naturally support sample weight equivalence properties by default. Pass quantile_method='averaged_inverted_cdf' explicitly to silence this warning.
+  warnings.warn(
+INFO: 离散化器拟合完成
+INFO:   Discretized features: ['Temperature', 'Humidity', 'WindSpeed', 'EDP_State', 'CAM_Cluster', 'Attention_Type']
+INFO: 
+[Step 7/9] Association Rule Mining...
+INFO: AssociationRuleMiner initialized with min_support=0.05, min_confidence=0.6, min_lift=1.2
+INFO: Prepared data: 1980 transactions, 20 items
+INFO: Found 269 frequent itemsets
+INFO: Generated 10 association rules
+INFO: Filtered to 0 EDP-related rules
+INFO: Extracted 0 candidate edges from top 50 rules
+INFO:   Found 0 candidate edges
+INFO: Saved 0 rules to ./outputs/training_run_1/results/association_rules.csv
+INFO: 
+[Step 8/9] Bayesian Network Learning...
+INFO: CausalBayesianNetwork initialized with 4 domain edges and 0 forbidden edges
+INFO: Constraints: 4 white-list, 0 black-list edges
+INFO:  Datatype (N=numerical, C=Categorical Unordered, O=Categorical Ordered) inferred from data: 
+ {'Temperature': 'C', 'Humidity': 'C', 'WindSpeed': 'C', 'EDP_State': 'C', 'CAM_Cluster': 'C', 'Attention_Type': 'C'}
+INFO:  Datatype (N=numerical, C=Categorical Unordered, O=Categorical Ordered) inferred from data: 
+ {'Temperature': 'C', 'Humidity': 'C', 'WindSpeed': 'C', 'EDP_State': 'C', 'CAM_Cluster': 'C', 'Attention_Type': 'C'}
+WARNING: Structure learning with constraints failed: HillClimbSearch.estimate() got an unexpected keyword argument 'white_list'
+INFO: Falling back to unconstrained structure learning
+INFO:  Datatype (N=numerical, C=Categorical Unordered, O=Categorical Ordered) inferred from data: 
+ {'Temperature': 'C', 'Humidity': 'C', 'WindSpeed': 'C', 'EDP_State': 'C', 'CAM_Cluster': 'C', 'Attention_Type': 'C'}
+  0%|          | 0/50 [00:00<?, ?it/s]  8%|▊         | 4/50 [00:00<00:00, 90.33it/s]
+INFO: Learned structure with 5 nodes and 4 edges
+INFO:  Datatype (N=numerical, C=Categorical Unordered, O=Categorical Ordered) inferred from data: 
+ {'Temperature': 'C', 'Humidity': 'C', 'WindSpeed': 'C', 'EDP_State': 'C', 'CAM_Cluster': 'C', 'Attention_Type': 'C'}
+INFO: Learned parameters using mle estimator
+INFO:   Learned 4 edges in Bayesian Network
+INFO: Network structure saved to ./outputs/training_run_1/results/bayesian_network.png
+INFO: 
+[Step 9/9] Saving Models...
+ERROR: 
+❌ 训练失败: 'ParallelCNNLSTMAttention' object has no attribute 'save_model'
+Traceback (most recent call last):
+  File "/home/severin/Codelib/YS/scripts/run_training.py", line 93, in main
+    results = pipeline.run(train_data)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/severin/Codelib/YS/src/pipeline/train_pipeline.py", line 178, in run
+    self._step9_save_models()
+  File "/home/severin/Codelib/YS/src/pipeline/train_pipeline.py", line 400, in _step9_save_models
+    self.predictor.save_model(os.path.join(models_dir, 'predictor.h5'))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ParallelCNNLSTMAttention' object has no attribute 'save_model'. Did you mean: 'cam_model'?

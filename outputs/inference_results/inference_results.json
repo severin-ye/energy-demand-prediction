@@ -1,0 +1,29 @@
+[
+  {
+    "scenario": "高温高湿场景",
+    "predictions": {
+      "edp": 217.3087921142578,
+      "state": "Peak",
+      "cam_cluster": 1,
+      "attention_type": "Early"
+    }
+  },
+  {
+    "scenario": "低温低湿场景",
+    "predictions": {
+      "edp": 103.84156799316406,
+      "state": "Lower",
+      "cam_cluster": 0,
+      "attention_type": "Early"
+    }
+  },
+  {
+    "scenario": "适中温度场景",
+    "predictions": {
+      "edp": 118.2724838256836,
+      "state": "Lower",
+      "cam_cluster": 0,
+      "attention_type": "Early"
+    }
+  }
+]
