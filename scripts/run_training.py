@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 import logging
 import time
+from datetime import datetime
 from src.pipeline.train_pipeline import TrainPipeline
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -110,8 +111,8 @@ def main():
     )
     parser.add_argument(
         '--output-dir',
-        default='./outputs/training_uci',
-        help='输出目录'
+        default=None,
+        help='输出目录（默认: outputs/training/YY-MM-DD）'
     )
     parser.add_argument(
         '--epochs',
@@ -127,6 +128,11 @@ def main():
     )
     
     args = parser.parse_args()
+    
+    # 如果未指定输出目录，使用 outputs/training/日期/ 格式
+    if args.output_dir is None:
+        date_suffix = datetime.now().strftime('%y-%m-%d')
+        args.output_dir = f'./outputs/training/{date_suffix}'
     
     logger.info("="*80)
     logger.info(" "*20 + "完整训练流水线" + " "*20)

@@ -265,7 +265,7 @@ def generate_html_reports(results: dict, test_data: pd.DataFrame, output_dir: Pa
             
             # 预测结果
             'prediction': float(predictions[idx]),
-            'true_value': float(true_values[idx]) if idx < len(true_values) else 0,
+            'actual_value': float(true_values[idx]) if idx < len(true_values) else 0,  # 修正字段名
             'error': float(predictions[idx] - true_values[idx]) if idx < len(true_values) else 0,
             'error_percent': float((predictions[idx] - true_values[idx]) / (true_values[idx] + 1e-8) * 100) if idx < len(true_values) else 0,
             
@@ -278,12 +278,27 @@ def generate_html_reports(results: dict, test_data: pd.DataFrame, output_dir: Pa
                 'Global Reactive Power': _discretize_value(test_data.iloc[idx]['Global_reactive_power'], 'reactive'),
                 'Voltage': _discretize_value(test_data.iloc[idx]['Voltage'], 'voltage'),
                 'Global Intensity': _discretize_value(test_data.iloc[idx]['Global_intensity'], 'intensity'),
-            }
+            },
+            
+            # 因果分析说明
+            'causal_explanation': _generate_causal_explanation(
+                state=edp_states[idx] if idx < len(edp_states) else 'Unknown',
+                prediction=float(predictions[idx]),
+                actual=float(true_values[idx]) if idx < len(true_values) else 0,
+                features=test_data.iloc[idx]
+            ),
+            
+            # 优化建议
+            'recommendations': _generate_recommendations(
+                state=edp_states[idx] if idx < len(edp_states) else 'Unknown',
+                error_percent=float((predictions[idx] - true_values[idx]) / (true_values[idx] + 1e-8) * 100) if idx < len(true_values) else 0,
+                features=test_data.iloc[idx]
+            )
         }
         
         # 生成HTML
         html_file = html_dir / f'sample_{idx:03d}.html'
-        visualizer.generate_html(sample_data, html_file)
+        visualizer.generate_html(sample_data, idx, html_file)
         
         if idx == 0:
             logger.info(f"✅ 示例报告: {html_file}")
@@ -321,8 +336,127 @@ def _discretize_value(value: float, feature_type: str) -> str:
     return '未知'
 
 
+def _generate_causal_explanation(state: str, prediction: float, actual: float, features) -> str:
+    """生成因果分析说明"""
+    voltage = features['Voltage']
+    reactive = features['Global_reactive_power']
+    intensity = features['Global_intensity']
+    
+    explanations = []
+    
+    # 状态判断逻辑
+    if state == 'Peak':
+        explanations.append(f"<strong>负荷峰值状态</strong>: 预测功率为 {prediction:.3f} kW，高于正常水平")
+        if voltage > 240:
+            explanations.append(f"• 电压偏高 ({voltage:.1f}V)，可能存在电网波动")
+        if intensity > 10:
+            explanations.append(f"• 电流强度较大 ({intensity:.1f}A)，设备负载较重")
+    elif state == 'Lower':
+        explanations.append(f"<strong>低负荷状态</strong>: 预测功率为 {prediction:.3f} kW，处于较低水平")
+        if voltage < 235:
+            explanations.append(f"• 电压偏低 ({voltage:.1f}V)，用电负荷较小")
+        if intensity < 3:
+            explanations.append(f"• 电流强度较小 ({intensity:.1f}A)，设备使用较少")
+    else:
+        explanations.append(f"<strong>正常负荷状态</strong>: 预测功率为 {prediction:.3f} kW")
+    
+    # 无功功率分析
+    if reactive > 0.2:
+        explanations.append(f"• 无功功率较高 ({reactive:.3f} kW)，存在感性负载")
+    elif reactive < 0.05:
+        explanations.append(f"• 无功功率很低 ({reactive:.3f} kW)，负载主要为阻性")
+    
+    # 预测准确性
+    if actual > 0:
+        error_pct = abs(prediction - actual) / actual * 100
+        if error_pct < 10:
+            explanations.append(f"• 预测误差 {error_pct:.1f}%，准确度较高")
+        elif error_pct < 30:
+            explanations.append(f"• 预测误差 {error_pct:.1f}%，准确度中等")
+        else:
+            explanations.append(f"• 预测误差 {error_pct:.1f}%，存在一定偏差")
+    
+    return '<br>'.join(explanations) if explanations else '当前数据正常，无异常因素'
+
+
+def _generate_recommendations(state: str, error_percent: float, features) -> list:
+    """生成优化建议"""
+    recommendations = []
+    
+    voltage = features['Voltage']
+    reactive = features['Global_reactive_power']
+    intensity = features['Global_intensity']
+    
+    # 基于状态的建议
+    if state == 'Peak':
+        recommendations.append({
+            'action': '削峰填谷',
+            'explanation': '当前处于负荷峰值，建议调整用电时段，避开高峰期',
+            'expected_impact': '降低10-20%用电成本'
+        })
+        if intensity > 15:
+            recommendations.append({
+                'action': '检查大功率设备',
+                'explanation': f'电流强度达到 {intensity:.1f}A，建议检查是否有大功率设备同时运行',
+                'expected_impact': '避免过载风险'
+            })
+    
+    # 预测误差较大时的建议
+    if abs(error_percent) > 50:
+        recommendations.append({
+            'action': '模型优化',
+            'explanation': f'预测误差较大 ({abs(error_percent):.1f}%)，建议：1) 增加类似场景训练样本 2) 检查数据质量',
+            'expected_impact': '提升预测准确度20-30%'
+        })
+    elif abs(error_percent) > 30:
+        recommendations.append({
+            'action': '数据校验',
+            'explanation': f'预测误差 {abs(error_percent):.1f}%，建议检查输入数据是否存在异常值',
+            'expected_impact': '提升预测稳定性'
+        })
+    
+    # 电压相关建议
+    if voltage < 220:
+        recommendations.append({
+            'action': '电压监测 - 欠压',
+            'explanation': f'电压过低 ({voltage:.1f}V < 220V)，可能影响设备正常运行',
+            'expected_impact': '保障用电安全'
+        })
+    elif voltage > 250:
+        recommendations.append({
+            'action': '电压监测 - 过压',
+            'explanation': f'电压过高 ({voltage:.1f}V > 250V)，建议联系供电部门',
+            'expected_impact': '保障设备安全'
+        })
+    
+    # 无功功率建议
+    if reactive > 0.3:
+        recommendations.append({
+            'action': '功率因数补偿',
+            'explanation': f'无功功率较高 ({reactive:.3f} kW)，建议安装补偿电容器',
+            'expected_impact': '降低5-10%电费'
+        })
+    
+    # 如果没有特殊建议
+    if not recommendations:
+        if abs(error_percent) < 20:
+            recommendations.append({
+                'action': '保持现状',
+                'explanation': '当前用电模式合理，预测准确度良好',
+                'expected_impact': '持续稳定运行'
+            })
+        else:
+            recommendations.append({
+                'action': '持续监测',
+                'explanation': '建议持续观察用电模式，收集更多数据',
+                'expected_impact': '优化预测模型'
+            })
+    
+    return recommendations
+
+
 def _generate_index_page(html_dir: Path, num_samples: int):
-    """生成索引页面"""
+    """生成简洁索引页面"""
     index_html = f'''
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -331,88 +465,117 @@ def _generate_index_page(html_dir: Path, num_samples: int):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>推理结果索引</title>
     <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
-            font-family: 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px;
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            padding: 30px;
+            line-height: 1.6;
         }}
         .container {{
             max-width: 1000px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }}
+        .header {{
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-bottom: 3px solid #3498db;
         }}
         h1 {{
-            text-align: center;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
         }}
         .subtitle {{
-            text-align: center;
-            color: #666;
-            margin-bottom: 40px;
+            font-size: 0.95em;
+            opacity: 0.85;
+        }}
+        .content {{
+            padding: 30px;
+        }}
+        .stats {{
+            background: #ecf0f1;
+            padding: 15px 20px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            color: #2c3e50;
         }}
         .grid {{
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            gap: 15px;
         }}
         .card {{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
+            background: white;
+            border: 2px solid #ecf0f1;
+            border-radius: 6px;
+            padding: 20px;
             text-align: center;
             text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            color: #2c3e50;
         }}
         .card:hover {{
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52,152,219,0.15);
         }}
         .card-title {{
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #3498db;
         }}
         .card-subtitle {{
-            font-size: 0.9em;
-            opacity: 0.9;
+            font-size: 0.85em;
+            color: #7f8c8d;
         }}
         .footer {{
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
             text-align: center;
-            margin-top: 40px;
-            color: #666;
+            font-size: 0.9em;
+            color: #7f8c8d;
         }}
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔮 电力负荷智能预测可视化</h1>
-        <p class="subtitle">UCI家庭电力消耗数据集 - 推理结果报告</p>
+        <div class="header">
+            <h1>电力负荷预测 - 推理结果</h1>
+            <p class="subtitle">UCI家庭电力消耗数据集</p>
+        </div>
         
-        <div class="grid">
+        <div class="content">
+            <div class="stats">
+                <strong>模型:</strong> Parallel CNN-LSTM-Attention + 因果推理 &nbsp;|&nbsp; 
+                <strong>样本总数:</strong> {num_samples} 个
+            </div>
+            
+            <div class="grid">
 '''
     
     for i in range(num_samples):
         index_html += f'''
             <a href="sample_{i:03d}.html" class="card">
-                <div class="card-title">样本 #{i}</div>
-                <div class="card-subtitle">查看详细推理流程</div>
+                <div class="card-title">#{i}</div>
+                <div class="card-subtitle">样本分析</div>
             </a>
 '''
     
     index_html += '''
-        </div>
-        
-        <div class="footer">
-            <p><strong>Parallel CNN-LSTM-Attention + Causal Inference</strong></p>
-            <p>生成时间: ''' + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + '''</p>
+            </div>
+            
+            <div class="footer">
+                <p>生成时间: ''' + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + '''</p>
+            </div>
         </div>
     </div>
 </body>
@@ -446,11 +609,24 @@ def main():
     )
     parser.add_argument(
         '--output-dir',
-        default='outputs/inference_uci',
-        help='输出目录'
+        default=None,
+        help='输出目录（默认: outputs/inference/模型名/时间）'
     )
     
     args = parser.parse_args()
+    
+    # 如果未指定输出目录，使用 outputs/inference/模型名/时间/ 格式
+    if args.output_dir is None:
+        # 从模型目录提取模型名称
+        model_dir_path = Path(args.model_dir)
+        if model_dir_path.parent.name == 'models':
+            # 如果是 xxx/models，取上一级目录名
+            model_name = model_dir_path.parent.parent.name
+        else:
+            model_name = model_dir_path.parent.name
+        
+        timestamp = datetime.now().strftime('%y-%m-%d_%H-%M')
+        args.output_dir = f'outputs/inference/{model_name}/{timestamp}'
     
     # 创建输出目录
     output_dir = Path(args.output_dir)
