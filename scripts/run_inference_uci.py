@@ -14,6 +14,7 @@ from datetime import datetime
 from pathlib import Path
 
 from src.pipeline.inference_pipeline import InferencePipeline
+from src.visualization.inference_visualizer import InferenceVisualizer
 
 logging.basicConfig(
     level=logging.INFO,
@@ -216,6 +217,212 @@ def save_detailed_results(results, output_file):
     return df_results
 
 
+def generate_html_reports(results: dict, test_data: pd.DataFrame, output_dir: Path):
+    """
+    为每个样本生成HTML可视化报告
+    
+    Args:
+        results: 推理结果字典
+        test_data: 测试数据
+        output_dir: 输出目录
+    """
+    logger.info("\n生成HTML可视化报告...")
+    
+    visualizer = InferenceVisualizer()
+    html_dir = output_dir / 'html_reports'
+    html_dir.mkdir(parents=True, exist_ok=True)
+    
+    predictions = results['predictions']
+    true_values = results.get('true_values', [])
+    edp_states = results.get('edp_states', [])
+    cam_clusters = results.get('cam_clusters', [])
+    attention_types = results.get('attention_types', [])
+    
+    # 计算中位数用于偏离判断
+    median_value = np.median(predictions)
+    
+    # 为每个样本生成HTML
+    num_samples = min(len(predictions), 10)  # 只生成前10个样本的HTML
+    logger.info(f"将为前{num_samples}个样本生成HTML报告")
+    
+    for idx in range(num_samples):
+        # 准备样本数据
+        sample_data = {
+            'sample_id': idx,
+            'window_size': 'N/A',  # 实际应该从数据获取
+            'target_name': 'Global Active Power (EDP)',
+            
+            # 输入特征（取当前时刻的值）
+            'input_features': {
+                'Global Reactive Power': test_data.iloc[idx]['Global_reactive_power'],
+                'Voltage': test_data.iloc[idx]['Voltage'],
+                'Global Intensity': test_data.iloc[idx]['Global_intensity'],
+            },
+            
+            # CAM和Attention
+            'cam_cluster': int(cam_clusters[idx]) if idx < len(cam_clusters) else 0,
+            'attention_type': attention_types[idx] if idx < len(attention_types) else 'Unknown',
+            
+            # 预测结果
+            'prediction': float(predictions[idx]),
+            'true_value': float(true_values[idx]) if idx < len(true_values) else 0,
+            'error': float(predictions[idx] - true_values[idx]) if idx < len(true_values) else 0,
+            'error_percent': float((predictions[idx] - true_values[idx]) / (true_values[idx] + 1e-8) * 100) if idx < len(true_values) else 0,
+            
+            # 状态
+            'state': edp_states[idx] if idx < len(edp_states) else 'Unknown',
+            'median_value': float(median_value),
+            
+            # 离散化特征（示例）
+            'discrete_features': {
+                'Global Reactive Power': _discretize_value(test_data.iloc[idx]['Global_reactive_power'], 'reactive'),
+                'Voltage': _discretize_value(test_data.iloc[idx]['Voltage'], 'voltage'),
+                'Global Intensity': _discretize_value(test_data.iloc[idx]['Global_intensity'], 'intensity'),
+            }
+        }
+        
+        # 生成HTML
+        html_file = html_dir / f'sample_{idx:03d}.html'
+        visualizer.generate_html(sample_data, html_file)
+        
+        if idx == 0:
+            logger.info(f"✅ 示例报告: {html_file}")
+    
+    logger.info(f"✅ 已生成 {num_samples} 个HTML报告到: {html_dir}")
+    
+    # 生成索引页面
+    _generate_index_page(html_dir, num_samples)
+    logger.info(f"✅ 索引页面: {html_dir}/index.html")
+
+
+def _discretize_value(value: float, feature_type: str) -> str:
+    """离散化数值"""
+    if feature_type == 'reactive':
+        if value < 0.05:
+            return '很低'
+        elif value < 0.15:
+            return '中等'
+        else:
+            return '偏高'
+    elif feature_type == 'voltage':
+        if value < 230:
+            return '偏低'
+        elif value < 245:
+            return '正常'
+        else:
+            return '偏高'
+    elif feature_type == 'intensity':
+        if value < 5:
+            return '低'
+        elif value < 15:
+            return '中等'
+        else:
+            return '高'
+    return '未知'
+
+
+def _generate_index_page(html_dir: Path, num_samples: int):
+    """生成索引页面"""
+    index_html = f'''
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>推理结果索引</title>
+    <style>
+        body {{
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            margin: 0;
+        }}
+        .container {{
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }}
+        h1 {{
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }}
+        .subtitle {{
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+        }}
+        .grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }}
+        .card {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }}
+        .card:hover {{
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }}
+        .card-title {{
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }}
+        .card-subtitle {{
+            font-size: 0.9em;
+            opacity: 0.9;
+        }}
+        .footer {{
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔮 电力负荷智能预测可视化</h1>
+        <p class="subtitle">UCI家庭电力消耗数据集 - 推理结果报告</p>
+        
+        <div class="grid">
+'''
+    
+    for i in range(num_samples):
+        index_html += f'''
+            <a href="sample_{i:03d}.html" class="card">
+                <div class="card-title">样本 #{i}</div>
+                <div class="card-subtitle">查看详细推理流程</div>
+            </a>
+'''
+    
+    index_html += '''
+        </div>
+        
+        <div class="footer">
+            <p><strong>Parallel CNN-LSTM-Attention + Causal Inference</strong></p>
+            <p>生成时间: ''' + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + '''</p>
+        </div>
+    </div>
+</body>
+</html>
+'''
+    
+    with open(html_dir / 'index.html', 'w', encoding='utf-8') as f:
+        f.write(index_html)
+
+
 def main():
     """主函数"""
     import argparse
@@ -307,17 +514,25 @@ def main():
             json.dump(json_results, f, indent=2, ensure_ascii=False)
         logger.info(f"JSON结果已保存到: {json_file}")
         
+        # 8. 生成HTML可视化报告
+        logger.info("\n" + "=" * 80)
+        logger.info("🎨 生成HTML可视化报告")
+        logger.info("=" * 80)
+        generate_html_reports(results, test_data, output_dir)
+        
         logger.info("\n" + "=" * 80)
         logger.info(" " * 30 + "推理测试完成")
         logger.info("=" * 80)
         
-        # 8. 返回性能摘要
+        # 9. 返回性能摘要
         print("\n" + "=" * 80)
         print("📊 性能摘要")
         print("=" * 80)
         print(f"MAE:  {json_results['statistics']['mae']:.4f} kW")
         print(f"RMSE: {json_results['statistics']['rmse']:.4f} kW")
         print(f"样本数: {json_results['statistics']['n_samples']}")
+        print("=" * 80)
+        print(f"\n💡 查看HTML可视化: {output_dir}/html_reports/index.html")
         print("=" * 80)
         
     except Exception as e:
