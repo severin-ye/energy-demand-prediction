@@ -151,51 +151,51 @@ python scripts/run_inference_uci.py \
   --n-samples 100 \
   --output-dir outputs/inference_uci
 
-## 🎨 HTML可视化推理报告
+## 🎨 HTML Visualization Inference Reports
 
-系统会自动为每个推理样本生成精美的HTML可视化报告，展示完整的10步推理流程：
+The system automatically generates beautiful HTML visualization reports for each inference sample, displaying the complete 10-step inference process:
 
 ```
-⓪ 📊 原始数据输入
-① 🔍 短期模式分析 (CNN)
-② 📈 长期趋势分析 (LSTM)
-③ ⏰ 关键时间判断 (Attention)
-④ 🎯 综合判断与预测
-⑤ 🚦 负荷状态分类
-⑥ 🔤 特征等级化
-⑦ 🧠 模型内部感知
-⑧ 🔗 因果关系推断
-⑨ 🔮 反事实分析
-⑩ ✨ 智能建议输出
+⓪ 📊 Raw Data Input
+① 🔍 Short-term Pattern Analysis (CNN)
+② 📈 Long-term Trend Analysis (LSTM)
+③ ⏰ Key Time Detection (Attention)
+④ 🎯 Comprehensive Prediction
+⑤ 🚦 Load State Classification
+⑥ 🔤 Feature Discretization
+⑦ 🧠 Model Internal Perception
+⑧ 🔗 Causal Relationship Inference
+⑨ 🔮 Counterfactual Analysis
+⑩ ✨ Intelligent Recommendations
 ```
 
-**特点**：
-- 🎨 精美的渐变设计
-- 💡 全中文通俗解释
-- 📊 可视化图表
-- 🔍 每步都有"为什么"
+**Features**:
+- 🎨 Beautiful gradient design
+- 💡 Clear explanations
+- 📊 Visual charts
+- 🔍 "Why" for each step
 
-详见 **[HTML可视化演示指南](doc/guides/HTML_DEMO.md)**
+See **[HTML Visualization Guide](doc/guides/HTML_DEMO.md)** for details
 
-## 📚 文档索引
+## 📚 Documentation Index
 
-> **完整文档导航**: [doc/INDEX.md](doc/INDEX.md) - 所有文档的快速导航和说明
+> **Complete Documentation Navigation**: [doc/INDEX.md](doc/INDEX.md) - Quick navigation and descriptions for all documentation
 
-### 使用指南
-- **[快速开始](doc/guides/QUICKSTART.md)** - 详细的安装、配置和使用教程
-- **[快速参考](doc/guides/QUICK_REFERENCE.md)** - 常用命令和参数速查
-- **[HTML可视化](doc/guides/HTML_DEMO.md)** - 推理流程可视化使用说明
+### User Guides
+- **[Quick Start](doc/guides/QUICKSTART.md)** - Detailed installation, configuration, and usage tutorial
+- **[Quick Reference](doc/guides/QUICK_REFERENCE.md)** - Common commands and parameters reference
+- **[HTML Visualization](doc/guides/HTML_DEMO.md)** - Inference process visualization guide
 
-### 技术文档
-- **[论文详解](doc/ChatGPT-详细整理论文.md)** - 论文完整解读（教学式）
-- **[项目设计](doc/项目设计文档.md)** - 系统架构设计文档
-- **[实现文档](doc/实现文档.md)** - 代码实现说明
-- **[UCI数据集](doc/数据集说明-UCI_Household.md)** - UCI数据集详细说明
-- **[项目结构](PROJECT_STRUCTURE.md)** - 完整项目结构说明
+### Technical Documentation
+- **[Paper Interpretation](doc/ChatGPT-详细整理论文.md)** - Complete paper interpretation (tutorial style)
+- **[Project Design](doc/项目设计文档.md)** - System architecture design document
+- **[Implementation](doc/实现文档.md)** - Code implementation documentation
+- **[UCI Dataset](doc/数据集说明-UCI_Household.md)** - UCI dataset detailed description
+- **[Project Structure](PROJECT_STRUCTURE.md)** - Complete project structure documentation
 
-### 进度总结
-- **[实现总结](doc/summaries/IMPLEMENTATION_SUMMARY.md)** - 实现进度汇总
-- **[项目进度](doc/summaries/PROGRESS_SUMMARY.md)** - 整体进度追踪
+### Progress Summaries
+- **[Implementation Summary](doc/summaries/IMPLEMENTATION_SUMMARY.md)** - Implementation progress summary
+- **[Progress Tracking](doc/summaries/PROGRESS_SUMMARY.md)** - Overall progress tracking
 
 ### 输出报告
 - **[Training Report](outputs/training_uci/TRAINING_REPORT.md)** - UCI data training results
