@@ -1,6 +1,7 @@
 """
-关联规则挖掘模块
-使用Apriori算法挖掘频繁项集和关联规则，为贝叶斯网络提供候选边
+Association Rule Mining Module
+Uses the Apriori algorithm to mine frequent itemsets and association rules, 
+providing candidate edges for the Bayesian Network.
 """
 
 import numpy as np
@@ -14,18 +15,18 @@ logger = logging.getLogger(__name__)
 
 class AssociationRuleMiner:
     """
-    关联规则挖掘器
+    Association Rule Miner
     
-    功能:
-    1. 将连续特征离散化后编码为事务格式
-    2. 使用Apriori算法挖掘频繁项集
-    3. 生成关联规则并筛选与EDP相关的规则
-    4. 提取候选因果关系边
+    Functions:
+    1. Encodes discretized continuous features into transaction format.
+    2. Mines frequent itemsets using the Apriori algorithm.
+    3. Generates and filters association rules related to EDP.
+    4. Extracts candidate causal edges.
     
-    参数:
-    - min_support: 最小支持度阈值（默认0.05）
-    - min_confidence: 最小置信度阈值（默认0.6）
-    - min_lift: 最小提升度阈值（默认1.2）
+    Parameters:
+    - min_support: Minimum support threshold (default 0.05).
+    - min_confidence: Minimum confidence threshold (default 0.6).
+    - min_lift: Minimum lift threshold (default 1.2).
     """
     
     def __init__(
@@ -54,23 +55,23 @@ class AssociationRuleMiner:
         edp_col: str = 'EDP_State'
     ) -> pd.DataFrame:
         """
-        准备数据：将离散化后的数据转换为One-hot编码
+        Prepares data: Converts discretized data into One-hot encoding.
         
-        参数:
-        - df: 离散化后的DataFrame（特征值为类别标签）
-        - edp_col: EDP状态列名
+        Parameters:
+        - df: Discretized DataFrame (feature values are category labels).
+        - edp_col: Name of the EDP state column.
         
-        返回:
-        - 布尔型DataFrame，适用于Apriori算法
+        Returns:
+        - Boolean DataFrame suitable for the Apriori algorithm.
         """
-        # 验证EDP列存在
+        # Validate that the EDP column exists
         if edp_col not in df.columns:
             raise ValueError(f"EDP column '{edp_col}' not found in DataFrame")
         
-        # One-hot编码所有列
+        # One-hot encode all columns
         df_encoded = pd.get_dummies(df, prefix_sep='=')
         
-        # 转换为布尔型
+        # Convert to boolean type
         df_encoded = df_encoded.astype(bool)
         
         logger.info(
@@ -81,13 +82,13 @@ class AssociationRuleMiner:
     
     def mine_frequent_itemsets(self, df_encoded: pd.DataFrame) -> pd.DataFrame:
         """
-        挖掘频繁项集
+        Mines frequent itemsets.
         
-        参数:
-        - df_encoded: One-hot编码后的布尔型DataFrame
+        Parameters:
+        - df_encoded: One-hot encoded boolean DataFrame.
         
-        返回:
-        - 频繁项集DataFrame（包含support列）
+        Returns:
+        - DataFrame of frequent itemsets (includes 'support' column).
         """
         self.frequent_itemsets = apriori(
             df_encoded,
@@ -105,14 +106,14 @@ class AssociationRuleMiner:
         min_threshold: Optional[float] = None
     ) -> pd.DataFrame:
         """
-        生成关联规则
+        Generates association rules.
         
-        参数:
-        - metric: 评估指标（'confidence', 'lift', 'leverage', 'conviction'）
-        - min_threshold: 最小阈值（如果为None，使用类初始化时的阈值）
+        Parameters:
+        - metric: Evaluation metric ('confidence', 'lift', 'leverage', 'conviction').
+        - min_threshold: Minimum threshold (if None, uses threshold from class initialization).
         
-        返回:
-        - 关联规则DataFrame
+        Returns:
+        - DataFrame of association rules.
         """
         if self.frequent_itemsets is None:
             raise ValueError("Must call mine_frequent_itemsets() first")
@@ -126,7 +127,7 @@ class AssociationRuleMiner:
             min_threshold=min_threshold
         )
         
-        # 过滤提升度
+        # Filter by lift
         if metric != 'lift':
             self.rules = self.rules[self.rules['lift'] >= self.min_lift]
         
@@ -136,26 +137,26 @@ class AssociationRuleMiner:
     
     def filter_edp_rules(self, edp_prefix: str = 'EDP_State=') -> pd.DataFrame:
         """
-        筛选与EDP相关的规则（EDP在后件）
+        Filters rules related to EDP (where EDP is in the consequent).
         
-        参数:
-        - edp_prefix: EDP列的前缀（One-hot编码后）
+        Parameters:
+        - edp_prefix: Prefix of the EDP column (after One-hot encoding).
         
-        返回:
-        - 包含EDP的关联规则
+        Returns:
+        - Association rules containing EDP.
         """
         if self.rules is None:
             raise ValueError("Must call generate_rules() first")
         
         def contains_edp(consequents):
-            """检查后件是否包含EDP"""
+            """Checks if the consequent contains EDP"""
             return any(edp_prefix in str(item) for item in consequents)
         
         self.edp_rules = self.rules[
             self.rules['consequents'].apply(contains_edp)
         ].copy()
         
-        # 按置信度降序排序
+        # Sort by confidence in descending order
         self.edp_rules = self.edp_rules.sort_values(
             'confidence',
             ascending=False
@@ -167,13 +168,13 @@ class AssociationRuleMiner:
     
     def rules_to_constraints(self, top_k: int = 50) -> List[Tuple[str, str]]:
         """
-        将关联规则转换为贝叶斯网络的候选边约束
+        Converts association rules into candidate edge constraints for the Bayesian Network.
         
-        参数:
-        - top_k: 提取前k条规则
+        Parameters:
+        - top_k: Extract from the top k rules.
         
-        返回:
-        - [(前件特征, 后件特征), ...] 列表
+        Returns:
+        - A list of [(antecedent_feature, consequent_feature), ...].
         """
         if self.edp_rules is None:
             raise ValueError("Must call filter_edp_rules() first")
@@ -182,19 +183,19 @@ class AssociationRuleMiner:
         edp_rules_subset = self.edp_rules.head(top_k)
         
         for _, rule in edp_rules_subset.iterrows():
-            # 提取前件特征名（去除离散化标签）
+            # Extract antecedent feature names (remove discretization labels)
             antecedents = [item.split('=')[0] for item in rule['antecedents']]
             
-            # 提取后件特征名
+            # Extract consequent feature names
             consequents = [item.split('=')[0] for item in rule['consequents']]
             
-            # 创建边（前件 -> 后件）
+            # Create edges (antecedent -> consequent)
             for ant in antecedents:
                 for cons in consequents:
-                    if ant != cons:  # 避免自环
+                    if ant != cons:  # Avoid self-loops
                         edges.append((ant, cons))
         
-        # 去重
+        # Remove duplicates
         self.candidate_edges = list(set(edges))
         
         logger.info(f"Extracted {len(self.candidate_edges)} candidate edges from top {top_k} rules")
@@ -203,13 +204,13 @@ class AssociationRuleMiner:
     
     def get_rule_summary(self, n: int = 10) -> pd.DataFrame:
         """
-        获取规则摘要（用于可视化和报告）
+        Gets a summary of the rules (for visualization and reporting).
         
-        参数:
-        - n: 返回前n条规则
+        Parameters:
+        - n: Returns the top n rules.
         
-        返回:
-        - 精简的规则DataFrame
+        Returns:
+        - A concise DataFrame of rules.
         """
         if self.edp_rules is None:
             raise ValueError("Must call filter_edp_rules() first")
@@ -222,18 +223,18 @@ class AssociationRuleMiner:
             'lift'
         ]].copy()
         
-        # 格式化显示
+        # Format for display
         summary['antecedents'] = summary['antecedents'].apply(lambda x: ', '.join(x))
         summary['consequents'] = summary['consequents'].apply(lambda x: ', '.join(x))
         
         return summary
     
     def save_rules(self, filepath: str):
-        """保存规则到CSV文件"""
+        """Saves rules to a CSV file"""
         if self.edp_rules is None:
             raise ValueError("No rules to save")
         
-        # 转换frozenset为字符串
+        # Convert frozenset to string for saving
         df_save = self.edp_rules.copy()
         df_save['antecedents'] = df_save['antecedents'].apply(lambda x: ', '.join(x))
         df_save['consequents'] = df_save['consequents'].apply(lambda x: ', '.join(x))
@@ -242,10 +243,10 @@ class AssociationRuleMiner:
         logger.info(f"Saved {len(df_save)} rules to {filepath}")
     
     def load_rules(self, filepath: str):
-        """从CSV文件加载规则"""
+        """Loads rules from a CSV file"""
         df_load = pd.read_csv(filepath)
         
-        # 转换字符串为frozenset
+        # Convert string back to frozenset
         df_load['antecedents'] = df_load['antecedents'].apply(
             lambda x: frozenset(x.split(', '))
         )
@@ -258,10 +259,10 @@ class AssociationRuleMiner:
 
 
 if __name__ == "__main__":
-    # 示例使用
+    # Example Usage
     logging.basicConfig(level=logging.INFO)
     
-    # 模拟离散化数据
+    # Mock discretized data
     np.random.seed(42)
     df_discrete = pd.DataFrame({
         'Temperature': np.random.choice(['Low', 'Medium', 'High'], 100),
@@ -270,28 +271,28 @@ if __name__ == "__main__":
         'EDP_State': np.random.choice(['Lower', 'Normal', 'Peak'], 100, p=[0.2, 0.5, 0.3])
     })
     
-    # 创建挖掘器
+    # Create miner
     miner = AssociationRuleMiner(min_support=0.05, min_confidence=0.6, min_lift=1.2)
     
-    # 数据准备
+    # Data preparation
     df_encoded = miner.prepare_data(df_discrete, edp_col='EDP_State')
     print(f"\nEncoded data shape: {df_encoded.shape}")
     
-    # 挖掘频繁项集
+    # Mine frequent itemsets
     frequent = miner.mine_frequent_itemsets(df_encoded)
     print(f"\nTop 5 frequent itemsets:")
     print(frequent.head())
     
-    # 生成规则
+    # Generate rules
     rules = miner.generate_rules()
     print(f"\nGenerated {len(rules)} rules")
     
-    # 筛选EDP规则
+    # Filter EDP rules
     edp_rules = miner.filter_edp_rules()
     print(f"\nTop 5 EDP rules:")
     print(miner.get_rule_summary(5))
     
-    # 提取候选边
+    # Extract candidate edges
     edges = miner.rules_to_constraints(top_k=10)
     print(f"\nCandidate edges for Bayesian Network:")
     for edge in edges[:10]:

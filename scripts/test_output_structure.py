@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 """
-测试输出目录结构
+Test Output Directory Structure
 """
 
 from pathlib import Path
 from datetime import datetime
 
 def test_training_dir():
-    """测试训练目录生成"""
+    """Test training directory generation"""
     date_suffix = datetime.now().strftime('%y-%m-%d')
     output_dir = f'./outputs/training/{date_suffix}'
-    print(f"训练目录: {output_dir}")
+    print(f"Training Directory: {output_dir}")
     return output_dir
 
 def test_inference_dir(model_dir):
-    """测试推理目录生成"""
+    """Test inference directory generation"""
     model_dir_path = Path(model_dir)
     
-    # 从模型目录提取名称
+    # Extract name from the model directory
     if model_dir_path.parent.name == 'models':
-        # 如果是 xxx/models，取上一级目录名
+        # If it is xxx/models, take the parent directory's name
         model_name = model_dir_path.parent.parent.name
     else:
         model_name = model_dir_path.parent.name
@@ -27,20 +27,20 @@ def test_inference_dir(model_dir):
     timestamp = datetime.now().strftime('%y-%m-%d_%H-%M')
     output_dir = f'outputs/inference/{model_name}/{timestamp}'
     
-    print(f"\n模型目录: {model_dir}")
-    print(f"提取模型名: {model_name}")
-    print(f"推理目录: {output_dir}")
+    print(f"\nModel Directory: {model_dir}")
+    print(f"Extracted Model Name: {model_name}")
+    print(f"Inference Directory: {output_dir}")
     return output_dir
 
 if __name__ == '__main__':
     print("=" * 60)
-    print("输出目录结构测试")
+    print("Output Directory Structure Test")
     print("=" * 60)
     
-    # 测试训练目录
+    # Test training directory
     train_dir = test_training_dir()
     
-    # 测试推理目录（多种情况）
+    # Test inference directory (multiple scenarios)
     test_cases = [
         'outputs/training/26-01-16/models',
         './outputs/training/26-01-17/models',
@@ -52,5 +52,5 @@ if __name__ == '__main__':
         test_inference_dir(model_dir)
     
     print("\n" + "=" * 60)
-    print("测试完成")
+    print("Test Complete")
     print("=" * 60)

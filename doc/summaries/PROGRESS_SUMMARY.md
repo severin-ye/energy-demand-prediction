@@ -1,91 +1,91 @@
-# 项目整理总结
+# Project Cleanup & Progress Summary
 
-## ✅ 已完成任务
+## ✅ Completed Tasks
 
-### 1. 数据文件夹结构整理
+### 1. Data Folder Structure Organization
 
-**新的目录结构**：
+**New Directory Structure**:
 ```
 data/
-├── uci/                          # UCI真实数据集
-│   ├── raw/                      # 原始数据（127 MB）
+├── uci/                          # UCI Real-world Dataset
+│   ├── raw/                      # Raw data (127 MB)
 │   │   └── household_power_consumption.txt
-│   ├── processed/                # 预处理后（16 MB）
+│   ├── processed/                # Preprocessed data (16 MB)
 │   │   └── uci_household_clean.csv
-│   └── splits/                   # 训练/测试划分
-│       ├── train.csv (15 MB, 131,435样本, 95%)
-│       └── test.csv (776 KB, 6,917样本, 5%)
+│   └── splits/                   # Train/Test splits
+│       ├── train.csv (15 MB, 131,435 samples, 95%)
+│       └── test.csv (776 KB, 6,917 samples, 5%)
 │
-├── synthetic/                    # 合成数据集
+├── synthetic/                    # Synthetic Dataset
 │   ├── raw/
-│   │   └── training_data.csv (2,000样本)
-│   └── scenarios/                # 7个测试场景
+│   │   └── training_data.csv (2,000 samples)
+│   └── scenarios/                # 7 Test Scenarios
 │       ├── heatwave.csv, coldwave.csv
 │       ├── high_temp_humid.csv, low_temp_humid.csv
 │       ├── moderate.csv, peak_hour.csv, valley_hour.csv
 │       └── scenario_*.csv
 │
 └── processed/
-    └── synthetic_energy_data.csv (旧数据，待清理)
+    └── synthetic_energy_data.csv (Old data, to be cleaned)
 ```
 
-**说明文档**：
-- `data/README.md`: 完整的数据文件夹说明文档
+**Documentation**:
+- `data/README.md`: Complete data folder description document.
 
 ---
 
-### 2. Git配置
+### 2. Git Configuration
 
-**`.gitignore`已创建**，排除：
-- UCI大文件（>100MB）：`data/uci/raw/`, `data/uci/processed/`, `data/uci/splits/`
-- 训练输出：`outputs/`, `*.h5`, `*.keras`, `*.pkl`
-- Python缓存：`__pycache__/`, `*.pyc`
-- 虚拟环境：`.venv/`
+**`.gitignore` created**, excluding:
+- Large UCI files (>100MB): `data/uci/raw/`, `data/uci/processed/`, `data/uci/splits/`
+- Training outputs: `outputs/`, `*.h5`, `*.keras`, `*.pkl`
+- Python cache: `__pycache__/`, `*.pyc`
+- Virtual environment: `.venv/`
 
-**提交建议**：
+**Commit Recommendations**:
 ```bash
 git add .gitignore
 git add data/README.md
-git add data/synthetic/  # 合成数据很小可以提交
-git commit -m "整理数据文件夹结构，配置.gitignore"
+git add data/synthetic/  # Synthetic data is small enough to commit
+git commit -m "Organized data folder structure and configured .gitignore"
 ```
 
 ---
 
-### 3. 数据处理代码模块化
+### 3. Modularization of Data Processing Code
 
-**新模块**：`src/data_processing/`
+**New Module**: `src/data_processing/`
 
-**文件结构**：
+**File Structure**:
 ```
 src/data_processing/
 ├── __init__.py
-├── uci_loader.py          # UCI数据加载器
-│   └── UCIDataLoader类
-│       ├── download()      # 下载数据
-│       ├── load_raw()      # 加载原始数据
-│       ├── preprocess()    # 预处理
+├── uci_loader.py          # UCI Data Loader
+│   └── UCIDataLoader Class
+│       ├── download()      # Download data
+│       ├── load_raw()      # Load raw data
+│       ├── preprocess()    # Preprocessing
 │       └── save_processed()
 │
-└── data_splitter.py       # 数据划分器
-    └── DataSplitter类
-        ├── split_sequential()  # 顺序划分
-        ├── split_random()      # 随机划分
+└── data_splitter.py       # Data Splitter
+    └── DataSplitter Class
+        ├── split_sequential()  # Sequential split
+        ├── split_random()      # Random split
         └── save_splits()
 ```
 
-**使用示例**：
+**Usage Example**:
 ```python
 from src.data_processing import UCIDataLoader, DataSplitter
 
-# 加载和预处理
+# Load and preprocess
 loader = UCIDataLoader(data_dir='data/uci')
 loader.download(method='direct')
 df_raw = loader.load_raw()
 df_clean = loader.preprocess(df_raw, resample_freq='15T')
 loader.save_processed(df_clean)
 
-# 划分训练/测试集
+# Split train/test sets
 splitter = DataSplitter(output_dir='data/uci/splits')
 train_df, test_df = splitter.split_sequential(df_clean, test_ratio=0.05)
 splitter.save_splits(train_df, test_df)
@@ -93,54 +93,54 @@ splitter.save_splits(train_df, test_df)
 
 ---
 
-### 4. UCI数据集划分
+### 4. UCI Dataset Splitting
 
-**脚本**：`scripts/split_uci_dataset.py`
+**Script**: `scripts/split_uci_dataset.py`
 
-**划分结果**：
-- **训练集**: 131,435 样本 (95%)
-  - 时间范围: 2006-12-16 ~ 2010-09-15
-  - 文件: `data/uci/splits/train.csv` (15 MB)
-  - 目标变量均值: 1.086 kW, 标准差: 0.992
+**Splitting Results**:
+- **Training Set**: 131,435 samples (95%)
+  - Time Range: 2006-12-16 ~ 2010-09-15
+  - File: `data/uci/splits/train.csv` (15 MB)
+  - Target variable mean: 1.086 kW, Std: 0.992
 
-- **测试集**: 6,917 样本 (5%)
-  - 时间范围: 2010-09-15 ~ 2010-11-26
-  - 文件: `data/uci/splits/test.csv` (776 KB)
-  - 目标变量均值: 1.091 kW, 标准差: 0.910
+- **Test Set**: 6,917 samples (5%)
+  - Time Range: 2010-09-15 ~ 2010-11-26
+  - File: `data/uci/splits/test.csv` (776 KB)
+  - Target variable mean: 1.091 kW, Std: 0.910
 
-**使用方法**：
+**Usage Usage**:
 ```bash
 python scripts/split_uci_dataset.py --test-ratio 0.05
 ```
 
 ---
 
-### 5. 训练脚本支持UCI数据
+### 5. Training Script Support for UCI Data
 
-**脚本更新**：`scripts/run_training.py`
+**Script Updated**: `scripts/run_training.py`
 
-**新功能**：
-- ✅ 自动检测数据类型（UCI vs 合成数据）
-- ✅ UCI数据特征映射：
-  - 输入特征: `Global_reactive_power`, `Voltage`, `Global_intensity`
-  - 目标变量: `Global_active_power` → `EDP`
-- ✅ 命令行参数：
-  - `--data`: 数据路径
-  - `--data-type`: 数据类型（auto/uci/synthetic）
-  - `--epochs`: 训练轮数
-  - `--batch-size`: 批次大小
-  - `--output-dir`: 输出目录
+**New Features**:
+- ✅ Auto-detection of data types (UCI vs Synthetic)
+- ✅ UCI Data Feature Mapping:
+  - Input Features: `Global_reactive_power`, `Voltage`, `Global_intensity`
+  - Target Variable: `Global_active_power` → `EDP`
+- ✅ Command Line Arguments:
+  - `--data`: Path to data file
+  - `--data-type`: Data type (auto/uci/synthetic)
+  - `--epochs`: Number of training epochs
+  - `--batch-size`: Batch size
+  - `--output-dir`: Output directory
 
-**使用方法**：
+**Usage Usage**:
 ```bash
-# UCI真实数据训练
+# Training with UCI real-world data
 python scripts/run_training.py \
     --data data/uci/splits/train.csv \
     --epochs 20 \
     --batch-size 64 \
     --output-dir outputs/training_uci
 
-# 合成数据训练
+# Training with synthetic data
 python scripts/run_training.py \
     --data data/synthetic/raw/training_data.csv \
     --data-type synthetic \
@@ -150,53 +150,53 @@ python scripts/run_training.py \
 
 ---
 
-### 6. UCI真实数据训练（✅ 已完成）
+### 6. UCI Real-world Data Training (✅ Completed)
 
-**训练结果**：
-- ✅ **成功完成**：20轮训练，总耗时 **5分钟**
-- ✅ **最终性能**：loss 0.2655, MAE 0.3150
-- ✅ **性能提升**：损失降低30%, MAE降低18%
-- ✅ **模型参数**：58,867个参数
+**Training Results**:
+- ✅ **Successfully Completed**: 20 epochs of training, total time **5 minutes**
+- ✅ **Final Performance**: loss 0.2655, MAE 0.3150
+- ✅ **Performance Improvement**: Loss reduced by 30%, MAE reduced by 18%
+- ✅ **Model Parameters**: 58,867 parameters
 
-**数据集**：
-- 训练样本：131,435条记录
-- 训练序列：131,415个（20步长）
-- 特征维度：(131,415, 20, 3)
+**Dataset**:
+- Training samples: 131,435 records
+- Training sequences: 131,415 (sequence length 20)
+- Feature dimensions: (131,415, 20, 3)
 
-**9步流水线结果**：
-1. ✅ 数据预处理：131,415序列
-2. ✅ 模型训练：20轮收敛良好
-3. ✅ DLP提取：CAM(131,415,10) + Attention(131,415,20)
-4. ✅ DLP聚类：CAM 3类, Attention 3类
-5. ✅ 状态分类：Lower 56.9%, Normal 33.6%, Peak 9.5%
-6. ✅ 特征离散化：6特征 × 4bins
-7. ✅ 关联规则：**13条EDP相关规则**
-8. ✅ 贝叶斯网络：**6节点，12边**
-9. ✅ 模型保存：7个模型文件（~2.3MB）
+**9-Step Pipeline Results**:
+1. ✅ Data Preprocessing: 131,415 sequences
+2. ✅ Model Training: 20 epochs, good convergence
+3. ✅ DLP Extraction: CAM (131,415, 10) + Attention (131,415, 20)
+4. ✅ DLP Clustering: CAM (3 classes), Attention (3 classes)
+5. ✅ State Classification: Lower 56.9%, Normal 33.6%, Peak 9.5%
+6. ✅ Feature Discretization: 6 features × 4 bins
+7. ✅ Association Rules: **13 EDP-related rules**
+8. ✅ Bayesian Network: **6 nodes, 12 edges**
+9. ✅ Model Saving: 7 model files (~2.3 MB)
 
-**输出文件**：
-- 模型：`outputs/training_uci/models/` (7个文件)
-- 结果：`outputs/training_uci/results/` (关联规则 + BN图)
-- 报告：`outputs/training_uci/TRAINING_REPORT.md`
+**Output Files**:
+- Models: `outputs/training_uci/models/` (7 files)
+- Results: `outputs/training_uci/results/` (Association Rules + BN graph)
+- Report: `outputs/training_uci/TRAINING_REPORT.md`
 
 ---
 
-## 📝 文件清单
+## 📝 File Inventory
 
-### 新增文件
-1. `data/README.md` - 数据文件夹说明文档
-2. `.gitignore` - Git忽略配置
-3. `src/data_processing/__init__.py` - 数据处理模块
-4. `src/data_processing/uci_loader.py` - UCI数据加载器
-5. `src/data_processing/data_splitter.py` - 数据集划分器
-6. `scripts/split_uci_dataset.py` - 数据集划分脚本
-7. `doc/数据集说明-UCI_Household.md` - UCI数据集详细文档
+### New Files
+1. `data/README.md` - Data folder description
+2. `.gitignore` - Git ignore configuration
+3. `src/data_processing/__init__.py` - Data processing module
+4. `src/data_processing/uci_loader.py` - UCI data loader
+5. `src/data_processing/data_splitter.py` - Data set splitter
+6. `scripts/split_uci_dataset.py` - Dataset splitting script
+7. `doc/DATASET_UCI_HOUSEHOLD.md` - Detailed UCI dataset document
 
-### 修改文件
-1. `scripts/run_training.py` - 支持UCI数据的训练脚本
-2. `scripts/download_uci_data.py` - 带进度条的下载脚本
+### Modified Files
+1. `scripts/run_training.py` - Training script supporting UCI data
+2. `scripts/download_uci_data.py` - Download script with progress bar
 
-### 数据文件（已生成）
+### Data Files (Generated)
 1. `data/uci/raw/household_power_consumption.txt` (127 MB)
 2. `data/uci/processed/uci_household_clean.csv` (16 MB)
 3. `data/uci/splits/train.csv` (15 MB, 95%)
@@ -204,95 +204,95 @@ python scripts/run_training.py \
 
 ---
 
-## 🎯 下一步计划
+## 🎯 Next Steps
 
-### 等待训练完成后
-1. **评估模型性能**：
-   - 在测试集上评估
-   - 计算MSE、RMSE、MAE
-   - 与论文报告的指标对比
+### After Training Completion
+1. **Model Performance Evaluation**:
+   - Evaluate on the test set
+   - Calculate MSE, RMSE, MAE
+   - Compare with metrics reported in the paper
 
-2. **运行推理测试**：
+2. **Run Inference Tests**:
    ```bash
    python scripts/run_inference.py \
        --model-dir outputs/training_uci/models \
        --data data/uci/splits/test.csv
    ```
 
-3. **完成单元测试** (Task 14)：
-   - 测试UCI数据加载器
-   - 测试数据划分器
-   - 测试训练流程
-   - 测试推理流程
+3. **Complete Unit Tests** (Task 14):
+   - Test UCI data loader
+   - Test data splitter
+   - Test training pipeline
+   - Test inference pipeline
 
-4. **性能基准测试** (Task 15)：
-   - 与基线模型对比
-   - 计算训练/推理时间
-   - 生成性能报告
+4. **Performance Benchmarking** (Task 15):
+   - Compare with baseline models
+   - Calculate training/inference time
+   - Generate performance report
 
 ---
 
-## 📊 数据集对比
+## 📊 Dataset Comparison
 
-| 指标 | UCI真实数据 | 合成数据 |
+| Metric | UCI Real-world Data | Synthetic Data |
 |------|------------|---------|
-| **训练集样本** | 131,435 | 2,000 |
-| **测试集样本** | 6,917 | - |
-| **时间跨度** | 47个月 | 可配置 |
-| **目标变量** | Global_active_power (kW) | EDP (kWh) |
-| **输入特征** | 3个电力特征 | 3个气象特征 |
-| **均值** | 1.086 kW | 120 kWh |
-| **范围** | 0.08-8.57 kW | 63-185 kWh |
-| **文件大小** | 15 MB (训练) | 158 KB |
-| **训练时间** | ~5-8分钟 | ~1-2分钟 |
+| **Training Samples** | 131,435 | 2,000 |
+| **Test Samples** | 6,917 | - |
+| **Time Span** | 47 months | Configurable |
+| **Target Variable** | Global_active_power (kW) | EDP (kWh) |
+| **Input Features** | 3 Power Features | 3 Weather Features |
+| **Mean** | 1.086 kW | 120 kWh |
+| **Range** | 0.08-8.57 kW | 63-185 kWh |
+| **File Size** | 15 MB (Train) | 158 KB |
+| **Training Time** | ~5-8 minutes | ~1-2 minutes |
 
 ---
 
-## ✅ 质量检查
+## ✅ Quality Check
 
-### 数据质量
-- ✅ 无缺失值（已处理）
-- ✅ 时间连续性良好
-- ✅ 目标变量分布合理
-- ✅ 特征归一化正常
+### Data Quality
+- ✅ No missing values (handled)
+- ✅ Good temporal continuity
+- ✅ Reasonable distribution of target variable
+- ✅ Normal feature normalization
 
-### 代码质量
-- ✅ 模块化设计
-- ✅ 类型注释完整
-- ✅ 日志记录详细
-- ✅ 错误处理健全
+### Code Quality
+- ✅ Modular design
+- ✅ Complete type annotations
+- ✅ Detailed logging
+- ✅ Robust error handling
 
-### 文档质量
-- ✅ README完整
-- ✅ 代码注释清晰
-- ✅ 使用示例充分
-- ✅ 参数说明详细
+### Documentation Quality
+- ✅ Complete README
+- ✅ Clear code comments
+- ✅ Ample usage examples
+- ✅ Detailed parameter descriptions
 
 ---
 
-**最后更新**: 2026-01-16 17:47
-**训练状态**: ✅ **全部完成！** （6/6任务）
+**Last Updated**: 2026-01-16 17:47
+**Training Status**: ✅ **All Completed!** (6/6 Tasks)
 
-## 🎉 项目完成总结
+## 🎉 Project Completion Summary
 
-### 所有任务已完成
-1. ✅ 数据文件夹结构整理
-2. ✅ .gitignore配置
-3. ✅ 数据处理代码模块化
-4. ✅ UCI数据集划分（95%/5%）
-5. ✅ 训练脚本支持UCI数据
-6. ✅ **UCI真实数据训练成功**
+### All Tasks Completed
+1. ✅ Data folder structure organization
+2. ✅ .gitignore configuration
+3. ✅ Data processing code modularization
+4. ✅ UCI dataset splitting (95%/5%)
+5. ✅ Training script support for UCI data
+6. ✅ **UCI real-world data training successful**
 
-### 关键成果
-- **训练时间**：5分钟（20轮）
-- **模型性能**：MAE 0.3150（降低18%）
-- **因果推理**：13条关联规则，12边贝叶斯网络
-- **模型文件**：7个完整模型（2.3MB）
-- **详细报告**：`outputs/training_uci/TRAINING_REPORT.md`
+### Key Results
+- **Training Time**: 5 minutes (20 epochs)
+- **Model Performance**: MAE 0.3150 (reduction of 18%)
+- **Causal Inference**: 13 association rules, 12-edge Bayesian Network
+- **Model Files**: 7 complete models (2.3 MB)
+- **Detailed Report**: `outputs/training_uci/TRAINING_REPORT.md`
 
-### 下一步建议
-1. 在测试集上评估模型性能
-2. 运行推理测试
-3. 编写单元测试
-4. 性能基准测试
-5. 撰写技术文档
+### Recommendations for Next Steps
+1. Evaluate model performance on the test set
+2. Run inference tests
+3. Write unit tests
+4. Performance benchmarking
+5. Draft technical documentation

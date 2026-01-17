@@ -1,136 +1,136 @@
 #!/usr/bin/env python3
 """
-演示：为什么样本数太少会导致推理错误
+Demo: Why Insufficient Samples Lead to Inference Errors
 
-问题根源：序列长度要求
+Root Cause: Sequence Length Requirements
 """
 
 import numpy as np
 
 def create_sequences_demo(data, sequence_length=20):
     """
-    模拟 create_sequences 函数的行为
+    Simulates the behavior of the create_sequences function
     
-    参数:
-        data: 输入数据 [样本数,]
-        sequence_length: 序列长度（滑动窗口大小）
+    Parameters:
+        data: Input data [sample_count,]
+        sequence_length: Sequence length (sliding window size)
     
-    返回:
-        序列数组和对应的目标值
+    Returns:
+        Sequence array and corresponding target values
     """
     print(f"\n{'='*60}")
-    print(f"输入数据: {len(data)} 个样本")
-    print(f"序列长度: {sequence_length}")
+    print(f"Input Data: {len(data)} samples")
+    print(f"Sequence Length: {sequence_length}")
     print(f"{'='*60}\n")
     
     X, y = [], []
     
-    # 这是关键循环：range(len(data) - sequence_length)
+    # The critical loop: range(len(data) - sequence_length)
     max_index = len(data) - sequence_length
-    print(f"循环范围: range(0, {max_index})")
-    print(f"  → 可生成的序列数: {max_index}\n")
+    print(f"Loop Range: range(0, {max_index})")
+    print(f"  → Sequences that can be generated: {max_index}\n")
     
     if max_index <= 0:
-        print(f"❌ 错误！无法生成序列")
-        print(f"   原因: 样本数({len(data)}) ≤ 序列长度({sequence_length})")
-        print(f"   需要: 样本数 > {sequence_length}")
+        print(f"❌ Error! Cannot generate sequences")
+        print(f"   Reason: Sample count({len(data)}) ≤ Sequence length({sequence_length})")
+        print(f"   Requirement: Sample count > {sequence_length}")
         return None, None
     
-    print(f"✅ 可以生成 {max_index} 个序列\n")
-    print("序列构建过程:")
+    print(f"✅ Can generate {max_index} sequences\n")
+    print("Sequence Construction Process:")
     
     for i in range(max_index):
-        # 取窗口 [i : i+sequence_length]
+        # Slice window [i : i+sequence_length]
         sequence = data[i:i + sequence_length]
         target = data[i + sequence_length]
         
         X.append(sequence)
         y.append(target)
         
-        if i < 3:  # 只显示前3个示例
-            print(f"  序列 {i}: data[{i}:{i+sequence_length}] → 目标 data[{i+sequence_length}]")
-            print(f"          值: {sequence} → {target}")
+        if i < 3:  # Only display the first 3 examples
+            print(f"  Sequence {i}: data[{i}:{i+sequence_length}] → Target data[{i+sequence_length}]")
+            print(f"          Values: {sequence} → {target}")
     
     if max_index > 3:
-        print(f"  ... ({max_index - 3} 个序列省略)")
+        print(f"  ... ({max_index - 3} sequences omitted)")
     
     return np.array(X), np.array(y)
 
 
 def test_cases():
-    """测试不同样本数的情况"""
+    """Test cases for different sample counts"""
     
     print("\n" + "="*70)
-    print("测试案例：不同样本数的序列生成")
+    print("Test Cases: Sequence Generation with Different Sample Counts")
     print("="*70)
     
     sequence_length = 20
     
-    # 测试案例1: 样本数太少（10个）
-    print("\n【案例 1】样本数太少")
+    # Case 1: Too few samples (10)
+    print("\n【Case 1】Insufficient Samples")
     data1 = np.arange(10)
     X1, y1 = create_sequences_demo(data1, sequence_length)
     
-    # 测试案例2: 样本数刚好等于序列长度（20个）
-    print("\n\n【案例 2】样本数 = 序列长度")
+    # Case 2: Sample count equals sequence length (20)
+    print("\n\n【Case 2】Sample Count = Sequence Length")
     data2 = np.arange(20)
     X2, y2 = create_sequences_demo(data2, sequence_length)
     
-    # 测试案例3: 样本数略多于序列长度（25个）
-    print("\n\n【案例 3】样本数略多（25个）")
+    # Case 3: Slightly more samples (25)
+    print("\n\n【Case 3】Slightly more samples (25)")
     data3 = np.arange(25)
     X3, y3 = create_sequences_demo(data3, sequence_length)
     
-    # 测试案例4: 样本数充足（50个）
-    print("\n\n【案例 4】样本数充足（50个）")
+    # Case 4: Sufficient samples (50)
+    print("\n\n【Case 4】Sufficient samples (50)")
     data4 = np.arange(50)
     X4, y4 = create_sequences_demo(data4, sequence_length)
     
-    # 总结
+    # Summary
     print("\n\n" + "="*70)
-    print("总结")
+    print("Summary")
     print("="*70)
-    print(f"\n给定序列长度 = {sequence_length}:\n")
-    print(f"  • 样本数 = 10  → 序列数 = 0  ❌ (太少，无法生成)")
-    print(f"  • 样本数 = 20  → 序列数 = 0  ❌ (刚好，但仍无法生成)")
-    print(f"  • 样本数 = 21  → 序列数 = 1  ⚠️  (勉强可用)")
-    print(f"  • 样本数 = 25  → 序列数 = 5  ⚠️  (太少)")
-    print(f"  • 样本数 = 30  → 序列数 = 10 ✅ (可用)")
-    print(f"  • 样本数 = 50  → 序列数 = 30 ✅ (推荐)")
-    print(f"\n公式: 序列数 = max(0, 样本数 - 序列长度)")
-    print(f"\n推荐: 样本数 ≥ {sequence_length + 30} (至少能生成30个序列)")
+    print(f"\nGiven Sequence Length = {sequence_length}:\n")
+    print(f"  • Samples = 10  → Sequences = 0  ❌ (Too few to generate)")
+    print(f"  • Samples = 20  → Sequences = 0  ❌ (Equal, but still cannot generate)")
+    print(f"  • Samples = 21  → Sequences = 1  ⚠️  (Barely usable)")
+    print(f"  • Samples = 25  → Sequences = 5  ⚠️  (Still low)")
+    print(f"  • Samples = 30  → Sequences = 10 ✅ (Usable)")
+    print(f"  • Samples = 50  → Sequences = 30 ✅ (Recommended)")
+    print(f"\nFormula: Num Sequences = max(0, Num Samples - Sequence Length)")
+    print(f"\nRecommendation: Num Samples ≥ {sequence_length + 30} (to generate at least 30 sequences)")
 
 
 def explain_batch_outputs_error():
-    """解释 batch_outputs 错误"""
+    """Explain the 'batch_outputs' error"""
     
     print("\n\n" + "="*70)
-    print("为什么会出现 'batch_outputs' 错误？")
+    print("Why does the 'batch_outputs' error occur?")
     print("="*70)
     
     print("""
-当样本数太少时的执行流程：
+Execution flow when samples are insufficient:
 
-1️⃣  用户输入: 20 个样本
-2️⃣  预处理器创建序列:
+1️⃣  User Input: 20 samples
+2️⃣  Preprocessor creates sequences:
     - sequence_length = 20
-    - 可生成序列数 = 20 - 20 = 0
-    - 返回: X=[], y=[]  (空数组！)
+    - Sequences to generate = 20 - 20 = 0
+    - Result: X=[], y=[]  (Empty arrays!)
 
-3️⃣  模型预测:
-    - model.predict(X) 其中 X.shape = (0, 20, 3)
-    - Keras 发现没有数据可预测
-    - 循环体从未执行
-    - batch_outputs 变量从未被赋值
+3️⃣  Model Prediction:
+    - model.predict(X) where X.shape = (0, 20, 3)
+    - Keras finds no data to predict
+    - The loop body never executes
+    - The variable 'batch_outputs' is never assigned
 
-4️⃣  访问变量:
-    - 代码尝试访问 batch_outputs
+4️⃣  Variable Access:
+    - Code attempts to access 'batch_outputs'
     - UnboundLocalError: cannot access local variable 'batch_outputs'
 
-解决方案:
-  ✅ 确保样本数 > sequence_length
-  ✅ 推荐: 样本数 ≥ sequence_length + 30
-  ✅ 对于 sequence_length=20，建议至少 50 个样本
+Solutions:
+  ✅ Ensure Sample Count > sequence_length
+  ✅ Recommended: Sample Count ≥ sequence_length + 30
+  ✅ For sequence_length=20, at least 50 samples are suggested
 """)
 
 
@@ -139,27 +139,30 @@ if __name__ == '__main__':
     explain_batch_outputs_error()
     
     print("\n" + "="*70)
-    print("实际项目中的最小样本数要求")
+    print("Minimum Sample Requirements in Actual Projects")
     print("="*70)
+    
+    
+
     print("""
-训练配置: sequence_length = 20
+Training Config: sequence_length = 20
 
-推理时的样本数要求:
-  • 最小值: 21 个样本 (生成 1 个序列)
-  • 安全值: 50 个样本 (生成 30 个序列) ✅
-  • 推荐值: 100+ 个样本 (生成 80+ 个序列) ✅✅
+Sample requirements for Inference:
+  • Minimum: 21 samples (generates 1 sequence)
+  • Safe Value: 50 samples (generates 30 sequences) ✅
+  • Recommended: 100+ samples (generates 80+ sequences) ✅✅
 
-为什么需要更多样本？
-  1. 统计意义: 更多样本 → 更可靠的性能评估
-  2. HTML报告: 默认生成前10个样本的详细报告
-  3. 分布分析: 需要足够样本来分析状态分布
-  4. 可视化: 更多数据点 → 更有意义的可视化
+Why are more samples needed?
+  1. Statistical Significance: More samples → More reliable performance evaluation
+  2. HTML Reports: Detailed reports are generated for the first 10 samples by default
+  3. Distribution Analysis: Enough samples are needed for meaningful state distribution analysis
+  4. Visualization: More data points → More meaningful visualizations
 
-建议:
+Recommendation:
   python scripts/run_inference_uci.py \\
     --model-dir outputs/training/26-01-16/models \\
     --test-data data/uci/splits/test.csv \\
-    --n-samples 50   # 或更多 ✅
+    --n-samples 50   # Or more ✅
 """)
     
     print("\n" + "="*70 + "\n")

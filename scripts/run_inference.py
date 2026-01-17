@@ -1,6 +1,6 @@
 """
-推理测试脚本
-加载训练好的模型，对新数据进行预测并生成因果解释和建议
+Inference Test Script
+Loads the trained model, performs predictions on new data, and generates causal explanations and recommendations.
 """
 
 import sys
@@ -11,12 +11,12 @@ import logging
 import json
 from pathlib import Path
 
-# 添加项目路径
+# Add project path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from src.pipeline.inference_pipeline import InferencePipeline
 
-# 配置日志
+# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(levelname)s: %(message)s'
@@ -25,13 +25,13 @@ logger = logging.getLogger(__name__)
 
 
 def create_test_data(n_samples=10):
-    """创建测试数据（生成完整序列）"""
+    """Create test data (generate complete sequences)"""
     np.random.seed(42)
     
-    # 创建足够多的历史数据点(至少30个以生成序列)
+    # Create enough historical data points (at least 30 to generate sequences)
     hours = list(range(30))
     
-    # 场景1: 高温高湿序列
+    # Scenario 1: High Temperature & High Humidity sequence
     temp1 = [30 + 2*np.sin(h/24*2*np.pi) + np.random.randn()*0.5 for h in hours]
     hum1 = [70 + 5*np.cos(h/24*2*np.pi) + np.random.randn()*1 for h in hours]
     wind1 = [3 + np.random.randn()*0.5 for h in hours]
@@ -40,13 +40,13 @@ def create_test_data(n_samples=10):
         'Temperature': temp1,
         'Humidity': hum1,
         'WindSpeed': wind1,
-        'EDP': [0.0] * 30,  # 占位符
+        'EDP': [0.0] * 30,  # Placeholder
         'Hour': [(14 + h) % 24 for h in hours],
         'DayOfWeek': [2] * 30,
         'Month': [7] * 30
     })
     
-    # 场景2: 低温低湿序列
+    # Scenario 2: Low Temperature & Low Humidity sequence
     temp2 = [12 + 2*np.sin(h/24*2*np.pi) + np.random.randn()*0.5 for h in hours]
     hum2 = [40 + 5*np.cos(h/24*2*np.pi) + np.random.randn()*1 for h in hours]
     wind2 = [8 + np.random.randn()*0.5 for h in hours]
@@ -55,13 +55,13 @@ def create_test_data(n_samples=10):
         'Temperature': temp2,
         'Humidity': hum2,
         'WindSpeed': wind2,
-        'EDP': [0.0] * 30,
+        'EDP': [0.0] * 30,  # Placeholder
         'Hour': [(3 + h) % 24 for h in hours],
         'DayOfWeek': [1] * 30,
         'Month': [3] * 30
     })
     
-    # 场景3: 适中温度序列
+    # Scenario 3: Moderate Temperature sequence
     temp3 = [20 + 2*np.sin(h/24*2*np.pi) + np.random.randn()*0.5 for h in hours]
     hum3 = [55 + 5*np.cos(h/24*2*np.pi) + np.random.randn()*1 for h in hours]
     wind3 = [5 + np.random.randn()*0.5 for h in hours]
@@ -70,16 +70,16 @@ def create_test_data(n_samples=10):
         'Temperature': temp3,
         'Humidity': hum3,
         'WindSpeed': wind3,
-        'EDP': [0.0] * 30,
+        'EDP': [0.0] * 30,  # Placeholder
         'Hour': [(10 + h) % 24 for h in hours],
         'DayOfWeek': [3] * 30,
         'Month': [5] * 30
     })
     
     scenarios = [
-        ('高温高湿场景', scenario1),
-        ('低温低湿场景', scenario2),
-        ('适中温度场景', scenario3)
+        ('High Temp & Humid Scenario', scenario1),
+        ('Low Temp & Humid Scenario', scenario2),
+        ('Moderate Temp Scenario', scenario3)
     ]
     
     return scenarios
@@ -87,65 +87,65 @@ def create_test_data(n_samples=10):
 
 def main():
     logger.info("=" * 80)
-    logger.info(" " * 30 + "推理测试流水线")
+    logger.info(" " * 30 + "Inference Test Pipeline")
     logger.info("=" * 80)
     logger.info("")
     
-    # 1. 加载模型
-    logger.info("[步骤 1] 加载训练好的模型...")
+    # 1. Load Model
+    logger.info("[Step 1] Loading trained model...")
     model_dir = './outputs/training_run_1/models'
     
     if not os.path.exists(model_dir):
-        logger.error(f"❌ 模型目录不存在: {model_dir}")
-        logger.error("请先运行训练脚本: python scripts/run_training.py")
+        logger.error(f"❌ Model directory does not exist: {model_dir}")
+        logger.error("Please run the training script first: python scripts/run_training.py")
         return
     
     try:
         pipeline = InferencePipeline(model_dir)
-        logger.info(f"✅ 模型加载成功，目录: {model_dir}")
+        logger.info(f"✅ Model loaded successfully from: {model_dir}")
     except Exception as e:
-        logger.error(f"❌ 模型加载失败: {e}")
+        logger.error(f"❌ Failed to load model: {e}")
         import traceback
         traceback.print_exc()
         return
     
     logger.info("")
     
-    # 2. 创建测试数据
-    logger.info("[步骤 2] 准备测试数据...")
+    # 2. Create Test Data
+    logger.info("[Step 2] Preparing test data...")
     scenarios = create_test_data()
-    logger.info(f"✅ 测试数据准备完成: {len(scenarios)} 个场景")
-    logger.info(f"场景: {', '.join([name for name, _ in scenarios])}")
+    logger.info(f"✅ Test data preparation complete: {len(scenarios)} scenarios")
+    logger.info(f"Scenarios: {', '.join([name for name, _ in scenarios])}")
     logger.info("")
     
-    # 3. 运行推理
-    logger.info("[步骤 3] 执行推理...")
+    # 3. Run Inference
+    logger.info("[Step 3] Executing inference...")
     logger.info("=" * 60)
     
     results_list = []
     
     for idx, (scenario_name, test_data) in enumerate(scenarios, 1):
         logger.info("")
-        logger.info(f"场景 {idx}: {scenario_name}")
+        logger.info(f"Scenario {idx}: {scenario_name}")
         logger.info("-" * 60)
-        logger.info(f"输入数据: {len(test_data)} 个时间步")
-        logger.info(f"  温度范围: {test_data['Temperature'].min():.1f} ~ {test_data['Temperature'].max():.1f}°C")
-        logger.info(f"  湿度范围: {test_data['Humidity'].min():.1f} ~ {test_data['Humidity'].max():.1f}%")
-        logger.info(f"  风速范围: {test_data['WindSpeed'].min():.1f} ~ {test_data['WindSpeed'].max():.1f}m/s")
+        logger.info(f"Input Data: {len(test_data)} time steps")
+        logger.info(f"  Temp Range: {test_data['Temperature'].min():.1f} ~ {test_data['Temperature'].max():.1f}°C")
+        logger.info(f"  Humidity Range: {test_data['Humidity'].min():.1f} ~ {test_data['Humidity'].max():.1f}%")
+        logger.info(f"  Wind Speed Range: {test_data['WindSpeed'].min():.1f} ~ {test_data['WindSpeed'].max():.1f}m/s")
         logger.info("")
         
         try:
-            # 运行推理（不生成建议，避免贝叶斯网络问题）
+            # Run inference (recommendations disabled to avoid potential Bayesian network issues)
             result = pipeline.predict(test_data, generate_recommendations=False)
             
-            # 显示结果（取最后一个预测）
+            # Display results (taking the last prediction)
             idx_last = -1
-            logger.info(f"📊 预测结果:")
-            logger.info(f"  EDP预测值: {result['predictions'][idx_last]:.2f} kWh")
-            logger.info(f"  EDP状态: {result['edp_states'][idx_last]}")
-            logger.info(f"  CAM聚类: Cluster {result['cam_clusters'][idx_last]}")
-            logger.info(f"  Attention类型: {result['attention_types'][idx_last]}")
-            logger.info(f"  生成序列数: {len(result['predictions'])}")
+            logger.info(f"📊 Prediction Results:")
+            logger.info(f"  EDP Predicted Value: {result['predictions'][idx_last]:.2f} kWh")
+            logger.info(f"  EDP State: {result['edp_states'][idx_last]}")
+            logger.info(f"  CAM Cluster: Cluster {result['cam_clusters'][idx_last]}")
+            logger.info(f"  Attention Type: {result['attention_types'][idx_last]}")
+            logger.info(f"  Sequences Generated: {len(result['predictions'])}")
             
             results_list.append({
                 'scenario': scenario_name,
@@ -158,16 +158,16 @@ def main():
             })
             
         except Exception as e:
-            logger.error(f"❌ 推理失败: {e}")
+            logger.error(f"❌ Inference failed: {e}")
             import traceback
             traceback.print_exc()
     
     logger.info("")
     logger.info("=" * 60)
     
-    # 4. 保存结果
+    # 4. Save Results
     logger.info("")
-    logger.info("[步骤 4] 保存推理结果...")
+    logger.info("[Step 4] Saving inference results...")
     
     output_dir = './outputs/inference_results'
     os.makedirs(output_dir, exist_ok=True)
@@ -176,11 +176,11 @@ def main():
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(results_list, f, indent=2, ensure_ascii=False)
     
-    logger.info(f"✅ 结果已保存到: {output_file}")
+    logger.info(f"✅ Results saved to: {output_file}")
     logger.info("")
     
-    # 5. 汇总统计
-    logger.info("[步骤 5] 结果汇总")
+    # 5. Summary Statistics
+    logger.info("[Step 5] Results Summary")
     logger.info("=" * 60)
     
     if results_list:
@@ -190,13 +190,13 @@ def main():
                 all_preds.append(r['predictions']['edp'])
         
         if all_preds:
-            logger.info(f"EDP预测统计:")
-            logger.info(f"  最小值: {min(all_preds):.2f} kWh")
-            logger.info(f"  最大值: {max(all_preds):.2f} kWh")
-            logger.info(f"  平均值: {np.mean(all_preds):.2f} kWh")
+            logger.info(f"EDP Prediction Statistics:")
+            logger.info(f"  Minimum: {min(all_preds):.2f} kWh")
+            logger.info(f"  Maximum: {max(all_preds):.2f} kWh")
+            logger.info(f"  Average: {np.mean(all_preds):.2f} kWh")
     
     logger.info("")
-    logger.info("✅ 推理测试完成！")
+    logger.info("✅ Inference test complete!")
     logger.info("=" * 80)
 
 

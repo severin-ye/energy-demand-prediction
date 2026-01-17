@@ -1,6 +1,6 @@
 """
-推荐生成模块
-基于因果推断结果生成可操作的节能建议
+Recommendation Generation Module
+Generates actionable energy-saving suggestions based on causal inference results.
 """
 
 import numpy as np
@@ -13,18 +13,18 @@ logger = logging.getLogger(__name__)
 
 class RecommendationEngine:
     """
-    推荐引擎
+    Recommendation Engine
     
-    功能:
-    1. 基于因果推断识别关键影响因素
-    2. 生成可操作的节能建议
-    3. 量化每条建议的预期效果
-    4. 支持多模板和上下文感知的自然语言生成
+    Functions:
+    1. Identify key influence factors based on causal inference.
+    2. Generate actionable energy-saving suggestions.
+    3. Quantify the expected effect of each suggestion.
+    4. Support multi-template and context-aware natural language generation.
     
-    参数:
-    - causal_inference: 训练好的CausalInference对象
-    - feature_mapping: 特征到可读名称的映射
-    - action_templates: 行动建议模板
+    Parameters:
+    - causal_inference: Trained CausalInference object.
+    - feature_mapping: Mapping from features to human-readable names.
+    - action_templates: Templates for action suggestions.
     """
     
     def __init__(
@@ -40,50 +40,50 @@ class RecommendationEngine:
         logger.info("RecommendationEngine initialized")
     
     def _default_mapping(self) -> Dict[str, str]:
-        """默认特征映射（可读名称）"""
+        """Default feature mapping (Readable Names)"""
         return {
-            'Temperature': '温度',
-            'Humidity': '湿度',
-            'WindSpeed': '风速',
-            'Hour': '时段',
-            'DayOfWeek': '星期',
-            'Month': '月份',
-            'Season': '季节',
-            'IsWeekend': '周末标志',
-            'EDP_State': '用电负荷'
+            'Temperature': 'Temperature',
+            'Humidity': 'Humidity',
+            'WindSpeed': 'Wind Speed',
+            'Hour': 'Time Period',
+            'DayOfWeek': 'Day of Week',
+            'Month': 'Month',
+            'Season': 'Season',
+            'IsWeekend': 'Weekend Flag',
+            'EDP_State': 'Power Load'
         }
     
     def _default_templates(self) -> Dict[str, Dict[str, str]]:
-        """默认行动建议模板"""
+        """Default action suggestion templates"""
         return {
             'Temperature': {
-                'Low': '建议降低室内温度设定，例如调低空调温度至{value}℃左右',
-                'Medium': '建议保持适中温度，避免过度制冷或制热',
-                'High': '建议提高室内温度设定，减少空调能耗',
-                'VeryHigh': '建议大幅提高温度设定，或考虑关闭部分空调'
+                'Low': 'Suggest lowering the indoor temperature setting, e.g., adjusting AC to around {value}℃',
+                'Medium': 'Suggest maintaining a moderate temperature, avoid excessive cooling or heating',
+                'High': 'Suggest increasing the indoor temperature setting to reduce AC energy consumption',
+                'VeryHigh': 'Suggest significantly increasing temperature settings or consider turning off some units'
             },
             'Humidity': {
-                'Low': '建议降低除湿设备使用，湿度控制在{value}%左右',
-                'Medium': '建议保持当前湿度水平',
-                'High': '建议提高除湿设备功率，但注意能耗平衡',
-                'VeryHigh': '建议开启除湿模式，或使用自然通风'
+                'Low': 'Suggest reducing dehumidifier usage, maintaining humidity around {value}%',
+                'Medium': 'Suggest maintaining the current humidity level',
+                'High': 'Suggest increasing dehumidifier power while being mindful of energy balance',
+                'VeryHigh': 'Suggest enabling dehumidification mode or using natural ventilation'
             },
             'WindSpeed': {
-                'Low': '建议降低通风设备功率',
-                'Medium': '建议保持当前通风水平',
-                'High': '建议利用自然风，减少机械通风',
-                'VeryHigh': '建议充分利用自然通风，关闭风扇等设备'
+                'Low': 'Suggest reducing ventilation equipment power',
+                'Medium': 'Suggest maintaining current ventilation levels',
+                'High': 'Suggest utilizing natural wind to reduce mechanical ventilation',
+                'VeryHigh': 'Suggest making full use of natural ventilation and turning off fans, etc.'
             },
             'Hour': {
-                'Peak': '当前为用电高峰时段，建议错峰使用高耗能设备',
-                'Normal': '建议合理安排用电，避免集中使用',
-                'Lower': '当前为用电低谷时段，可适当使用高耗能设备'
+                'Peak': 'Current time is a peak demand period; suggest shifting high-energy tasks to off-peak',
+                'Normal': 'Suggest arranging electricity use reasonably to avoid concentrated demand',
+                'Lower': 'Current time is an off-peak period; high-energy equipment can be used appropriately'
             },
             'Season': {
-                'Winter': '冬季建议优化供暖策略，使用定时和分区控制',
-                'Spring': '春季建议减少空调使用，多利用自然通风',
-                'Summer': '夏季建议优化制冷策略，避免过度制冷',
-                'Autumn': '秋季建议减少空调使用，多利用自然环境'
+                'Winter': 'In Winter, suggest optimizing heating strategies using timed and zone controls',
+                'Spring': 'In Spring, suggest reducing AC use and utilizing natural ventilation',
+                'Summer': 'In Summer, suggest optimizing cooling strategies to avoid over-cooling',
+                'Autumn': 'In Autumn, suggest reducing AC use and utilizing the natural environment'
             }
         }
     
@@ -95,57 +95,57 @@ class RecommendationEngine:
         top_k: int = 5
     ) -> List[Dict]:
         """
-        生成节能建议
+        Generates energy-saving recommendations.
         
-        参数:
-        - current_state: 当前状态（特征取值）
-        - target_state: 目标状态（通常是'Peak'，表示高负荷）
-        - sensitivity_threshold: 敏感性阈值（只推荐影响大的特征）
-        - top_k: 返回前k条建议
+        Parameters:
+        - current_state: Current state (feature values).
+        - target_state: Target state (usually 'Peak', indicating high load).
+        - sensitivity_threshold: Threshold for sensitivity (only recommend high-impact features).
+        - top_k: Return the top k suggestions.
         
-        返回:
-        - 建议列表，每条包含：
+        Returns:
+        - List of suggestions, each containing:
           {
-            'rank': 排名,
-            'feature': 特征名,
-            'feature_name': 可读特征名,
-            'current_value': 当前值,
-            'recommended_value': 推荐值,
-            'current_prob': 当前概率,
-            'expected_prob': 预期概率,
-            'potential_reduction': 潜在降低幅度,
-            'action': 行动建议文本
+            'rank': Rank,
+            'feature': Feature name,
+            'feature_name': Readable feature name,
+            'current_value': Current value,
+            'recommended_value': Recommended value,
+            'current_prob': Current probability,
+            'expected_prob': Expected probability,
+            'potential_reduction': Potential reduction magnitude,
+            'action': Action suggestion text
           }
         """
-        # 确保已运行敏感性分析
+        # Ensure sensitivity analysis has been run
         if self.ci.sensitivity_results is None:
             features = list(current_state.keys())
             self.ci.sensitivity_analysis(features, target_state=target_state)
         
-        # 获取关键因素
+        # Get critical factors
         critical_factors = self.ci.identify_critical_factors(
             threshold=sensitivity_threshold,
             target_state=target_state
         )
         
-        # 生成建议
+        # Generate suggestions
         recommendations = []
         for idx, factor in enumerate(critical_factors[:top_k]):
             feature = factor['Feature']
             
-            # 获取可读名称
+            # Get readable name
             feature_name = self.feature_mapping.get(feature, feature)
             
-            # 当前值和推荐值
+            # Current and recommended values
             current_value = current_state.get(feature, 'Unknown')
             recommended_value = factor['Recommended_Value']
             
-            # 概率信息
+            # Probability information
             current_prob = factor['Current_Max_Prob']
             expected_prob = factor['Expected_Prob']
             potential_reduction = factor['Potential_Reduction']
             
-            # 生成行动建议
+            # Generate action text
             action = self._generate_action_text(
                 feature,
                 current_value,
@@ -177,37 +177,37 @@ class RecommendationEngine:
         impact: float
     ) -> str:
         """
-        生成行动建议文本
+        Generates the action suggestion text.
         
-        参数:
-        - feature: 特征名
-        - current_value: 当前值
-        - recommended_value: 推荐值
-        - impact: 影响程度
+        Parameters:
+        - feature: Feature name.
+        - current_value: Current value.
+        - recommended_value: Recommended value.
+        - impact: Magnitude of impact.
         
-        返回:
-        - 自然语言建议
+        Returns:
+        - Natural language recommendation.
         """
-        # 获取模板
+        # Get template
         if feature in self.action_templates:
             template = self.action_templates[feature].get(
                 recommended_value,
-                f"建议将{feature}调整为{recommended_value}"
+                f"Suggest adjusting {feature} to {recommended_value}"
             )
             action = template.format(value=recommended_value)
         else:
-            # 通用模板
-            action = f"建议将{self.feature_mapping.get(feature, feature)}从'{current_value}'调整为'{recommended_value}'"
+            # Generic template
+            action = f"Suggest adjusting {self.feature_mapping.get(feature, feature)} from '{current_value}' to '{recommended_value}'"
         
-        # 添加影响程度说明
+        # Add impact magnitude description
         if impact > 0.3:
-            magnitude = "显著"
+            magnitude = "significantly"
         elif impact > 0.15:
-            magnitude = "明显"
+            magnitude = "noticeably"
         else:
-            magnitude = "一定程度"
+            magnitude = "to some extent"
         
-        action += f"，预计可{magnitude}降低高峰负荷概率（约{impact:.1%}）"
+        action += f", which is expected to {magnitude} reduce the probability of peak load (by approx. {impact:.1%})"
         
         return action
     
@@ -218,50 +218,49 @@ class RecommendationEngine:
         prediction: Optional[float] = None
     ) -> str:
         """
-        生成格式化的推荐报告
+        Generates a formatted recommendation report.
         
-        参数:
-        - recommendations: 推荐列表
-        - current_state: 当前状态
-        - prediction: 预测的EDP值（可选）
+        Parameters:
+        - recommendations: List of suggestions.
+        - current_state: Current state.
+        - prediction: Predicted EDP value (optional).
         
-        返回:
-        - 格式化的报告文本
+        Returns:
+        - Formatted report text.
         """
         report = "=" * 60 + "\n"
-        report += "           能源消耗预测与优化建议报告\n"
+        report += "          Energy Consumption Prediction & Optimization Report\n"
         report += "=" * 60 + "\n\n"
         
-        # 当前状态
-        report += "【当前状态】\n"
+        # Current State
+        report += "[Current State]\n"
         for feature, value in current_state.items():
             feature_name = self.feature_mapping.get(feature, feature)
             report += f"  {feature_name}: {value}\n"
         
-        # 预测值
+        # Predicted Value
         if prediction is not None:
-            # 处理 numpy 数组
             if hasattr(prediction, 'item'):
                 pred_value = prediction.item()
             elif hasattr(prediction, '__getitem__'):
                 pred_value = float(prediction[0])
             else:
                 pred_value = float(prediction)
-            report += f"\n【预测负荷】\n  {pred_value:.2f} kWh\n"
+            report += f"\n[Predicted Load]\n  {pred_value:.2f} kWh\n"
         
-        # 建议
+        # Suggestions
         if recommendations:
-            report += f"\n【优化建议】（共{len(recommendations)}条）\n\n"
+            report += f"\n[Optimization Suggestions] ({len(recommendations)} total)\n\n"
             for rec in recommendations:
                 report += f"{rec['rank']}. {rec['action']}\n"
-                report += f"   当前: {rec['feature_name']}={rec['current_value']} "
-                report += f"→ 推荐: {rec['recommended_value']}\n"
-                report += f"   预期效果: 高峰概率从 {rec['current_prob']:.1%} 降至 {rec['expected_prob']:.1%}\n\n"
+                report += f"   Current: {rec['feature_name']}={rec['current_value']} "
+                report += f"→ Recommended: {rec['recommended_value']}\n"
+                report += f"   Expected Effect: Peak probability drops from {rec['current_prob']:.1%} to {rec['expected_prob']:.1%}\n\n"
         else:
-            report += "\n【优化建议】\n  当前状态已较优，无需调整。\n"
+            report += "\n[Optimization Suggestions]\n  Current state is optimal, no adjustment needed.\n"
         
         report += "=" * 60 + "\n"
-        report += "注：以上建议基于因果贝叶斯网络推断，供参考。\n"
+        report += "Note: Suggestions are based on Causal Bayesian Network inference for reference.\n"
         
         return report
     
@@ -271,26 +270,26 @@ class RecommendationEngine:
         cost_mapping: Optional[Dict[str, float]] = None
     ) -> List[Dict]:
         """
-        根据成本-效益比优先级排序建议
+        Prioritizes suggestions based on cost-benefit ratio.
         
-        参数:
-        - recommendations: 原始建议列表
-        - cost_mapping: 特征调整成本映射 {feature: cost}
+        Parameters:
+        - recommendations: Original suggestion list.
+        - cost_mapping: Mapping of adjustment costs per feature {feature: cost}.
         
-        返回:
-        - 重新排序的建议列表（增加cost_benefit_ratio字段）
+        Returns:
+        - Re-ordered suggestion list with added 'cost_benefit_ratio' field.
         """
         if cost_mapping is None:
-            # 默认成本（可根据实际情况调整）
+            # Default costs (adjust based on reality)
             cost_mapping = {
-                'Temperature': 0.5,  # 温度调整成本较低
+                'Temperature': 0.5,  # Low adjustment cost
                 'Humidity': 0.7,
                 'WindSpeed': 0.3,
-                'Hour': 1.0,  # 时段无法调整，成本高
+                'Hour': 1.0,  # Time cannot be adjusted, effectively high cost
                 'Season': 1.0
             }
         
-        # 计算成本-效益比
+        # Calculate cost-benefit ratio
         for rec in recommendations:
             cost = cost_mapping.get(rec['feature'], 0.5)
             benefit = rec['potential_reduction']
@@ -298,14 +297,14 @@ class RecommendationEngine:
             rec['benefit'] = benefit
             rec['cost_benefit_ratio'] = benefit / cost if cost > 0 else 0
         
-        # 按成本-效益比降序排序
+        # Sort by cost-benefit ratio descending
         prioritized = sorted(
             recommendations,
             key=lambda x: x['cost_benefit_ratio'],
             reverse=True
         )
         
-        # 更新排名
+        # Update ranks
         for idx, rec in enumerate(prioritized):
             rec['rank'] = idx + 1
         
@@ -318,14 +317,14 @@ class RecommendationEngine:
         recommendations: List[Dict],
         filepath: str
     ):
-        """保存建议到CSV文件"""
+        """Saves recommendations to a CSV file"""
         df = pd.DataFrame(recommendations)
         df.to_csv(filepath, index=False, encoding='utf-8-sig')
         logger.info(f"Saved {len(recommendations)} recommendations to {filepath}")
 
 
 if __name__ == "__main__":
-    # 示例（需要先训练因果推断模型）
+    # Example (Requires a trained causal inference model)
     import sys
     sys.path.append('/home/severin/Codelib/YS')
     
@@ -335,7 +334,7 @@ if __name__ == "__main__":
     
     logging.basicConfig(level=logging.INFO)
     
-    # 模拟训练
+    # Mock data and train network
     np.random.seed(42)
     data = pd.DataFrame({
         'Temperature': np.random.choice(['Low', 'Medium', 'High'], 200),
@@ -353,17 +352,17 @@ if __name__ == "__main__":
     
     ci = CausalInference(bn, target_var='EDP_State')
     
-    # 创建推荐引擎
+    # Create engine
     engine = RecommendationEngine(ci)
     
-    # 当前状态
+    # Current State
     current_state = {
         'Temperature': 'High',
         'Humidity': 'Medium',
         'WindSpeed': 'Low'
     }
     
-    # 生成建议
+    # Generate suggestions
     recommendations = engine.generate_recommendations(
         current_state,
         target_state='Peak',
@@ -376,6 +375,6 @@ if __name__ == "__main__":
     for rec in recommendations:
         print(f"{rec['rank']}. {rec['action']}")
     
-    # 生成报告
+    # Generate report
     report = engine.format_report(recommendations, current_state, prediction=125.5)
     print("\n" + report)

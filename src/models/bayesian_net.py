@@ -1,6 +1,6 @@
 """
-因果贝叶斯网络模块
-结合领域知识约束和数据学习，构建因果解释的贝叶斯网络
+Causal Bayesian Network Module
+Combines domain knowledge constraints and data-driven learning to construct causal explainable Bayesian Networks.
 """
 
 import numpy as np
@@ -23,18 +23,18 @@ logger = logging.getLogger(__name__)
 
 class CausalBayesianNetwork:
     """
-    因果贝叶斯网络
+    Causal Bayesian Network
     
-    功能:
-    1. 结合领域知识约束（白名单/黑名单边）
-    2. 使用BIC评分进行结构学习
-    3. 最大似然估计参数
-    4. 支持因果推断（do-演算）
+    Functions:
+    1. Incorporates domain knowledge constraints (white-list/black-list edges).
+    2. Performs structure learning using the BIC score.
+    3. Estimates parameters using Maximum Likelihood.
+    4. Supports causal inference (do-calculus).
     
-    参数:
-    - domain_edges: 领域知识强制边（白名单）
-    - forbidden_edges: 禁止边（黑名单，如防止时间倒流）
-    - score_fn: 评分函数（'bic' 或 'k2'）
+    Parameters:
+    - domain_edges: Forced edges from domain knowledge (white-list).
+    - forbidden_edges: Forbidden edges (black-list, e.g., to prevent reverse causality in time).
+    - score_fn: Scoring function ('bic' or 'k2').
     """
     
     def __init__(
@@ -61,23 +61,23 @@ class CausalBayesianNetwork:
         candidate_edges: Optional[List[Tuple[str, str]]] = None
     ) -> Tuple[List[Tuple[str, str]], List[Tuple[str, str]]]:
         """
-        创建结构学习约束
+        Creates constraints for structure learning.
         
-        参数:
-        - candidate_edges: 从关联规则提取的候选边
+        Parameters:
+        - candidate_edges: Candidate edges extracted from association rules.
         
-        返回:
-        - (白名单边, 黑名单边)
+        Returns:
+        - (white_list_edges, black_list_edges)
         """
-        # 白名单：领域知识边 + 候选边
+        # White-list: Domain knowledge edges + candidate edges
         white_list = self.domain_edges.copy()
         if candidate_edges:
             white_list.extend(candidate_edges)
         
-        # 去重
+        # Remove duplicates
         white_list = list(set(white_list))
         
-        # 黑名单：禁止边
+        # Black-list: Forbidden edges
         black_list = self.forbidden_edges.copy()
         
         logger.info(f"Constraints: {len(white_list)} white-list, {len(black_list)} black-list edges")
@@ -92,23 +92,23 @@ class CausalBayesianNetwork:
         max_indegree: Optional[int] = None
     ) -> DiscreteBayesianNetwork:
         """
-        学习贝叶斯网络结构
+        Learns the Bayesian Network structure.
         
-        参数:
-        - data: 离散化后的数据
-        - candidate_edges: 候选边（来自关联规则）
-        - max_iter: 爬山搜索最大迭代次数
-        - max_indegree: 节点最大入度（限制复杂度）
+        Parameters:
+        - data: Discretized data.
+        - candidate_edges: Candidate edges (from association rules).
+        - max_iter: Max iterations for Hill Climbing search.
+        - max_indegree: Max in-degree per node (limits complexity).
         
-        返回:
-        - DiscreteBayesianNetwork模型
+        Returns:
+        - DiscreteBayesianNetwork model.
         """
         self.feature_names = list(data.columns)
         
-        # 创建约束
+        # Create constraints
         white_list, black_list = self._create_constraints(candidate_edges)
         
-        # 选择评分函数
+        # Select scoring function
         if self.score_fn == 'bic':
             scoring = BIC(data)
         elif self.score_fn == 'k2':
@@ -116,11 +116,11 @@ class CausalBayesianNetwork:
         else:
             raise ValueError(f"Unknown score function: {self.score_fn}")
         
-        # 爬山搜索结构学习
+        # Hill Climbing Structure Learning
         hc = HillClimbSearch(data)
         
         try:
-            # pgmpy白名单/黑名单使用方式
+            # pgmpy usage for white-list/black-list
             best_model = hc.estimate(
                 scoring_method=scoring,
                 max_iter=max_iter,
@@ -154,13 +154,13 @@ class CausalBayesianNetwork:
         equivalent_sample_size: int = 10
     ):
         """
-        学习条件概率表（CPT）参数
+        Learns the Conditional Probability Table (CPT) parameters.
         
-        参数:
-        - data: 训练数据
-        - estimator: 'mle'（极大似然）或 'bayes'（贝叶斯估计）
-        - prior_type: 先验类型（用于贝叶斯估计）
-        - equivalent_sample_size: 等效样本大小（用于BDeu先验）
+        Parameters:
+        - data: Training data.
+        - estimator: 'mle' (Maximum Likelihood) or 'bayes' (Bayesian Estimator).
+        - prior_type: Type of prior (for Bayesian estimation).
+        - equivalent_sample_size: Equivalent sample size (for BDeu prior).
         """
         if self.model is None:
             raise ValueError("Must call learn_structure() first")
@@ -177,18 +177,18 @@ class CausalBayesianNetwork:
         else:
             raise ValueError(f"Unknown estimator: {estimator}")
         
-        # 拟合所有CPT
+        # Fit all CPTs
         for node in self.model.nodes():
             cpd = est.estimate_cpd(node)
             self.model.add_cpds(cpd)
         
-        # 验证模型
+        # Validate model
         assert self.model.check_model(), "Model CPDs are inconsistent"
         
         logger.info(f"Learned parameters using {estimator} estimator")
     
     def create_inference_engine(self):
-        """创建变量消去推理引擎"""
+        """Creates a Variable Elimination inference engine."""
         if self.model is None:
             raise ValueError("Must train the model first")
         
@@ -201,14 +201,14 @@ class CausalBayesianNetwork:
         evidence: Optional[Dict[str, str]] = None
     ) -> Dict:
         """
-        贝叶斯推断查询 P(variables | evidence)
+        Bayesian Inference Query P(variables | evidence).
         
-        参数:
-        - variables: 查询变量列表
-        - evidence: 证据字典 {变量名: 取值}
+        Parameters:
+        - variables: List of query variables.
+        - evidence: Evidence dictionary {variable_name: value}.
         
-        返回:
-        - 查询结果字典
+        Returns:
+            Dictionary of query results.
         """
         if self.inference_engine is None:
             self.create_inference_engine()
@@ -227,32 +227,32 @@ class CausalBayesianNetwork:
         evidence: Optional[Dict[str, str]] = None
     ) -> Dict:
         """
-        Do-演算：P(query_var | do(intervention), evidence)
+        Do-calculus: P(query_var | do(intervention), evidence).
         
-        参数:
-        - intervention: 干预变量 {变量名: 干预值}
-        - query_var: 查询变量
-        - evidence: 其他证据
+        Parameters:
+        - intervention: Intervened variables {variable_name: intervention_value}.
+        - query_var: Variable to query.
+        - evidence: Other evidence.
         
-        返回:
-        - 干预后的概率分布
+        Returns:
+            Probability distribution after intervention.
         """
         if self.model is None:
             raise ValueError("Must train the model first")
         
-        # 创建干预后的模型（移除指向干预变量的边）
+        # Create post-intervention model (removes edges pointing to intervened variables)
         intervened_model = self.model.copy()
         
         for var in intervention.keys():
-            # 移除所有指向干预变量的边
+            # Remove all edges pointing to the intervention variable
             parents = list(intervened_model.get_parents(var))
             for parent in parents:
                 intervened_model.remove_edge(parent, var)
         
-        # 在干预模型上推断
+        # Perform inference on the intervened model
         intervened_inference = VariableElimination(intervened_model)
         
-        # 合并干预和证据
+        # Combine intervention and evidence
         combined_evidence = intervention.copy()
         if evidence:
             combined_evidence.update(evidence)
@@ -267,33 +267,33 @@ class CausalBayesianNetwork:
         return result
     
     def get_parents(self, node: str) -> List[str]:
-        """获取节点的父节点（直接原因）"""
+        """Gets parent nodes (direct causes) of a node."""
         if self.model is None:
             raise ValueError("Model not trained")
         return list(self.model.get_parents(node))
     
     def get_markov_blanket(self, node: str) -> Set[str]:
         """
-        获取马尔可夫毯（父节点+子节点+子节点的其他父节点）
-        这是与目标变量直接相关的所有变量
+        Gets the Markov Blanket (parents + children + children's other parents).
+        These are all variables directly relevant to the target variable.
         """
         if self.model is None:
             raise ValueError("Model not trained")
         
         mb = set()
         
-        # 父节点
+        # Parents
         mb.update(self.model.get_parents(node))
         
-        # 子节点
+        # Children
         children = self.model.get_children(node)
         mb.update(children)
         
-        # 子节点的其他父节点
+        # Other parents of the children
         for child in children:
             mb.update(self.model.get_parents(child))
         
-        # 移除自身
+        # Discard self
         mb.discard(node)
         
         return mb
@@ -304,19 +304,19 @@ class CausalBayesianNetwork:
         target: str
     ) -> List[List[str]]:
         """
-        获取从source到target的所有有向路径（因果路径）
+        Gets all directed paths (causal paths) from source to target.
         
-        参数:
-        - source: 源节点
-        - target: 目标节点
+        Parameters:
+        - source: Source node.
+        - target: Target node.
         
-        返回:
-        - 路径列表，每个路径是节点序列
+        Returns:
+            List of paths, where each path is a node sequence.
         """
         if self.model is None:
             raise ValueError("Model not trained")
         
-        # 转换为networkx DiGraph
+        # Convert to networkx DiGraph
         G = nx.DiGraph(self.model.edges())
         
         try:
@@ -328,11 +328,11 @@ class CausalBayesianNetwork:
             return []
     
     def save_model(self, filepath: str):
-        """保存模型结构和参数"""
+        """Saves model structure and parameters."""
         if self.model is None:
             raise ValueError("No model to save")
         
-        # 保存为BIF格式（Bayesian Interchange Format）
+        # Save in BIF format (Bayesian Interchange Format)
         from pgmpy.readwrite import BIFWriter
         writer = BIFWriter(self.model)
         writer.write_bif(filepath)
@@ -340,7 +340,7 @@ class CausalBayesianNetwork:
         logger.info(f"Model saved to {filepath}")
     
     def load_model(self, filepath: str):
-        """加载模型"""
+        """Loads a model."""
         from pgmpy.readwrite import BIFReader
         reader = BIFReader(filepath)
         self.model = reader.get_model()
@@ -349,10 +349,10 @@ class CausalBayesianNetwork:
     
     def visualize_structure(self, output_path: Optional[str] = None):
         """
-        可视化网络结构
+        Visualizes the network structure.
         
-        参数:
-        - output_path: 输出图片路径（如果为None，则显示）
+        Parameters:
+        - output_path: Output image path (displays if None).
         """
         if self.model is None:
             raise ValueError("Model not trained")
@@ -384,10 +384,10 @@ class CausalBayesianNetwork:
 
 
 if __name__ == "__main__":
-    # 示例使用
+    # Example usage
     logging.basicConfig(level=logging.INFO)
     
-    # 模拟离散化数据
+    # Mock discretized data
     np.random.seed(42)
     data = pd.DataFrame({
         'Temperature': np.random.choice(['Low', 'Medium', 'High'], 200),
@@ -396,32 +396,32 @@ if __name__ == "__main__":
         'EDP_State': np.random.choice(['Lower', 'Normal', 'Peak'], 200)
     })
     
-    # 领域知识：温度、湿度、风速都可能影响EDP
+    # Domain knowledge: Temperature, Humidity, and WindSpeed may influence EDP
     domain_edges = [
         ('Temperature', 'EDP_State'),
         ('Humidity', 'EDP_State'),
         ('WindSpeed', 'EDP_State')
     ]
     
-    # 创建贝叶斯网络
+    # Create Bayesian Network
     bn = CausalBayesianNetwork(domain_edges=domain_edges)
     
-    # 学习结构
+    # Learn structure
     model = bn.learn_structure(data)
     print(f"\nLearned structure edges: {model.edges()}")
     
-    # 学习参数
+    # Learn parameters
     bn.learn_parameters(data, estimator='mle')
     
-    # 推断示例
+    # Inference example
     bn.create_inference_engine()
     
-    # 查询：P(EDP_State | Temperature=High)
+    # Query: P(EDP_State | Temperature=High)
     result = bn.query(['EDP_State'], evidence={'Temperature': 'High'})
     print(f"\nP(EDP_State | Temperature=High):")
     print(result)
     
-    # Do-演算：P(EDP_State | do(Temperature=Low))
+    # Do-calculus: P(EDP_State | do(Temperature=Low))
     result_do = bn.do_calculus(
         intervention={'Temperature': 'Low'},
         query_var='EDP_State'
@@ -429,6 +429,6 @@ if __name__ == "__main__":
     print(f"\nP(EDP_State | do(Temperature=Low)):")
     print(result_do)
     
-    # 获取EDP的马尔可夫毯
+    # Get Markov Blanket of EDP
     mb = bn.get_markov_blanket('EDP_State')
     print(f"\nMarkov Blanket of EDP_State: {mb}")

@@ -1,46 +1,50 @@
-# 能源需求预测的因果可解释AI系统 - 实现文档
+Here is the verbatim English translation of your implementation document.
 
-## 1. 项目结构
+---
+
+# Causal Explainable AI System for Energy Demand Forecasting - Implementation Document
+
+## 1. Project Structure
 
 ```
 energy-causal-ai/
-├── README.md                    # 项目说明
-├── requirements.txt             # 依赖包
+├── README.md                    # Project Description
+├── requirements.txt             # Dependency Packages
 ├── config/
-│   ├── config.yaml             # 主配置文件
-│   ├── domain_config.yaml      # 领域知识配置
-│   └── model_params.yaml       # 模型超参数
+│   ├── config.yaml              # Main Configuration
+│   ├── domain_config.yaml       # Domain Knowledge Configuration
+│   └── model_params.yaml        # Model Hyperparameters
 ├── data/
-│   ├── raw/                    # 原始数据
-│   ├── processed/              # 预处理后数据
-│   └── interim/                # 中间数据
+│   ├── raw/                     # Raw Data
+│   ├── processed/               # Processed Data
+│   └── interim/                 # Intermediate Data
 ├── src/
 │   ├── __init__.py
 │   ├── data/
 │   │   ├── __init__.py
-│   │   ├── data_loader.py      # 数据加载
-│   │   ├── preprocessor.py     # 数据预处理
-│   │   └── discretizer.py      # 离散化模块
+│   │   ├── data_loader.py       # Data Loading
+│   │   ├── preprocessor.py      # Data Preprocessing
+│   │   └── discretizer.py       # Discretization Module
 │   ├── models/
 │   │   ├── __init__.py
-│   │   ├── predictor.py        # 预测模型（CNN+LSTM+Att）
-│   │   ├── state_classifier.py # 状态分类（Sn）
-│   │   ├── clustering.py       # CAM/Attention聚类
-│   │   ├── association.py      # 关联规则挖掘
-│   │   └── bayesian_net.py     # 贝叶斯网络
+│   │   ├── predictor.py         # Prediction Model (CNN+LSTM+Att)
+│   │   ├── state_classifier.py  # State Classification (Sn)
+│   │   ├── clustering.py        # CAM/Attention Clustering
+│   │   ├── association.py       # Association Rule Mining
+│   │   └── bayesian_net.py      # Bayesian Network
 │   ├── inference/
 │   │   ├── __init__.py
-│   │   ├── causal_inference.py # 因果推断
-│   │   └── recommendation.py   # 建议生成
+│   │   ├── causal_inference.py  # Causal Inference
+│   │   └── recommendation.py    # Recommendation Generation
 │   ├── utils/
 │   │   ├── __init__.py
-│   │   ├── metrics.py          # 评估指标
-│   │   ├── visualization.py    # 可视化
-│   │   └── logger.py           # 日志
+│   │   ├── metrics.py           # Evaluation Metrics
+│   │   ├── visualization.py     # Visualization
+│   │   └── logger.py            # Logging
 │   └── pipeline/
 │       ├── __init__.py
-│       ├── train_pipeline.py   # 训练流水线
-│       └── infer_pipeline.py   # 推理流水线
+│       ├── train_pipeline.py    # Training Pipeline
+│       └── infer_pipeline.py    # Inference Pipeline
 ├── notebooks/
 │   ├── 01_data_exploration.ipynb
 │   ├── 02_model_training.ipynb
@@ -49,37 +53,38 @@ energy-causal-ai/
 │   ├── test_data.py
 │   ├── test_models.py
 │   └── test_inference.py
-├── models/                      # 保存的模型
+├── models/                      # Saved Models
 │   ├── predictor.h5
 │   ├── bn_peak.pkl
 │   ├── bn_normal.pkl
 │   └── bn_lower.pkl
-├── outputs/                     # 输出结果
+├── outputs/                     # Output Results
 │   ├── predictions/
 │   ├── explanations/
 │   └── visualizations/
-└── docs/                        # 文档
-    ├── 项目设计文档.md
-    ├── 实现文档.md（本文档）
-    └── API文档.md
+└── docs/                        # Documentation
+    ├── Project_Design_Doc.md
+    ├── Implementation_Doc.md (This Document)
+    └── API_Doc.md
+
 ```
 
 ---
 
-## 2. 核心模块详细实现
+## 2. Detailed Implementation of Core Modules
 
-### 2.1 数据预处理模块
+### 2.1 Data Preprocessing Module
 
-#### 文件: `src/data/preprocessor.py`
+#### File: `src/data/preprocessor.py`
 
 ```python
 """
-数据预处理模块
-功能：
-1. 数据清洗
-2. 时间特征提取
-3. 滑动窗口构造
-4. 标准化
+Data Preprocessing Module
+Functions:
+1. Data Cleaning
+2. Time Feature Extraction
+3. Sliding Window Construction
+4. Normalization
 """
 
 import pandas as pd
@@ -92,16 +97,16 @@ logger = logging.getLogger(__name__)
 
 
 class EnergyDataPreprocessor:
-    """能源数据预处理器"""
+    """Energy Data Preprocessor"""
     
     def __init__(self, config: dict):
         """
-        参数:
-            config: 配置字典，包含：
-                - window_size: 窗口大小（默认80）
-                - pred_horizon: 预测步长（默认1）
-                - time_resolution: 时间分辨率（'15min', '30min', '1h', '1d'）
-                - feature_cols: 特征列名列表
+        Parameters:
+            config: Configuration dictionary containing:
+                - window_size: Window size (default 80)
+                - pred_horizon: Prediction horizon (default 1)
+                - time_resolution: Time resolution ('15min', '30min', '1h', '1d')
+                - feature_cols: List of feature column names
         """
         self.window_size = config.get('window_size', 80)
         self.pred_horizon = config.get('pred_horizon', 1)
@@ -113,91 +118,91 @@ class EnergyDataPreprocessor:
         
     def clean_data(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        数据清洗
+        Data Cleaning
         
-        步骤:
-        1. 处理缺失值（前向填充 + 后向填充）
-        2. 移除异常值（使用IQR方法）
-        3. 确保时间戳连续
+        Steps:
+        1. Handle missing values (Forward Fill + Backward Fill)
+        2. Remove outliers (Using IQR method)
+        3. Ensure timestamp continuity
         
-        输入:
-            df: 原始数据框，必须包含时间戳列
+        Input:
+            df: Raw dataframe, must contain a timestamp column
         
-        输出:
-            清洗后的数据框
+        Output:
+            Cleaned dataframe
         """
-        logger.info("开始数据清洗...")
+        logger.info("Starting data cleaning...")
         
-        # 1. 确保时间戳为datetime类型
+        # 1. Ensure timestamp is datetime type
         if 'timestamp' in df.columns:
             df['timestamp'] = pd.to_datetime(df['timestamp'])
             df = df.set_index('timestamp')
         
-        # 2. 重采样到指定时间分辨率（确保时间连续）
+        # 2. Resample to specified time resolution (Ensure continuity)
         df = df.resample(self.time_resolution).mean()
         
-        # 3. 处理缺失值
-        # 先前向填充，再后向填充
+        # 3. Handle missing values
+        # Forward fill then backward fill
         df = df.fillna(method='ffill').fillna(method='bfill')
         
-        # 如果还有缺失值，用列均值填充
+        # If missing values remain, fill with column mean
         df = df.fillna(df.mean())
         
-        # 4. 移除异常值（保守策略：仅移除极端异常）
+        # 4. Remove outliers (Conservative strategy: only remove extreme outliers)
         for col in self.feature_cols:
             if col in df.columns:
-                # 计算IQR
-                Q1 = df[col].quantile(0.01)  # 使用1%和99%分位点（更保守）
+                # Calculate IQR
+                Q1 = df[col].quantile(0.01)  # Using 1% and 99% percentiles (more conservative)
                 Q3 = df[col].quantile(0.99)
                 IQR = Q3 - Q1
                 
-                # 定义异常值边界
-                lower_bound = Q1 - 3 * IQR  # 3倍IQR（更宽松）
+                # Define outlier boundaries
+                lower_bound = Q1 - 3 * IQR  # 3x IQR (more relaxed)
                 upper_bound = Q3 + 3 * IQR
                 
-                # 截断（clip）而非删除
+                # Clip instead of delete
                 df[col] = df[col].clip(lower=lower_bound, upper=upper_bound)
         
-        logger.info(f"数据清洗完成。最终数据量: {len(df)}")
+        logger.info(f"Data cleaning complete. Final data volume: {len(df)}")
         return df
     
     def extract_time_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        提取时间特征
+        Extract Time Features
         
-        特征:
-        - Date: 日期（1-31）
-        - Day: 星期几（0-6，0为周一）
-        - Month: 月份（1-12）
-        - Season: 季节（0-3，0=春，1=夏，2=秋，3=冬）
-        - Weekend: 是否周末（0或1）
-        - Hour: 小时（如果分辨率 < 1天）
+        Features:
+        - Date: Day of month (1-31)
+        - Day: Day of week (0-6, 0 is Monday)
+        - Month: Month (1-12)
+        - Season: Season (0-3, 0=Spring, 1=Summer, 2=Autumn, 3=Winter)
+        - Weekend: Is weekend (0 or 1)
+        - Hour: Hour (if resolution < 1 day)
         
-        输入:
-            df: 带时间索引的数据框
+        Input:
+            df: Dataframe with time index
         
-        输出:
-            添加了时间特征的数据框
+        Output:
+            Dataframe with added time features
         """
-        logger.info("提取时间特征...")
+        logger.info("Extracting time features...")
         
-        # 基础时间特征
+        # Basic time features
         df['Date'] = df.index.day
-        df['Day'] = df.index.dayofweek  # 0=周一, 6=周日
+        df['Day'] = df.index.dayofweek  # 0=Mon, 6=Sun
         df['Month'] = df.index.month
         
-        # 季节特征（北半球）
-        # 春:3-5, 夏:6-8, 秋:9-11, 冬:12-2
+        # Season features (Northern Hemisphere)
+        # Spring:3-5, Summer:6-8, Autumn:9-11, Winter:12-2
         df['Season'] = ((df['Month'] % 12 + 3) // 3) % 4
         
-        # 周末标识
-        df['Weekend'] = (df['Day'] >= 5).astype(int)  # 5=周六, 6=周日
+        # Weekend indicator
+        df['Weekend'] = (df['Day'] >= 5).astype(int)  # 5=Sat, 6=Sun
         
-        # 如果分辨率小于1天，添加小时特征
+        # If resolution is less than 1 day, add hour feature
         if self.time_resolution in ['15min', '30min', '1h']:
             df['Hour'] = df.index.hour
         
-        logger.info(f"时间特征提取完成。新增特征: Date, Day, Month, Season, Weekend")
+        logger.info(f"Time feature extraction complete. New features: Date, Day, Month, Season, Weekend")
         return df
     
     def create_sequences(self, 
@@ -205,52 +210,52 @@ class EnergyDataPreprocessor:
                          target_col: str = 'Global_active_power'
                          ) -> Tuple[np.ndarray, np.ndarray]:
         """
-        创建滑动窗口序列
+        Create Sliding Window Sequences
         
-        输入:
-            df: 预处理后的数据框
-            target_col: 目标变量列名
+        Input:
+            df: Preprocessed dataframe
+            target_col: Target variable column name
         
-        输出:
-            X: 形状为 [样本数, 窗口大小, 特征数] 的输入序列
-            y: 形状为 [样本数,] 的目标值
+        Output:
+            X: Input sequence with shape [samples, window_size, features]
+            y: Target values with shape [samples,]
         
-        示例:
+        Example:
             window_size=80, pred_horizon=1
-            样本0: X[0] = df[0:80], y[0] = df[80][target_col]
-            样本1: X[1] = df[1:81], y[1] = df[81][target_col]
+            Sample 0: X[0] = df[0:80], y[0] = df[80][target_col]
+            Sample 1: X[1] = df[1:81], y[1] = df[81][target_col]
         """
-        logger.info("创建滑动窗口序列...")
+        logger.info("Creating sliding window sequences...")
         
-        # 选择特征列
+        # Select feature columns
         feature_df = df[self.feature_cols].copy()
         target_series = df[target_col].values
         
-        # 标准化特征
+        # Normalize features
         if not self.is_fitted:
             feature_values = self.scaler.fit_transform(feature_df)
             self.is_fitted = True
         else:
             feature_values = self.scaler.transform(feature_df)
         
-        # 构造序列
+        # Construct sequences
         X_list = []
         y_list = []
         
         for i in range(len(feature_values) - self.window_size - self.pred_horizon + 1):
-            # 输入窗口: [i, i+window_size)
+            # Input window: [i, i+window_size)
             X_window = feature_values[i:i+self.window_size]
             
-            # 目标值: i+window_size+pred_horizon-1
+            # Target value: i+window_size+pred_horizon-1
             y_target = target_series[i + self.window_size + self.pred_horizon - 1]
             
             X_list.append(X_window)
             y_list.append(y_target)
         
-        X = np.array(X_list)  # [样本数, 窗口, 特征]
-        y = np.array(y_list)  # [样本数,]
+        X = np.array(X_list)  # [samples, window, features]
+        y = np.array(y_list)  # [samples,]
         
-        logger.info(f"序列创建完成。X形状: {X.shape}, y形状: {y.shape}")
+        logger.info(f"Sequence creation complete. X shape: {X.shape}, y shape: {y.shape}")
         return X, y
     
     def split_data(self, 
@@ -260,16 +265,16 @@ class EnergyDataPreprocessor:
                    val_ratio: float = 0.15
                    ) -> Tuple:
         """
-        分割训练集、验证集、测试集
+        Split Train, Validation, and Test Sets
         
-        注意: 时间序列不能打乱，必须按时间顺序分割
+        Note: Time series cannot be shuffled; must be split chronologically.
         
-        输入:
-            X, y: 完整数据集
-            train_ratio: 训练集比例
-            val_ratio: 验证集比例（测试集 = 1 - train_ratio - val_ratio）
+        Input:
+            X, y: Full dataset
+            train_ratio: Training set ratio
+            val_ratio: Validation set ratio (Test set = 1 - train - val)
         
-        输出:
+        Output:
             (X_train, y_train, X_val, y_val, X_test, y_test)
         """
         n_samples = len(X)
@@ -286,10 +291,10 @@ class EnergyDataPreprocessor:
         X_test = X[val_end:]
         y_test = y[val_end:]
         
-        logger.info(f"数据分割完成:")
-        logger.info(f"  训练集: {len(X_train)} 样本")
-        logger.info(f"  验证集: {len(X_val)} 样本")
-        logger.info(f"  测试集: {len(X_test)} 样本")
+        logger.info(f"Data split complete:")
+        logger.info(f"  Training set: {len(X_train)} samples")
+        logger.info(f"  Validation set: {len(X_val)} samples")
+        logger.info(f"  Test set: {len(X_test)} samples")
         
         return X_train, y_train, X_val, y_val, X_test, y_test
     
@@ -298,37 +303,37 @@ class EnergyDataPreprocessor:
                             target_col: str = 'Global_active_power'
                             ) -> Tuple:
         """
-        完整预处理流水线
+        Full Preprocessing Pipeline
         
-        步骤:
-        1. 数据清洗
-        2. 时间特征提取
-        3. 创建序列
-        4. 数据分割
+        Steps:
+        1. Data Cleaning
+        2. Time Feature Extraction
+        3. Sequence Creation
+        4. Data Splitting
         
-        输入:
-            df: 原始数据框
-            target_col: 目标列名
+        Input:
+            df: Raw dataframe
+            target_col: Target column name
         
-        输出:
-            训练集、验证集、测试集的X和y
+        Output:
+            X and y for Train, Val, and Test sets
         """
-        # 1. 清洗
+        # 1. Clean
         df_clean = self.clean_data(df)
         
-        # 2. 时间特征
+        # 2. Time Features
         df_features = self.extract_time_features(df_clean)
         
-        # 3. 创建序列
+        # 3. Create Sequences
         X, y = self.create_sequences(df_features, target_col)
         
-        # 4. 分割
+        # 4. Split
         return self.split_data(X, y)
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # 配置
+    # Config
     config = {
         'window_size': 80,
         'pred_horizon': 1,
@@ -338,38 +343,39 @@ if __name__ == "__main__":
             'Global_reactive_power',
             'Voltage',
             'Global_intensity',
-            'Sub_metering_1',  # 厨房
-            'Sub_metering_2',  # 洗衣
-            'Sub_metering_3',  # 空调
-            # 时间特征将在extract_time_features中添加
+            'Sub_metering_1',  # Kitchen
+            'Sub_metering_2',  # Laundry
+            'Sub_metering_3',  # Climate Control
+            # Time features added in extract_time_features
         ]
     }
     
-    # 加载数据
+    # Load Data
     df = pd.read_csv('data/raw/household_power_consumption.txt',
                      sep=';',
                      parse_dates={'timestamp': ['Date', 'Time']},
                      na_values=['?'])
     
-    # 预处理
+    # Preprocess
     preprocessor = EnergyDataPreprocessor(config)
     X_train, y_train, X_val, y_val, X_test, y_test = \
         preprocessor.preprocess_pipeline(df)
     
-    print(f"预处理完成！")
+    print(f"Preprocessing complete!")
     print(f"X_train.shape: {X_train.shape}")
     print(f"y_train.shape: {y_train.shape}")
+
 ```
 
 ---
 
-### 2.2 预测模型实现
+### 2.2 Prediction Model Implementation
 
-#### 文件: `src/models/predictor.py`
+#### File: `src/models/predictor.py`
 
 ```python
 """
-并行CNN-LSTM-Attention预测模型
+Parallel CNN-LSTM-Attention Prediction Model
 """
 
 import tensorflow as tf
@@ -384,12 +390,12 @@ logger = logging.getLogger(__name__)
 
 class ParallelCNNLSTMAttention(Model):
     """
-    并行CNN-LSTM-Attention架构
+    Parallel CNN-LSTM-Attention Architecture
     
-    结构:
-    - CNN分支: 提取局部时序模式
-    - LSTM+Attention分支: 建模长期依赖并定位关键时间
-    - 融合: 拼接后通过MLP回归
+    Structure:
+    - CNN Branch: Extracts local temporal patterns
+    - LSTM+Attention Branch: Models long-term dependencies and locates key time steps
+    - Fusion: Concatenation followed by MLP regression
     """
     
     def __init__(self, 
@@ -400,46 +406,46 @@ class ParallelCNNLSTMAttention(Model):
                  mlp_units: list = [256, 128],
                  dropout_rate: float = 0.3):
         """
-        参数:
-            window_size: 输入窗口大小
-            n_features: 特征数量
-            cnn_filters: CNN各层的卷积核数量
-            lstm_units: LSTM隐藏单元数
-            mlp_units: MLP各层神经元数
-            dropout_rate: Dropout比例
+        Parameters:
+            window_size: Input window size
+            n_features: Number of features
+            cnn_filters: Filter counts for CNN layers
+            lstm_units: Number of LSTM hidden units
+            mlp_units: Neuron counts for MLP layers
+            dropout_rate: Dropout ratio
         """
         super(ParallelCNNLSTMAttention, self).__init__()
         
         self.window_size = window_size
         self.n_features = n_features
         
-        # ===== CNN分支 =====
+        # ===== CNN Branch =====
         self.conv1 = layers.Conv1D(filters=cnn_filters[0],
-                                    kernel_size=3,
-                                    activation='relu',
-                                    padding='same',
-                                    name='conv1')
+                                   kernel_size=3,
+                                   activation='relu',
+                                   padding='same',
+                                   name='conv1')
         self.pool1 = layers.MaxPooling1D(pool_size=2, name='pool1')
         
         self.conv2 = layers.Conv1D(filters=cnn_filters[1],
-                                    kernel_size=3,
-                                    activation='relu',
-                                    padding='same',
-                                    name='conv2')
+                                   kernel_size=3,
+                                   activation='relu',
+                                   padding='same',
+                                   name='conv2')
         self.pool2 = layers.MaxPooling1D(pool_size=2, name='pool2')
         
-        # 全局平均池化（用于生成CAM）
+        # Global Average Pooling (used for CAM generation)
         self.global_avg_pool = layers.GlobalAveragePooling1D(name='gap')
         
-        # ===== LSTM+Attention分支 =====
+        # ===== LSTM+Attention Branch =====
         self.lstm = layers.LSTM(units=lstm_units,
-                                return_sequences=True,  # 返回所有时间步
+                                return_sequences=True,  # Return all time steps
                                 name='lstm')
         
-        # 注意力层（自定义）
+        # Attention Layer (Custom)
         self.attention = AttentionLayer(name='attention')
         
-        # ===== 融合与回归 =====
+        # ===== Fusion and Regression =====
         self.flatten = layers.Flatten(name='flatten')
         
         self.fc1 = layers.Dense(mlp_units[0], activation='relu', name='fc1')
@@ -452,42 +458,42 @@ class ParallelCNNLSTMAttention(Model):
         
     def call(self, inputs, training=False, return_attention=False):
         """
-        前向传播
+        Forward Pass
         
-        输入:
+        Input:
             inputs: [batch, window_size, n_features]
-            training: 是否训练模式
-            return_attention: 是否返回注意力权重（用于解释）
+            training: Boolean training mode
+            return_attention: Whether to return attention weights (for explanation)
         
-        输出:
-            如果return_attention=False: 预测值 [batch, 1]
-            如果return_attention=True: (预测值, CAM, attention_weights)
+        Output:
+            If return_attention=False: Prediction [batch, 1]
+            If return_attention=True: (Prediction, CAM, attention_weights)
         """
-        # ===== CNN分支 =====
+        # ===== CNN Branch =====
         x_cnn = self.conv1(inputs)  # [batch, window_size, 64]
         x_cnn = self.pool1(x_cnn)   # [batch, window_size/2, 64]
         
         x_cnn = self.conv2(x_cnn)   # [batch, window_size/4, 128]
         x_cnn_pooled = self.pool2(x_cnn)  # [batch, window_size/4, 128]
         
-        # 生成CAM（在最后一个卷积层）
-        # CAM = 每个时间步在各特征维度的激活强度
+        # Generate CAM (at the last convolutional layer)
+        # CAM = activation intensity across feature dimensions per time step
         cam = tf.reduce_mean(x_cnn, axis=-1)  # [batch, window_size/4]
         
-        # 全局池化
+        # Global Pooling
         cnn_features = self.global_avg_pool(x_cnn_pooled)  # [batch, 128]
         
-        # ===== LSTM+Attention分支 =====
+        # ===== LSTM+Attention Branch =====
         lstm_out = self.lstm(inputs, training=training)  # [batch, window, 128]
         
-        # 注意力
+        # Attention
         context, attention_weights = self.attention(lstm_out)  # context: [batch, 128]
         
-        # ===== 融合 =====
-        # 拼接CNN特征和LSTM上下文
+        # ===== Fusion =====
+        # Concatenate CNN features and LSTM context
         merged = tf.concat([cnn_features, context], axis=-1)  # [batch, 256]
         
-        # MLP回归
+        # MLP Regression
         x = self.fc1(merged)
         x = self.dropout1(x, training=training)
         
@@ -502,7 +508,7 @@ class ParallelCNNLSTMAttention(Model):
             return prediction
     
     def get_config(self):
-        """保存模型配置（用于序列化）"""
+        """Save model configuration (for serialization)"""
         return {
             'window_size': self.window_size,
             'n_features': self.n_features
@@ -511,9 +517,9 @@ class ParallelCNNLSTMAttention(Model):
 
 class AttentionLayer(layers.Layer):
     """
-    自定义注意力层
+    Custom Attention Layer
     
-    计算公式:
+    Formula:
     score_k = fc(h_k)
     a_k = exp(score_k) / Σexp(score_k)  # softmax
     context = Σ(a_k × h_k)
@@ -524,11 +530,11 @@ class AttentionLayer(layers.Layer):
         
     def build(self, input_shape):
         """
-        输入形状: [batch, sequence_length, hidden_dim]
+        Input shape: [batch, sequence_length, hidden_dim]
         """
         self.hidden_dim = input_shape[-1]
         
-        # 注意力权重计算的全连接层
+        # Fully connected layer for attention weights calculation
         self.W = self.add_weight(name='attention_weight',
                                  shape=(self.hidden_dim, 1),
                                  initializer='glorot_uniform',
@@ -542,22 +548,22 @@ class AttentionLayer(layers.Layer):
     
     def call(self, inputs):
         """
-        输入:
-            inputs: LSTM输出 [batch, sequence, hidden]
+        Input:
+            inputs: LSTM output [batch, sequence, hidden]
         
-        输出:
-            context: 上下文向量 [batch, hidden]
-            attention_weights: 注意力权重 [batch, sequence]
+        Output:
+            context: Context vector [batch, hidden]
+            attention_weights: Attention weights [batch, sequence]
         """
-        # 计算注意力分数
+        # Calculate attention scores
         # [batch, sequence, hidden] × [hidden, 1] = [batch, sequence, 1]
         score = tf.matmul(inputs, self.W) + self.b
         score = tf.squeeze(score, axis=-1)  # [batch, sequence]
         
-        # Softmax归一化
+        # Softmax normalization
         attention_weights = tf.nn.softmax(score, axis=-1)  # [batch, sequence]
         
-        # 加权求和
+        # Weighted sum
         # [batch, sequence, 1] × [batch, sequence, hidden] = [batch, sequence, hidden]
         attention_weights_expanded = tf.expand_dims(attention_weights, axis=-1)
         context = tf.reduce_sum(inputs * attention_weights_expanded, axis=1)  # [batch, hidden]
@@ -568,12 +574,12 @@ class AttentionLayer(layers.Layer):
         return super(AttentionLayer, self).get_config()
 
 
-# ===== 模型构建与训练 =====
+# ===== Model Construction and Training =====
 def build_model(config: dict) -> ParallelCNNLSTMAttention:
     """
-    根据配置构建模型
+    Build model based on config
     
-    配置示例:
+    Config example:
     {
         'window_size': 80,
         'n_features': 10,
@@ -596,27 +602,27 @@ def train_model(model: ParallelCNNLSTMAttention,
                 batch_size: int = 64,
                 learning_rate: float = 0.001) -> Dict:
     """
-    训练模型
+    Train Model
     
-    输入:
-        model: 模型实例
-        X_train, y_train: 训练数据
-        X_val, y_val: 验证数据
-        epochs: 训练轮数
-        batch_size: 批大小
-        learning_rate: 学习率
+    Input:
+        model: Model instance
+        X_train, y_train: Training data
+        X_val, y_val: Validation data
+        epochs: Number of epochs
+        batch_size: Batch size
+        learning_rate: Learning rate
     
-    输出:
-        训练历史字典
+    Output:
+        Training history dictionary
     """
-    # 编译模型
+    # Compile model
     model.compile(
         optimizer=keras.optimizers.Adam(learning_rate=learning_rate),
         loss='mse',
         metrics=['mae', 'mse']
     )
     
-    # 回调函数
+    # Callbacks
     callbacks = [
         keras.callbacks.EarlyStopping(
             monitor='val_loss',
@@ -636,7 +642,7 @@ def train_model(model: ParallelCNNLSTMAttention,
         )
     ]
     
-    # 训练
+    # Train
     history = model.fit(
         X_train, y_train,
         validation_data=(X_val, y_val),
@@ -649,9 +655,9 @@ def train_model(model: ParallelCNNLSTMAttention,
     return history.history
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # 模型配置
+    # Model Config
     config = {
         'window_size': 80,
         'n_features': 10,
@@ -661,31 +667,32 @@ if __name__ == "__main__":
         'dropout_rate': 0.3
     }
     
-    # 构建模型
+    # Build Model
     model = build_model(config)
     
-    # 假设已有数据
+    # Assuming data exists
     # X_train, y_train, X_val, y_val = ...
     
-    # 训练
+    # Train
     # history = train_model(model, X_train, y_train, X_val, y_val)
     
-    # 预测（带解释）
+    # Prediction (with explanation)
     # predictions, cam, attention = model(X_test, return_attention=True)
     
-    print("模型构建完成！")
+    print("Model construction complete!")
     model.summary()
+
 ```
 
 ---
 
-### 2.3 状态分类模块（Sn估计）
+### 2.3 State Classification Module (Sn Estimation)
 
-#### 文件: `src/models/state_classifier.py`
+#### File: `src/models/state_classifier.py`
 
 ```python
 """
-基于Sn尺度估计的状态分类器
+State Classifier based on Sn Scale Estimation
 """
 
 import numpy as np
@@ -697,51 +704,51 @@ logger = logging.getLogger(__name__)
 
 class SnStateClassifier:
     """
-    Sn鲁棒尺度估计器
-    用于将连续预测值映射为3类状态
+    Sn Robust Scale Estimator
+    Used to map continuous prediction values to 3 state classes
     """
     
     def __init__(self, 
                  peak_threshold: float = 2.0,
                  lower_threshold: float = -2.0):
         """
-        参数:
-            peak_threshold: Peak状态的Z分数阈值
-            lower_threshold: Lower状态的Z分数阈值
+        Parameters:
+            peak_threshold: Z-score threshold for Peak state
+            lower_threshold: Z-score threshold for Lower state
         """
         self.peak_threshold = peak_threshold
         self.lower_threshold = lower_threshold
         
-        # 校正因子（使Sn在正态分布下无偏）
+        # Correction factor (makes Sn unbiased under normal distribution)
         self.correction_factor = 1.1926
         
     def sn_scale(self, data: np.ndarray) -> float:
         """
-        计算Sn尺度估计
+        Calculate Sn Scale Estimate
         
         Sn = c × median_i{ median_j(|x_i - x_j|) }
         
-        优点:
-        - 比标准差更鲁棒（breakdown point = 50%）
-        - 对异常值不敏感
-        - 适合高噪声数据
+        Advantages:
+        - More robust than standard deviation (breakdown point = 50%)
+        - Insensitive to outliers
+        - Suitable for high-noise data
         
-        输入:
-            data: 一维数组
+        Input:
+            data: 1D array
         
-        输出:
-            Sn尺度值
+        Output:
+            Sn scale value
         """
         n = len(data)
         
-        # 计算所有成对差值的中位数
+        # Calculate medians of all pairwise differences
         pairwise_medians = []
         for i in range(n):
-            # 第i个点与所有点的差值的绝对值
+            # Absolute differences between i-th point and all points
             diffs = np.abs(data - data[i])
             pairwise_medians.append(np.median(diffs))
         
-        # 对所有中位数再取中位数
+        # Take the median of all medians
         sn = self.correction_factor * np.median(pairwise_medians)
         
         return sn
@@ -750,21 +757,21 @@ class SnStateClassifier:
                        value: float,
                        reference_data: np.ndarray) -> float:
         """
-        计算鲁棒Z分数
+        Calculate Robust Z-score
         
         Z = (value - median) / Sn
         
-        输入:
-            value: 待判断的值（通常是预测值）
-            reference_data: 参考数据（历史窗口）
+        Input:
+            value: Value to evaluate (typically prediction)
+            reference_data: Reference data (historical window)
         
-        输出:
-            鲁棒Z分数
+        Output:
+            Robust Z-score
         """
         median = np.median(reference_data)
         sn = self.sn_scale(reference_data)
         
-        # 防止除零
+        # Prevent division by zero
         if sn < 1e-8:
             return 0.0
         
@@ -775,14 +782,14 @@ class SnStateClassifier:
                  prediction: float,
                  historical_window: np.ndarray) -> str:
         """
-        分类单个预测值
+        Classify single prediction value
         
-        输入:
-            prediction: 预测的下一时刻用电值
-            historical_window: 历史窗口数据（用于计算参考分布）
+        Input:
+            prediction: Predicted power consumption for next time step
+            historical_window: Historical window data (for reference distribution)
         
-        输出:
-            状态标签: 'Peak' / 'Normal' / 'Lower'
+        Output:
+            State label: 'Peak' / 'Normal' / 'Lower'
         """
         z = self.robust_z_score(prediction, historical_window)
         
@@ -797,14 +804,14 @@ class SnStateClassifier:
                        predictions: np.ndarray,
                        historical_windows: np.ndarray) -> np.ndarray:
         """
-        批量分类
+        Batch Classification
         
-        输入:
-            predictions: [n_samples,] 预测值数组
-            historical_windows: [n_samples, window_size] 对应的历史窗口
+        Input:
+            predictions: [n_samples,] Predicted values array
+            historical_windows: [n_samples, window_size] Corresponding historical windows
         
-        输出:
-            [n_samples,] 状态标签数组
+        Output:
+            [n_samples,] State labels array
         """
         states = []
         for pred, window in zip(predictions, historical_windows):
@@ -815,13 +822,13 @@ class SnStateClassifier:
     
     def get_state_statistics(self, states: np.ndarray) -> dict:
         """
-        统计各状态的分布
+        Statistically analyze state distribution
         
-        输入:
-            states: 状态标签数组
+        Input:
+            states: State labels array
         
-        输出:
-            统计字典
+        Output:
+            Statistics dictionary
         """
         unique, counts = np.unique(states, return_counts=True)
         total = len(states)
@@ -832,7 +839,7 @@ class SnStateClassifier:
             'ratios': {s: c/total for s, c in zip(unique, counts)}
         }
         
-        logger.info("状态分布:")
+        logger.info("State Distribution:")
         for state in ['Peak', 'Normal', 'Lower']:
             if state in stats['counts']:
                 count = stats['counts'][state]
@@ -842,48 +849,49 @@ class SnStateClassifier:
         return stats
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # 创建分类器
+    # Create Classifier
     classifier = SnStateClassifier(
         peak_threshold=2.0,
         lower_threshold=-2.0
     )
     
-    # 模拟数据
+    # Mock Data
     np.random.seed(42)
     
-    # 历史窗口（正常用电）
+    # Historical window (normal consumption)
     historical = np.random.normal(loc=3.0, scale=0.5, size=80)
     
-    # 测试用例
+    # Test cases
     test_cases = [
-        ("正常预测", 3.2, historical),
-        ("峰值预测", 5.0, historical),
-        ("偏低预测", 1.5, historical)
+        ("Normal Prediction", 3.2, historical),
+        ("Peak Prediction", 5.0, historical),
+        ("Lower Prediction", 1.5, historical)
     ]
     
     for desc, pred, window in test_cases:
         state = classifier.classify(pred, window)
         z_score = classifier.robust_z_score(pred, window)
-        print(f"{desc}: 预测值={pred:.2f}, Z分数={z_score:.2f}, 状态={state}")
+        print(f"{desc}: Prediction={pred:.2f}, Z-score={z_score:.2f}, State={state}")
+
 ```
 
 ---
 
-**待续...**
+**To be continued...**
 
-由于实现文档内容较长，我将继续补充其他模块的实现。让我在下一部分继续。
+Due to the length of the implementation document, I will continue adding other module implementations. Let's move to the next part.
 
 ---
 
-### 2.4 离散化模块
+### 2.4 Discretization Module
 
-#### 文件: `src/data/discretizer.py`
+#### File: `src/data/discretizer.py`
 
 ```python
 """
-连续变量离散化模块
+Continuous Variable Discretization Module
 """
 
 import pandas as pd
@@ -897,85 +905,85 @@ logger = logging.getLogger(__name__)
 
 class QuantileDiscretizer:
     """
-    基于分位数的离散化器
+    Quantile-based Discretizer
     
-    将连续变量映射为有限等级（Low, Medium, High, VeryHigh）
+    Maps continuous variables to finite levels (Low, Medium, High, VeryHigh)
     """
     
     def __init__(self, n_bins: int = 4, labels: List[str] = None):
         """
-        参数:
-            n_bins: 离散化级别数
-            labels: 标签列表
+        Parameters:
+            n_bins: Number of discretization levels
+            labels: List of labels
         """
         self.n_bins = n_bins
         self.labels = labels or ['Low', 'Medium', 'High', 'VeryHigh']
         
         assert len(self.labels) == n_bins, \
-            f"标签数量 ({len(self.labels)}) 必须等于bins数量 ({n_bins})"
+            f"Label count ({len(self.labels)}) must equal bin count ({n_bins})"
         
-        # 保存每个变量的分位点（用于transform）
+        # Save quantiles for each variable (used for transform)
         self.quantile_dict_ = {}
         self.is_fitted = False
     
     def fit(self, data: pd.DataFrame, columns: List[str]):
         """
-        拟合离散化器（计算分位点）
+        Fit discretizer (calculate quantiles)
         
-        输入:
-            data: 数据框
-            columns: 需要离散化的列名列表
+        Input:
+            data: Dataframe
+            columns: List of column names to discretize
         """
-        logger.info(f"开始拟合离散化器，变量数: {len(columns)}")
+        logger.info(f"Starting discretizer fit, variables: {len(columns)}")
         
         quantiles = np.linspace(0, 1, self.n_bins + 1)
         
         for col in columns:
             if col not in data.columns:
-                logger.warning(f"列 '{col}' 不存在，跳过")
+                logger.warning(f"Column '{col}' does not exist, skipping")
                 continue
             
-            # 计算分位点
+            # Calculate quantile bins
             bins = data[col].quantile(quantiles).values
             
-            # 确保边界唯一（避免重复边界导致的错误）
+            # Ensure boundaries are unique (prevents errors from duplicate boundaries)
             bins = np.unique(bins)
             if len(bins) < len(quantiles):
-                logger.warning(f"列 '{col}' 的唯一分位点少于预期，可能有重复值")
+                logger.warning(f"Column '{col}' has fewer unique quantiles than expected; likely duplicate values")
             
             self.quantile_dict_[col] = bins
         
         self.is_fitted = True
-        logger.info("离散化器拟合完成")
+        logger.info("Discretizer fit complete")
     
     def transform(self, data: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         """
-        转换数据（离散化）
+        Transform data (Discretize)
         
-        输入:
-            data: 数据框
-            columns: 需要离散化的列名
+        Input:
+            data: Dataframe
+            columns: Column names to discretize
         
-        输出:
-            离散化后的数据框（原列被替换）
+        Output:
+            Discretized dataframe (original columns replaced)
         """
         if not self.is_fitted:
-            raise ValueError("离散化器未拟合，请先调用fit()")
+            raise ValueError("Discretizer not fitted. Call fit() first.")
         
         data_discrete = data.copy()
         
         for col in columns:
             if col not in self.quantile_dict_:
-                logger.warning(f"列 '{col}' 未在拟合时出现，跳过")
+                logger.warning(f"Column '{col}' was not seen during fit, skipping")
                 continue
             
             bins = self.quantile_dict_[col]
             
-            # 使用pd.cut进行离散化
+            # Discretize using pd.cut
             data_discrete[col] = pd.cut(
                 data[col],
                 bins=bins,
-                labels=self.labels[:len(bins)-1],  # 标签数 = bins数 - 1
+                labels=self.labels[:len(bins)-1],  # labels count = bins count - 1
                 include_lowest=True,
                 duplicates='drop'
             )
@@ -983,27 +991,27 @@ class QuantileDiscretizer:
         return data_discrete
     
     def fit_transform(self, data: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
-        """拟合并转换"""
+        """Fit and transform"""
         self.fit(data, columns)
         return self.transform(data, columns)
     
     def save(self, filepath: str):
-        """保存离散化器"""
+        """Save discretizer"""
         with open(filepath, 'wb') as f:
             pickle.dump(self.quantile_dict_, f)
-        logger.info(f"离散化器已保存到 {filepath}")
+        logger.info(f"Discretizer saved to {filepath}")
     
     def load(self, filepath: str):
-        """加载离散化器"""
+        """Load discretizer"""
         with open(filepath, 'rb') as f:
             self.quantile_dict_ = pickle.load(f)
         self.is_fitted = True
-        logger.info(f"离散化器已从 {filepath} 加载")
+        logger.info(f"Discretizer loaded from {filepath}")
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # 模拟数据
+    # Mock data
     np.random.seed(42)
     data = pd.DataFrame({
         'power': np.random.normal(3, 1, 1000),
@@ -1011,30 +1019,31 @@ if __name__ == "__main__":
         'current': np.random.normal(10, 2, 1000)
     })
     
-    # 离散化
+    # Discretization
     discretizer = QuantileDiscretizer(n_bins=4)
     
     columns_to_discretize = ['power', 'voltage', 'current']
     data_discrete = discretizer.fit_transform(data, columns_to_discretize)
     
-    print("离散化后的前5行:")
+    print("First 5 rows after discretization:")
     print(data_discrete.head())
     
-    print("\n各变量的分布:")
+    print("\nDistribution per variable:")
     for col in columns_to_discretize:
         print(f"\n{col}:")
         print(data_discrete[col].value_counts().sort_index())
+
 ```
 
 ---
 
-### 2.5 CAM/Attention聚类模块
+### 2.5 CAM/Attention Clustering Module
 
-#### 文件: `src/models/clustering.py`
+#### File: `src/models/clustering.py`
 
 ```python
 """
-CAM和Attention向量聚类模块
+CAM and Attention Vector Clustering Module
 """
 
 import numpy as np
@@ -1050,11 +1059,11 @@ logger = logging.getLogger(__name__)
 
 class DLPClusterer:
     """
-    深度学习参数（Deep Learning Parameters）聚类器
+    Deep Learning Parameters (DLP) Clusterer
     
-    用于:
-    1. CAM（类激活图）聚类
-    2. Attention权重向量聚类
+    Used for:
+    1. CAM (Class Activation Map) Clustering
+    2. Attention weight vector Clustering
     """
     
     def __init__(self, 
@@ -1062,10 +1071,10 @@ class DLPClusterer:
                  max_clusters: int = 10,
                  random_state: int = 42):
         """
-        参数:
-            n_clusters: 聚类数量（None则自动选择）
-            max_clusters: 自动选择时的最大聚类数
-            random_state: 随机种子
+        Parameters:
+            n_clusters: Number of clusters (None for automatic selection)
+            max_clusters: Maximum clusters for automatic selection
+            random_state: Random seed
         """
         self.n_clusters = n_clusters
         self.max_clusters = max_clusters
@@ -1077,15 +1086,15 @@ class DLPClusterer:
     
     def find_optimal_k(self, data: np.ndarray) -> int:
         """
-        使用肘部法则（Elbow Method）自动确定最优K
+        Determine optimal K using the Elbow Method/Silhouette Score
         
-        输入:
+        Input:
             data: [n_samples, n_features]
         
-        输出:
-            最优K值
+        Output:
+            Optimal K value
         """
-        logger.info("使用肘部法则寻找最优K值...")
+        logger.info("Finding optimal K using Elbow Method...")
         
         inertias = []
         silhouette_scores = []
@@ -1105,28 +1114,25 @@ class DLPClusterer:
             else:
                 silhouette_scores.append(0)
         
-        # 使用轮廓系数最大的K
+        # Use K with the highest Silhouette Score
         optimal_k = K_range[np.argmax(silhouette_scores)]
         
-        logger.info(f"最优K值: {optimal_k}")
-        logger.info(f"对应轮廓系数: {max(silhouette_scores):.3f}")
-        
-        # 可视化（可选）
-        # self._plot_elbow(K_range, inertias, silhouette_scores, optimal_k)
+        logger.info(f"Optimal K: {optimal_k}")
+        logger.info(f"Corresponding Silhouette Score: {max(silhouette_scores):.3f}")
         
         return optimal_k
     
     def fit(self, data: np.ndarray):
         """
-        拟合聚类器
+        Fit Clusterer
         
-        输入:
+        Input:
             data: [n_samples, n_features]
         """
         if self.n_clusters is None:
             self.n_clusters = self.find_optimal_k(data)
         
-        logger.info(f"开始K-means聚类，K={self.n_clusters}")
+        logger.info(f"Starting K-means clustering, K={self.n_clusters}")
         
         self.kmeans = KMeans(n_clusters=self.n_clusters,
                              random_state=self.random_state,
@@ -1135,121 +1141,121 @@ class DLPClusterer:
         self.labels_ = self.kmeans.fit_predict(data)
         self.cluster_centers_ = self.kmeans.cluster_centers_
         
-        logger.info("聚类完成")
+        logger.info("Clustering complete")
         self._print_cluster_info(data)
     
     def transform(self, data: np.ndarray) -> np.ndarray:
         """
-        将新数据映射到聚类标签
+        Map new data to cluster labels
         
-        输入:
+        Input:
             data: [n_samples, n_features]
         
-        输出:
-            聚类标签 [n_samples,]
+        Output:
+            Cluster labels [n_samples,]
         """
         if self.kmeans is None:
-            raise ValueError("聚类器未拟合")
+            raise ValueError("Clusterer not fitted")
         
         return self.kmeans.predict(data)
     
     def fit_transform(self, data: np.ndarray) -> np.ndarray:
-        """拟合并转换"""
+        """Fit and transform"""
         self.fit(data)
         return self.labels_
     
     def _print_cluster_info(self, data: np.ndarray):
-        """打印聚类统计信息"""
+        """Print cluster stats"""
         unique, counts = np.unique(self.labels_, return_counts=True)
         
-        logger.info("聚类分布:")
+        logger.info("Cluster Distribution:")
         for cluster_id, count in zip(unique, counts):
             ratio = count / len(data)
-            logger.info(f"  簇{cluster_id}: {count} 样本 ({ratio:.1%})")
+            logger.info(f"  Cluster {cluster_id}: {count} samples ({ratio:.1%})")
     
     def save(self, filepath: str):
-        """保存聚类器"""
+        """Save Clusterer"""
         with open(filepath, 'wb') as f:
             pickle.dump({
                 'kmeans': self.kmeans,
                 'n_clusters': self.n_clusters,
                 'cluster_centers': self.cluster_centers_
             }, f)
-        logger.info(f"聚类器已保存到 {filepath}")
+        logger.info(f"Clusterer saved to {filepath}")
     
     def load(self, filepath: str):
-        """加载聚类器"""
+        """Load Clusterer"""
         with open(filepath, 'rb') as f:
             data = pickle.load(f)
             self.kmeans = data['kmeans']
             self.n_clusters = data['n_clusters']
             self.cluster_centers_ = data['cluster_centers']
-        logger.info(f"聚类器已从 {filepath} 加载")
+        logger.info(f"Clusterer loaded from {filepath}")
 
 
 class AttentionClusterer(DLPClusterer):
     """
-    Attention向量聚类器（专用）
+    Attention Vector Clusterer (Specialized)
     
-    额外功能:
-    - 累积Attention向量处理
-    - 识别Early/Late/Other模式
+    Extra functions:
+    - Cumulative Attention vector processing
+    - Identification of Early/Late/Other patterns
     """
     
     def preprocess_attention(self, attention_weights: np.ndarray) -> np.ndarray:
         """
-        预处理Attention权重向量
+        Preprocess Attention weight vectors
         
-        步骤:
-        1. 归一化（确保和为1）
-        2. 计算累积和
+        Steps:
+        1. Normalization (ensure sum=1)
+        2. Compute cumulative sum
         
-        输入:
+        Input:
             attention_weights: [n_samples, sequence_length]
         
-        输出:
-            累积attention向量 [n_samples, sequence_length]
+        Output:
+            Cumulative attention vectors [n_samples, sequence_length]
         """
-        # 归一化
+        # Normalization
         normalized = attention_weights / (attention_weights.sum(axis=1, keepdims=True) + 1e-8)
         
-        # 累积和
+        # Cumulative Sum
         cumulative = np.cumsum(normalized, axis=1)
         
         return cumulative
     
     def fit(self, attention_weights: np.ndarray):
         """
-        拟合（自动预处理）
+        Fit (Auto-preprocessing)
         
-        输入:
+        Input:
             attention_weights: [n_samples, sequence_length]
         """
         processed = self.preprocess_attention(attention_weights)
         super().fit(processed)
         
-        # 为聚类命名（基于累积模式）
+        # Name clusters based on cumulative patterns
         self._name_clusters(processed)
     
     def _name_clusters(self, cumulative_attention: np.ndarray):
         """
-        根据累积Attention模式命名聚类
+        Name clusters based on Cumulative Attention patterns
         
-        策略:
-        - Early: 前50%时间累积到70%以上
-        - Late: 前50%时间累积到30%以下
-        - Other: 其他
+        Strategy:
+        - Early: Cumulative sum > 70% at the 50% time mark
+        - Late: Cumulative sum < 30% at the 50% time mark
+        - Other: Otherwise
         """
         self.cluster_names_ = {}
         
         mid_point = cumulative_attention.shape[1] // 2
         
         for cluster_id in range(self.n_clusters):
-            # 该簇的样本
+            # Samples in this cluster
             mask = self.labels_ == cluster_id
             cluster_samples = cumulative_attention[mask]
             
-            # 计算中点的平均累积值
+            # Average cumulative value at mid-point
             mid_cumulative = cluster_samples[:, mid_point].mean()
             
             if mid_cumulative > 0.7:
@@ -1261,19 +1267,19 @@ class AttentionClusterer(DLPClusterer):
             
             self.cluster_names_[cluster_id] = name
         
-        logger.info("Attention簇命名:")
+        logger.info("Attention Cluster Naming:")
         for cid, name in self.cluster_names_.items():
-            logger.info(f"  簇{cid} -> {name}")
+            logger.info(f"  Cluster {cid} -> {name}")
     
     def transform_to_names(self, attention_weights: np.ndarray) -> np.ndarray:
         """
-        转换为命名标签
+        Convert to named labels
         
-        输入:
+        Input:
             attention_weights: [n_samples, sequence_length]
         
-        输出:
-            命名标签 [n_samples,] (例如 ['Early', 'Late', ...])
+        Output:
+            Named labels [n_samples,] (e.g., ['Early', 'Late', ...])
         """
         processed = self.preprocess_attention(attention_weights)
         cluster_ids = super().transform(processed)
@@ -1281,54 +1287,56 @@ class AttentionClusterer(DLPClusterer):
         return np.array([self.cluster_names_[cid] for cid in cluster_ids])
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # === CAM聚类 ===
+    # === CAM Clustering ===
     np.random.seed(42)
     
-    # 模拟CAM数据（例如从CNN最后一层提取）
-    cam_data = np.random.rand(1000, 20)  # 1000样本，20个时间步
+    # Mock CAM data
+    cam_data = np.random.rand(1000, 20)  # 1000 samples, 20 steps
     
-    cam_clusterer = DLPClusterer(n_clusters=None)  # 自动选择K
+    cam_clusterer = DLPClusterer(n_clusters=None)  # Auto K
     cam_labels = cam_clusterer.fit_transform(cam_data)
     
-    print(f"CAM聚类完成，K={cam_clusterer.n_clusters}")
-    print(f"前10个样本的聚类标签: {cam_labels[:10]}")
+    print(f"CAM clustering complete, K={cam_clusterer.n_clusters}")
+    print(f"Cluster labels for first 10 samples: {cam_labels[:10]}")
     
-    # === Attention聚类 ===
-    # 模拟Attention权重（前期高 vs 后期高）
-    attention_early = np.random.beta(2, 5, size=(500, 80))  # 前期高
-    attention_late = np.random.beta(5, 2, size=(500, 80))   # 后期高
+    # === Attention Clustering ===
+    # Mock Attention weights (Early peak vs Late peak)
+    attention_early = np.random.beta(2, 5, size=(500, 80))  # High early
+    attention_late = np.random.beta(5, 2, size=(500, 80))   # High late
     attention_data = np.vstack([attention_early, attention_late])
     
     att_clusterer = AttentionClusterer(n_clusters=3)
     att_clusterer.fit(attention_data)
     
-    # 转换为命名标签
+    # Convert to names
     att_names = att_clusterer.transform_to_names(attention_data[:10])
-    print(f"\n前10个样本的Attention类型: {att_names}")
+    print(f"\nAttention types for first 10 samples: {att_names}")
+
 ```
 
 ---
 
-以上是核心模块的实现代码。由于篇幅限制，后续模块（关联规则、贝叶斯网络、因果推断）我将在下一部分继续编写。
+The above covers the implementation code for core modules. Due to space constraints, subsequent modules (Association Rules, Bayesian Network, Causal Inference) will be provided in the next sections.
 
-你现在可以看到：
-1. **项目设计文档**已创建（完整的架构设计）
-2. **实现文档**正在创建（包含详细代码）
+Currently you can see:
 
-这些文档都位于 [doc/](doc/)目录下。接下来我会继续完成实现文档并开始搭建项目代码结构。
+1. **Project Design Document** created (Full architecture design)
+2. **Implementation Document** being created (Detailed code)
+
+All documents are located in the [doc/](https://www.google.com/search?q=doc/) directory. Next, I will finish the implementation document and start setting up the project code structure.
 
 ---
 
-### 2.6 关联规则挖掘模块
+### 2.6 Association Rule Mining Module
 
-#### 文件: `src/models/association.py`
+#### File: `src/models/association.py`
 
 ```python
 """
-关联规则挖掘模块（Apriori算法）
-用于提取离散变量间的高频关联模式
+Association Rule Mining Module (Apriori Algorithm)
+Used to extract frequent association patterns between discrete variables
 """
 
 import pandas as pd
@@ -1343,9 +1351,9 @@ logger = logging.getLogger(__name__)
 
 class AssociationRuleMiner:
     """
-    关联规则挖掘器
+    Association Rule Miner
     
-    基于Apriori算法提取候选因果关系
+    Extracts candidate causal relationships based on the Apriori algorithm
     """
     
     def __init__(self, 
@@ -1353,10 +1361,10 @@ class AssociationRuleMiner:
                  min_confidence: float = 0.6,
                  min_lift: float = 1.0):
         """
-        参数:
-            min_support: 最小支持度阈值
-            min_confidence: 最小置信度阈值
-            min_lift: 最小提升度阈值
+        Parameters:
+            min_support: Minimum support threshold
+            min_confidence: Minimum confidence threshold
+            min_lift: Minimum lift threshold
         """
         self.min_support = min_support
         self.min_confidence = min_confidence
@@ -1367,45 +1375,45 @@ class AssociationRuleMiner:
     
     def prepare_data(self, df: pd.DataFrame, target_col: str = 'EDP') -> pd.DataFrame:
         """
-        准备one-hot编码数据
+        Prepare One-hot encoded data
         
-        输入:
-            df: 离散化后的数据框
-            target_col: 目标列名（EDP状态）
+        Input:
+            df: Discretized dataframe
+            target_col: Target column name (EDP state)
         
-        输出:
-            One-hot编码的数据框
+        Output:
+            One-hot encoded dataframe
         """
-        logger.info("准备关联规则挖掘数据...")
+        logger.info("Preparing data for association rule mining...")
         
-        # 对每一列创建 "列名_值" 的组合
+        # Create "ColumnName_Value" combinations for each row
         transactions = []
         
         for _, row in df.iterrows():
             items = []
             for col in df.columns:
                 if pd.notna(row[col]):
-                    # 创建 "变量=值" 的项
+                    # Create "Variable=Value" item
                     item = f"{col}_{row[col]}"
                     items.append(item)
             transactions.append(items)
         
-        # One-hot编码
+        # One-hot encoding
         te = TransactionEncoder()
         te_ary = te.fit(transactions).transform(transactions)
         df_encoded = pd.DataFrame(te_ary, columns=te.columns_)
         
-        logger.info(f"编码后特征数: {len(df_encoded.columns)}")
+        logger.info(f"Encoded features count: {len(df_encoded.columns)}")
         return df_encoded
     
     def mine_frequent_itemsets(self, df_encoded: pd.DataFrame):
         """
-        挖掘频繁项集
+        Mine frequent itemsets
         
-        输入:
-            df_encoded: One-hot编码后的数据框
+        Input:
+            df_encoded: One-hot encoded dataframe
         """
-        logger.info(f"挖掘频繁项集 (min_support={self.min_support})...")
+        logger.info(f"Mining frequent itemsets (min_support={self.min_support})...")
         
         self.frequent_itemsets_ = apriori(
             df_encoded,
@@ -1414,32 +1422,32 @@ class AssociationRuleMiner:
             low_memory=True
         )
         
-        logger.info(f"找到 {len(self.frequent_itemsets_)} 个频繁项集")
+        logger.info(f"Found {len(self.frequent_itemsets_)} frequent itemsets")
         return self.frequent_itemsets_
     
     def generate_rules(self, target_suffix: str = 'EDP'):
         """
-        生成关联规则
+        Generate association rules
         
-        输入:
-            target_suffix: 目标变量后缀（用于过滤规则）
+        Input:
+            target_suffix: Target variable suffix (used for filtering rules)
         
-        输出:
-            规则数据框
+        Output:
+            Rules dataframe
         """
         if self.frequent_itemsets_ is None:
-            raise ValueError("请先调用 mine_frequent_itemsets()")
+            raise ValueError("Call mine_frequent_itemsets() first")
         
-        logger.info("生成关联规则...")
+        logger.info("Generating association rules...")
         
-        # 生成所有规则
+        # Generate all rules
         all_rules = association_rules(
             self.frequent_itemsets_,
             metric="confidence",
             min_threshold=self.min_confidence
         )
         
-        # 过滤：只保留后件包含目标变量的规则
+        # Filter: Keep only rules where the consequent contains the target variable
         def has_target_in_consequent(consequents):
             return any(target_suffix in str(item) for item in consequents)
         
@@ -1447,30 +1455,30 @@ class AssociationRuleMiner:
             all_rules['consequents'].apply(has_target_in_consequent)
         ]
         
-        # 进一步过滤lift
+        # Further filter by lift
         self.rules_ = self.rules_[self.rules_['lift'] >= self.min_lift]
         
-        # 按confidence排序
+        # Sort by confidence
         self.rules_ = self.rules_.sort_values(
             by='confidence',
             ascending=False
         ).reset_index(drop=True)
         
-        logger.info(f"生成 {len(self.rules_)} 条有效规则")
+        logger.info(f"Generated {len(self.rules_)} valid rules")
         return self.rules_
     
     def filter_rules_for_state(self, state: str) -> pd.DataFrame:
         """
-        过滤特定EDP状态的规则
+        Filter rules for a specific EDP state
         
-        输入:
-            state: 'Peak', 'Normal', 或 'Lower'
+        Input:
+            state: 'Peak', 'Normal', or 'Lower'
         
-        输出:
-            该状态的规则子集
+        Output:
+            Subset of rules for the state
         """
         if self.rules_ is None:
-            raise ValueError("请先调用 generate_rules()")
+            raise ValueError("Call generate_rules() first")
         
         state_key = f"EDP_{state}"
         
@@ -1480,19 +1488,19 @@ class AssociationRuleMiner:
             )
         ]
         
-        logger.info(f"状态 '{state}' 的规则数: {len(filtered)}")
+        logger.info(f"Rule count for state '{state}': {len(filtered)}")
         return filtered
     
     def get_top_rules(self, n: int = 10, state: str = None) -> pd.DataFrame:
         """
-        获取Top-N规则
+        Get Top-N rules
         
-        输入:
-            n: 返回规则数量
-            state: 特定状态（None则返回所有）
+        Input:
+            n: Number of rules to return
+            state: Specific state (None for all)
         
-        输出:
-            Top规则数据框
+        Output:
+            Top rules dataframe
         """
         if state is not None:
             rules = self.filter_rules_for_state(state)
@@ -1503,13 +1511,13 @@ class AssociationRuleMiner:
     
     def rules_to_constraints(self, state: str) -> List[tuple]:
         """
-        将规则转换为贝叶斯网络的候选边
+        Convert rules to candidate edges for Bayesian Network
         
-        输入:
-            state: EDP状态
+        Input:
+            state: EDP state
         
-        输出:
-            候选边列表 [(from_var, to_var), ...]
+        Output:
+            List of candidate edges [(from_var, to_var), ...]
         """
         state_rules = self.filter_rules_for_state(state)
         
@@ -1517,61 +1525,61 @@ class AssociationRuleMiner:
         target_node = 'EDP'
         
         for _, rule in state_rules.iterrows():
-            # 从前件中提取变量名（去掉值部分）
+            # Extract variable names from antecedents (remove value part)
             for antecedent in rule['antecedents']:
-                # 格式: "VariableName_Value"
+                # Format: "VariableName_Value"
                 var_name = str(antecedent).split('_')[0]
                 
-                # 添加边: 变量 → EDP
+                # Add edge: Variable -> EDP
                 if var_name != target_node:
                     edges.append((var_name, target_node))
         
-        # 去重
+        # De-duplicate
         edges = list(set(edges))
         
-        logger.info(f"状态 '{state}' 提取 {len(edges)} 条候选边")
+        logger.info(f"Extracted {len(edges)} candidate edges for state '{state}'")
         return edges
     
     def print_rules_summary(self, n: int = 5):
         """
-        打印规则摘要
+        Print rules summary
         
-        输入:
-            n: 每个状态显示的规则数
+        Input:
+            n: Number of rules to display per state
         """
         if self.rules_ is None or len(self.rules_) == 0:
-            logger.warning("没有找到规则")
+            logger.warning("No rules found")
             return
         
         print("\n" + "=" * 80)
-        print("关联规则摘要")
+        print("Association Rules Summary")
         print("=" * 80)
         
         for state in ['Peak', 'Normal', 'Lower']:
-            print(f"\n--- 状态: {state} ---")
+            print(f"\n--- State: {state} ---")
             state_rules = self.filter_rules_for_state(state)
             
             if len(state_rules) == 0:
-                print("  (无规则)")
+                print("  (No rules)")
                 continue
             
             for idx, rule in state_rules.head(n).iterrows():
                 antecedents_str = ', '.join([str(x) for x in rule['antecedents']])
                 consequents_str = ', '.join([str(x) for x in rule['consequents']])
                 
-                print(f"\n  规则 {idx + 1}:")
+                print(f"\n  Rule {idx + 1}:")
                 print(f"    IF {antecedents_str}")
                 print(f"    THEN {consequents_str}")
-                print(f"    支持度: {rule['support']:.3f}")
-                print(f"    置信度: {rule['confidence']:.3f}")
-                print(f"    提升度: {rule['lift']:.3f}")
+                print(f"    Support: {rule['support']:.3f}")
+                print(f"    Confidence: {rule['confidence']:.3f}")
+                print(f"    Lift: {rule['lift']:.3f}")
         
         print("\n" + "=" * 80)
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # 模拟离散化数据
+    # Mock discretized data
     np.random.seed(42)
     
     data = pd.DataFrame({
@@ -1584,39 +1592,40 @@ if __name__ == "__main__":
         'EDP': np.random.choice(['Peak', 'Normal', 'Lower'], 1000, p=[0.2, 0.6, 0.2])
     })
     
-    # 创建规则挖掘器
+    # Create rule miner
     miner = AssociationRuleMiner(
         min_support=0.05,
         min_confidence=0.5,
         min_lift=1.2
     )
     
-    # 数据准备
+    # Data preparation
     df_encoded = miner.prepare_data(data)
     
-    # 挖掘频繁项集
+    # Mine frequent itemsets
     miner.mine_frequent_itemsets(df_encoded)
     
-    # 生成规则
+    # Generate rules
     rules = miner.generate_rules()
     
-    # 打印摘要
+    # Print summary
     miner.print_rules_summary(n=3)
     
-    # 提取候选边
+    # Extract candidate edges
     peak_edges = miner.rules_to_constraints('Peak')
-    print(f"\nPeak状态候选边: {peak_edges}")
+    print(f"\nCandidate edges for Peak state: {peak_edges}")
+
 ```
 
 ---
 
-### 2.7 贝叶斯网络模块
+### 2.7 Bayesian Network Module
 
-#### 文件: `src/models/bayesian_net.py`
+#### File: `src/models/bayesian_net.py`
 
 ```python
 """
-贝叶斯网络构建与推断模块
+Bayesian Network Construction and Inference Module
 """
 
 import pandas as pd
@@ -1638,24 +1647,24 @@ logger = logging.getLogger(__name__)
 
 class CausalBayesianNetwork:
     """
-    因果贝叶斯网络
+    Causal Bayesian Network
     
-    结合领域知识约束的结构学习
+    Structure learning combined with domain knowledge constraints
     """
     
     def __init__(self, domain_knowledge: dict = None):
         """
-        参数:
-            domain_knowledge: 领域知识约束字典
+        Parameters:
+            domain_knowledge: Domain knowledge constraint dictionary
                 {
-                    'themes': {  # 主题分组
-                        'physical_env': [变量列表],
-                        'appliances': [变量列表],
-                        'consumption': [变量列表],
-                        'dlp': [变量列表],
-                        'target': [目标变量]
+                    'themes': {  # Theme grouping
+                        'physical_env': [var list],
+                        'appliances': [var list],
+                        'consumption': [var list],
+                        'dlp': [var list],
+                        'target': [target variable]
                     },
-                    'allow_directions': [  # 允许的方向
+                    'allow_directions': [  # Allowed directions
                         ('theme_from', 'theme_to'),
                         ...
                     ]
@@ -1666,13 +1675,13 @@ class CausalBayesianNetwork:
         self.model = None
         self.inference = None
         
-        # 白名单和黑名单
+        # White-list and black-list
         self.white_list = []
         self.black_list = []
     
     def _default_domain_knowledge(self) -> dict:
         """
-        默认领域知识（基于论文表2）
+        Default domain knowledge (based on Table 2 in the paper)
         """
         return {
             'themes': {
@@ -1687,27 +1696,27 @@ class CausalBayesianNetwork:
                 ('physical_env', 'appliances'),
                 ('appliances', 'consumption'),
                 ('consumption', 'target'),
-                ('dlp', 'target')  # DLP直接影响目标
+                ('dlp', 'target')  # DLP directly influences target
             ]
         }
     
     def _build_constraints(self, variables: List[str]):
         """
-        根据领域知识构建白名单和黑名单
+        Construct white-list and black-list based on domain knowledge
         
-        输入:
-            variables: 数据中实际存在的变量列表
+        Input:
+            variables: List of variables actually present in the data
         """
-        logger.info("构建领域知识约束...")
+        logger.info("Constructing domain knowledge constraints...")
         
-        # 映射变量到主题
+        # Map variables to themes
         var_to_theme = {}
         for theme, vars_list in self.domain_knowledge['themes'].items():
             for var in vars_list:
                 if var in variables:
                     var_to_theme[var] = theme
         
-        # 生成白名单（允许的边）
+        # Generate white-list (allowed edges)
         for from_theme, to_theme in self.domain_knowledge['allow_directions']:
             from_vars = [v for v, t in var_to_theme.items() if t == from_theme]
             to_vars = [v for v, t in var_to_theme.items() if t == to_theme]
@@ -1717,8 +1726,8 @@ class CausalBayesianNetwork:
                     if from_var != to_var:
                         self.white_list.append((from_var, to_var))
         
-        # 生成黑名单（禁止的边）
-        # 规则1: 目标变量不能指向其他变量
+        # Generate black-list (forbidden edges)
+        # Rule 1: Target variable cannot point to other variables
         target_vars = self.domain_knowledge['themes']['target']
         for target in target_vars:
             if target in variables:
@@ -1726,7 +1735,7 @@ class CausalBayesianNetwork:
                     if var != target:
                         self.black_list.append((target, var))
         
-        # 规则2: 反向因果（consumption → appliances, appliances → physical_env）
+        # Rule 2: Reverse causality (consumption -> appliances, appliances -> physical_env)
         consumption_vars = [v for v, t in var_to_theme.items() 
                             if t == 'consumption']
         appliance_vars = [v for v, t in var_to_theme.items() 
@@ -1742,93 +1751,93 @@ class CausalBayesianNetwork:
             for phy_var in physical_vars:
                 self.black_list.append((app_var, phy_var))
         
-        logger.info(f"白名单边数: {len(self.white_list)}")
-        logger.info(f"黑名单边数: {len(self.black_list)}")
+        logger.info(f"White-list edges count: {len(self.white_list)}")
+        logger.info(f"Black-list edges count: {len(self.black_list)}")
     
     def learn_structure(self, data: pd.DataFrame, scoring_method='bic'):
         """
-        结构学习（带领域约束）
+        Structure Learning (with domain constraints)
         
-        输入:
-            data: 离散化后的数据
-            scoring_method: 评分方法 ('bic', 'k2', 'bdeu')
+        Input:
+            data: Discretized data
+            scoring_method: Scoring method ('bic', 'k2', 'bdeu')
         
-        输出:
-            学习到的DAG结构
+        Output:
+            Learned DAG structure
         """
-        logger.info("开始贝叶斯网络结构学习...")
+        logger.info("Starting Bayesian Network structure learning...")
         
         variables = list(data.columns)
         self._build_constraints(variables)
         
-        # 选择评分函数
+        # Select scoring function
         if scoring_method == 'bic':
             scoring = BicScore(data)
         else:
-            raise ValueError(f"不支持的评分方法: {scoring_method}")
+            raise ValueError(f"Unsupported scoring method: {scoring_method}")
         
-        # Hill-Climbing搜索
+        # Hill-Climbing Search
         hc = HillClimbSearch(data)
         
         best_model = hc.estimate(
             scoring_method=scoring,
             white_list=self.white_list if len(self.white_list) > 0 else None,
             black_list=self.black_list if len(self.black_list) > 0 else None,
-            max_indegree=5,  # 限制入度，避免过于复杂
+            max_indegree=5,  # Limit in-degree to avoid complexity
             max_iter=int(1e4)
         )
         
-        logger.info(f"结构学习完成。边数: {len(best_model.edges())}")
+        logger.info(f"Structure learning complete. Edge count: {len(best_model.edges())}")
         return best_model
     
     def learn_parameters(self, data: pd.DataFrame, structure=None, method='mle'):
         """
-        参数学习（CPT估计）
+        Parameter Learning (CPT Estimation)
         
-        输入:
-            data: 离散化数据
-            structure: DAG结构（None则使用已学习的）
-            method: 'mle' (最大似然) 或 'bayes' (贝叶斯估计)
+        Input:
+            data: Discretized data
+            structure: DAG structure (if None, use learned one)
+            method: 'mle' (Maximum Likelihood) or 'bayes' (Bayesian Estimation)
         
-        输出:
-            完整的贝叶斯网络模型
+        Output:
+            Full Bayesian Network model
         """
         if structure is None and self.model is None:
-            raise ValueError("请先进行结构学习或提供结构")
+            raise ValueError("Run structure learning first or provide a structure")
         
         if structure is not None:
             self.model = BayesianNetwork(structure.edges())
         
-        logger.info(f"参数学习 (方法: {method})...")
+        logger.info(f"Parameter learning (Method: {method})...")
         
         if method == 'mle':
             estimator = MaximumLikelihoodEstimator
         elif method == 'bayes':
             estimator = BayesianEstimator
         else:
-            raise ValueError(f"未知方法: {method}")
+            raise ValueError(f"Unknown method: {method}")
         
         self.model.fit(data, estimator=estimator)
         
-        # 初始化推断引擎
+        # Initialize inference engine
         self.inference = VariableElimination(self.model)
         
-        logger.info("参数学习完成")
+        logger.info("Parameter learning complete")
         return self.model
     
     def query(self, variables: List[str], evidence: dict = None) -> dict:
         """
-        贝叶斯推断
+        Bayesian Inference
         
-        输入:
-            variables: 查询变量列表
-            evidence: 观测证据 {'var': 'value', ...}
+        Input:
+            variables: List of query variables
+            evidence: Observed evidence {'var': 'value', ...}
         
-        输出:
-            后验概率分布
+        Output:
+            Posterior probability distribution
         """
         if self.inference is None:
-            raise ValueError("模型未拟合，无法推断")
+            raise ValueError("Model not fitted, cannot perform inference")
         
         result = self.inference.query(
             variables=variables,
@@ -1839,17 +1848,17 @@ class CausalBayesianNetwork:
     
     def map_query(self, variables: List[str], evidence: dict = None) -> dict:
         """
-        最大后验估计（MAP）
+        Maximum A Posteriori (MAP) Estimation
         
-        输入:
-            variables: 查询变量
-            evidence: 证据
+        Input:
+            variables: Query variables
+            evidence: Evidence
         
-        输出:
-            最可能的状态
+        Output:
+            Most probable state
         """
         if self.inference is None:
-            raise ValueError("模型未拟合")
+            raise ValueError("Model not fitted")
         
         result = self.inference.map_query(
             variables=variables,
@@ -1859,31 +1868,31 @@ class CausalBayesianNetwork:
         return result
     
     def get_cpd(self, variable: str):
-        """获取条件概率表"""
+        """Get Conditional Probability Table"""
         return self.model.get_cpds(variable)
     
     def save(self, filepath: str):
-        """保存模型"""
+        """Save Model"""
         with open(filepath, 'wb') as f:
             pickle.dump({
                 'model': self.model,
                 'domain_knowledge': self.domain_knowledge
             }, f)
-        logger.info(f"模型已保存到 {filepath}")
+        logger.info(f"Model saved to {filepath}")
     
     def load(self, filepath: str):
-        """加载模型"""
+        """Load Model"""
         with open(filepath, 'rb') as f:
             data = pickle.load(f)
             self.model = data['model']
             self.domain_knowledge = data['domain_knowledge']
             self.inference = VariableElimination(self.model)
-        logger.info(f"模型已从 {filepath} 加载")
+        logger.info(f"Model loaded from {filepath}")
     
     def visualize(self, filename: str = None):
-        """可视化DAG结构"""
+        """Visualize DAG Structure"""
         if self.model is None:
-            raise ValueError("模型未构建")
+            raise ValueError("Model not constructed")
         
         import matplotlib.pyplot as plt
         
@@ -1905,14 +1914,14 @@ class CausalBayesianNetwork:
         
         if filename:
             plt.savefig(filename, dpi=300, bbox_inches='tight')
-            logger.info(f"网络结构图已保存到 {filename}")
+            logger.info(f"Network structure image saved to {filename}")
         else:
             plt.show()
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # 模拟数据
+    # Mock data
     np.random.seed(42)
     data = pd.DataFrame({
         'Season': np.random.choice(['Spring', 'Summer', 'Fall', 'Winter'], 1000),
@@ -1925,16 +1934,16 @@ if __name__ == "__main__":
         'EDP': np.random.choice(['Peak', 'Normal', 'Lower'], 1000)
     })
     
-    # 创建BN
+    # Create BN
     bn = CausalBayesianNetwork()
     
-    # 结构学习
+    # Structure learning
     structure = bn.learn_structure(data)
     
-    # 参数学习
+    # Parameter learning
     bn.learn_parameters(data)
     
-    # 推断
+    # Inference
     evidence = {
         'Season': 'Summer',
         'ClimateControl': 'VeryHigh',
@@ -1942,23 +1951,23 @@ if __name__ == "__main__":
     }
     
     result = bn.query(variables=['EDP'], evidence=evidence)
-    print("\n推断结果:")
+    print("\nInference Result:")
     print(result)
     
-    # 可视化
+    # Visualize
     bn.visualize('bn_structure.png')
+
 ```
 
 ---
 
+### 2.8 Causal Inference Module
 
-### 2.8 因果推断模块
-
-#### 文件: `src/inference/causal_inference.py`
+#### File: `src/inference/causal_inference.py`
 
 ```python
 """
-因果推断和敏感性分析模块
+Causal Inference and Sensitivity Analysis Module
 """
 
 import pandas as pd
@@ -1972,43 +1981,43 @@ logger = logging.getLogger(__name__)
 
 class CausalInferenceEngine:
     """
-    因果推断引擎
+    Causal Inference Engine
     
-    基于贝叶斯网络进行因果推断和敏感性分析
+    Performs causal inference and sensitivity analysis based on Bayesian Network
     """
     
     def __init__(self, bayesian_network):
         """
-        参数:
-            bayesian_network: CausalBayesianNetwork实例
+        Parameters:
+            bayesian_network: CausalBayesianNetwork instance
         """
         self.bn = bayesian_network
         
         if self.bn.inference is None:
-            raise ValueError("贝叶斯网络未拟合")
+            raise ValueError("Bayesian Network not fitted")
     
     def causal_effect(self, 
                      intervention: Dict[str, str],
                      target: str,
                      evidence: Dict[str, str] = None) -> pd.DataFrame:
         """
-        计算do-calculus下的因果效应
+        Calculate Causal Effect under do-calculus
         
-        输入:
-            intervention: 干预变量及其值 {'var': 'value'}
-            target: 目标变量
-            evidence: 观测证据 (可选)
+        Input:
+            intervention: Intervention variable and value {'var': 'value'}
+            target: Target variable
+            evidence: Observed evidence (optional)
         
-        输出:
-            目标变量的后验分布
+        Output:
+            Posterior distribution of the target variable
         """
-        logger.info(f"计算因果效应: do({intervention}) -> {target}")
+        logger.info(f"Calculating causal effect: do({intervention}) -> {target}")
         
-        # 合并干预和证据
+        # Merge intervention and evidence
         combined_evidence = evidence.copy() if evidence else {}
         combined_evidence.update(intervention)
         
-        # 查询目标变量
+        # Query target variable
         result = self.bn.query(
             variables=[target],
             evidence=combined_evidence
@@ -2022,33 +2031,33 @@ class CausalInferenceEngine:
                             baseline: Dict[str, str] = None,
                             n_samples: int = 100) -> pd.DataFrame:
         """
-        敏感性分析（单变量扰动）
+        Sensitivity Analysis (Univariate Perturbation)
         
-        输入:
-            target: 目标变量
-            variables: 待分析的变量列表
-            baseline: 基线观测（None则使用空证据）
-            n_samples: 每个变量的采样数
+        Input:
+            target: Target variable
+            variables: List of variables to analyze
+            baseline: Baseline observation (if None, use empty evidence)
+            n_samples: Sample count per variable
         
-        输出:
-            敏感性分数DataFrame
+        Output:
+            Sensitivity scores DataFrame
         """
-        logger.info(f"敏感性分析: 目标={target}, 变量数={len(variables)}")
+        logger.info(f"Sensitivity Analysis: Target={target}, Variable count={len(variables)}")
         
         baseline = baseline or {}
         
         sensitivity_scores = {}
         
         for var in variables:
-            # 获取变量的所有可能值
+            # Get all possible values for variable
             var_cpd = self.bn.get_cpd(var)
             var_states = var_cpd.state_names[var]
             
-            # 计算每个值下目标的分布
+            # Calculate target distribution under each value
             distributions = []
             
             for state in var_states:
-                # 干预此变量
+                # Intervene on this variable
                 evidence = baseline.copy()
                 evidence[var] = state
                 
@@ -2058,19 +2067,19 @@ class CausalInferenceEngine:
                         evidence=evidence
                     )
                     
-                    # 提取概率分布
+                    # Extract probability distribution
                     probs = result.values
                     distributions.append(probs)
                     
                 except Exception as e:
-                    logger.warning(f"查询失败: {var}={state}, 错误: {e}")
+                    logger.warning(f"Query failed: {var}={state}, Error: {e}")
                     distributions.append(None)
             
-            # 计算分布的方差（作为敏感性指标）
+            # Calculate variance of distributions (as sensitivity indicator)
             valid_dists = [d for d in distributions if d is not None]
             
             if len(valid_dists) > 1:
-                # 计算各状态下Peak/Normal/Lower概率的标准差
+                # Calculate standard deviation of probabilities for Peak/Normal/Lower
                 dist_array = np.array(valid_dists)
                 sensitivity = np.mean(np.std(dist_array, axis=0))
             else:
@@ -2078,14 +2087,14 @@ class CausalInferenceEngine:
             
             sensitivity_scores[var] = sensitivity
         
-        # 转为DataFrame并排序
+        # Convert to DataFrame and sort
         df = pd.DataFrame.from_dict(
             sensitivity_scores,
             orient='index',
             columns=['Sensitivity']
         ).sort_values(by='Sensitivity', ascending=False)
         
-        logger.info(f"敏感性分析完成，Top变量: {df.head(3).index.tolist()}")
+        logger.info(f"Sensitivity Analysis complete. Top variables: {df.head(3).index.tolist()}")
         
         return df
     
@@ -2094,12 +2103,12 @@ class CausalInferenceEngine:
                      top_n: int = 10,
                      filename: str = None):
         """
-        绘制Tornado图（敏感性可视化）
+        Plot Tornado Chart (Sensitivity Visualization)
         
-        输入:
-            sensitivity_df: 敏感性分析结果
-            top_n: 显示Top-N变量
-            filename: 保存路径（None则显示）
+        Input:
+            sensitivity_df: Sensitivity analysis result
+            top_n: Display Top-N variables
+            filename: Save path (None to show)
         """
         top_vars = sensitivity_df.head(top_n)
         
@@ -2111,44 +2120,44 @@ class CausalInferenceEngine:
         plt.yticks(y_pos, top_vars.index)
         plt.xlabel('Sensitivity Score', fontsize=12)
         plt.title('Tornado Chart: Variable Sensitivity', fontsize=14, fontweight='bold')
-        plt.gca().invert_yaxis()  # 最高的在顶部
+        plt.gca().invert_yaxis()  # Highest at top
         
         plt.tight_layout()
         
         if filename:
             plt.savefig(filename, dpi=300, bbox_inches='tight')
-            logger.info(f"Tornado图已保存到 {filename}")
+            logger.info(f"Tornado chart saved to {filename}")
         else:
             plt.show()
     
     def counterfactual_analysis(self,
-                               factual_evidence: Dict[str, str],
-                               intervention: Dict[str, str],
-                               target: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+                                factual_evidence: Dict[str, str],
+                                intervention: Dict[str, str],
+                                target: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
-        反事实分析
+        Counterfactual Analysis
         
-        比较:
-          - 事实情况: P(Target | Evidence)
-          - 反事实情况: P(Target | do(Intervention), Evidence)
+        Compare:
+          - Factual Case: P(Target | Evidence)
+          - Counterfactual Case: P(Target | do(Intervention), Evidence)
         
-        输入:
-            factual_evidence: 事实观测
-            intervention: 反事实干预
-            target: 目标变量
+        Input:
+            factual_evidence: Factual observation
+            intervention: Counterfactual intervention
+            target: Target variable
         
-        输出:
-            (事实分布, 反事实分布)
+        Output:
+            (Factual Distribution, Counterfactual Distribution)
         """
-        logger.info("反事实分析...")
+        logger.info("Counterfactual Analysis...")
         
-        # 事实推断
+        # Factual Inference
         factual_result = self.bn.query(
             variables=[target],
             evidence=factual_evidence
         )
         
-        # 反事实推断
+        # Counterfactual Inference
         counterfactual_evidence = factual_evidence.copy()
         counterfactual_evidence.update(intervention)
         
@@ -2157,7 +2166,7 @@ class CausalInferenceEngine:
             evidence=counterfactual_evidence
         )
         
-        logger.info("反事实分析完成")
+        logger.info("Counterfactual Analysis complete")
         
         return factual_result, counterfactual_result
     
@@ -2167,12 +2176,12 @@ class CausalInferenceEngine:
                             labels: Tuple[str, str] = ('Factual', 'Counterfactual'),
                             filename: str = None):
         """
-        可视化对比两个分布
+        Visualize and compare two distributions
         
-        输入:
-            dist1, dist2: 概率分布
-            labels: 分布标签
-            filename: 保存路径
+        Input:
+            dist1, dist2: Probability distributions
+            labels: Distribution labels
+            filename: Save path
         """
         states = dist1.state_names[dist1.variables[0]]
         
@@ -2195,7 +2204,7 @@ class CausalInferenceEngine:
         
         if filename:
             plt.savefig(filename, dpi=300, bbox_inches='tight')
-            logger.info(f"分布对比图已保存到 {filename}")
+            logger.info(f"Distribution comparison image saved to {filename}")
         else:
             plt.show()
     
@@ -2205,45 +2214,45 @@ class CausalInferenceEngine:
                      evidence: Dict[str, str],
                      top_n: int = 5) -> pd.DataFrame:
         """
-        解释特定状态的关键因素
+        Explain key factors for a specific state
         
-        输入:
-            target: 目标变量
-            target_state: 目标状态（如'Peak'）
-            evidence: 当前观测
-            top_n: 返回Top-N关键因素
+        Input:
+            target: Target variable
+            target_state: Target state (e.g., 'Peak')
+            evidence: Current observation
+            top_n: Return Top-N key factors
         
-        输出:
-            关键因素DataFrame
+        Output:
+            Key factors DataFrame
         """
-        logger.info(f"解释状态: {target}={target_state}")
+        logger.info(f"Explaining state: {target}={target_state}")
         
-        # 获取所有父节点
+        # Get all parent nodes
         parents = list(self.bn.model.get_parents(target))
         
         if len(parents) == 0:
-            logger.warning(f"{target}没有父节点，无法解释")
+            logger.warning(f"{target} has no parent nodes, cannot explain")
             return pd.DataFrame()
         
-        # 计算每个父节点的贡献
+        # Calculate contribution of each parent node
         contributions = {}
         
-        # 基线：无任何证据
+        # Baseline: No evidence
         baseline_prob = self.bn.query(
             variables=[target],
             evidence={}
         ).values
         
-        # 获取target_state的索引
+        # Get target_state index
         target_cpd = self.bn.get_cpd(target)
         target_states = target_cpd.state_names[target]
         state_idx = list(target_states).index(target_state)
         baseline_target_prob = baseline_prob[state_idx]
         
-        # 逐个证据计算贡献
+        # Calculate contribution for each piece of evidence
         for var in parents:
             if var in evidence:
-                # 计算有此证据时的概率
+                # Probability with this evidence
                 single_evidence = {var: evidence[var]}
                 
                 prob_with_evidence = self.bn.query(
@@ -2251,7 +2260,7 @@ class CausalInferenceEngine:
                     evidence=single_evidence
                 ).values[state_idx]
                 
-                # 贡献 = P(Target=state|Var) - P(Target=state)
+                # Contribution = P(Target=state|Var) - P(Target=state)
                 contribution = prob_with_evidence - baseline_target_prob
                 
                 contributions[var] = {
@@ -2260,20 +2269,20 @@ class CausalInferenceEngine:
                     'P(Target|Var)': prob_with_evidence
                 }
         
-        # 转为DataFrame
+        # Convert to DataFrame
         df = pd.DataFrame.from_dict(contributions, orient='index')
         df = df.sort_values(by='Contribution', ascending=False).head(top_n)
         
-        logger.info(f"Top {top_n} 关键因素已识别")
+        logger.info(f"Top {top_n} key factors identified")
         
         return df
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
     from bayesian_net import CausalBayesianNetwork
     
-    # 构建示例BN
+    # Build sample BN
     np.random.seed(42)
     data = pd.DataFrame({
         'Season': np.random.choice(['Spring', 'Summer', 'Fall', 'Winter'], 1000),
@@ -2287,27 +2296,27 @@ if __name__ == "__main__":
     structure = bn.learn_structure(data)
     bn.learn_parameters(data)
     
-    # 创建因果推断引擎
+    # Create Causal Inference Engine
     engine = CausalInferenceEngine(bn)
     
-    # 敏感性分析
+    # Sensitivity Analysis
     sensitivity = engine.sensitivity_analysis(
         target='EDP',
         variables=['Season', 'ClimateControl', 'GlobalActivePower', 'ATT_type']
     )
     print(sensitivity)
     
-    # 绘制Tornado图
+    # Plot Tornado Chart
     engine.tornado_chart(sensitivity, filename='tornado.png')
     
-    # 反事实分析
+    # Counterfactual Analysis
     factual_ev = {
         'Season': 'Summer',
         'ClimateControl': 'VeryHigh'
     }
     
     intervention = {
-        'ClimateControl': 'Low'  # 反事实：如果使用低空调
+        'ClimateControl': 'Low'  # Counterfactual: What if air con usage was low?
     }
     
     factual, counterfactual = engine.counterfactual_analysis(
@@ -2316,24 +2325,25 @@ if __name__ == "__main__":
         target='EDP'
     )
     
-    print("\n事实分布:")
+    print("\nFactual Distribution:")
     print(factual)
-    print("\n反事实分布:")
+    print("\nCounterfactual Distribution:")
     print(counterfactual)
     
-    # 可视化对比
+    # Visualize Comparison
     engine.compare_distributions(factual, counterfactual, filename='counterfactual.png')
+
 ```
 
 ---
 
-### 2.9 推荐生成模块
+### 2.9 Recommendation Generation Module
 
-#### 文件: `src/inference/recommendation.py`
+#### File: `src/inference/recommendation.py`
 
 ```python
 """
-可操作推荐生成模块
+Actionable Recommendation Generation Module
 """
 
 import pandas as pd
@@ -2346,70 +2356,70 @@ logger = logging.getLogger(__name__)
 
 class RecommendationGenerator:
     """
-    基于因果推断的推荐生成器
+    Causal Inference-based Recommendation Generator
     
-    生成针对不同EDP状态的节能建议
+    Generates energy-saving suggestions tailored for different EDP states
     """
     
     def __init__(self, causal_engine):
         """
-        参数:
-            causal_engine: CausalInferenceEngine实例
+        Parameters:
+            causal_engine: CausalInferenceEngine instance
         """
         self.engine = causal_engine
         self.bn = causal_engine.bn
         
-        # 推荐模板（基于论文表7的actionable insights）
+        # Recommendation Templates (based on Actionable Insights in Table 7)
         self.templates = self._load_templates()
     
     def _load_templates(self) -> Dict:
         """
-        加载推荐模板（基于论文中的示例）
+        Load Recommendation Templates (based on examples from the paper)
         """
         return {
             'Peak': {
                 'ClimateControl': {
-                    'VeryHigh': "空调使用过高是峰值用电的主要原因。建议将空调温度设置提高2-3度，可降低{reduction}%的能耗。",
-                    'High': "空调用量较高。建议在非高峰时段使用，或调整到节能模式。"
+                    'VeryHigh': "Excessive air conditioning is the main cause of peak usage. Suggested increase in temp by 2-3°C can reduce energy by {reduction}%.",
+                    'High': "Air conditioning usage is high. Suggest use during off-peak or switching to eco mode."
                 },
                 'Kitchen': {
-                    'VeryHigh': "厨房电器集中使用导致峰值负荷。建议错峰使用烤箱、微波炉等大功率设备。",
-                    'High': "厨房用电较高。建议分散使用高功率电器。"
+                    'VeryHigh': "Concentrated kitchen appliance usage causes peak load. Stagger use of high-power devices like ovens/microwaves.",
+                    'High': "Kitchen energy usage is high. Suggest distributed usage of high-power appliances."
                 },
                 'Laundry': {
-                    'VeryHigh': "洗衣/烘干设备使用密集。建议在夜间低峰时段运行，可节省{reduction}%电费。",
-                    'High': "洗衣设备用量较高。建议使用冷水洗涤模式，减少加热耗电。"
+                    'VeryHigh': "Dense laundry/drying equipment usage. Running during off-peak night hours can save {reduction}% on bills.",
+                    'High': "Laundry usage is high. Suggest cold wash mode to reduce heating energy."
                 },
                 'Season': {
-                    'Summer': "夏季高温导致空调负荷增加。建议使用遮阳窗帘，减少室内热量积累。",
-                    'Winter': "冬季供暖需求高。建议检查门窗密封性，减少热量流失。"
+                    'Summer': "High summer temps increase AC load. Suggest blackout curtains to reduce indoor heat accumulation.",
+                    'Winter': "High heating demand in winter. Suggest checking window/door seals to reduce heat loss."
                 },
                 'GlobalActivePower': {
-                    'VeryHigh': "整体用电功率过高，存在过载风险。建议立即关闭非必要电器。"
+                    'VeryHigh': "Total active power is too high; overload risk. Suggest immediate shutdown of non-essential appliances."
                 }
             },
             'Normal': {
                 'ClimateControl': {
-                    'Medium': "用电正常。继续保持当前空调设置即可。",
-                    'High': "空调用量偏高。可考虑微调温度，进一步优化能耗。"
+                    'Medium': "Usage is normal. Keep current AC settings.",
+                    'High': "AC usage is slightly high. Consider slight temp adjustments for further optimization."
                 },
                 'Kitchen': {
-                    'Medium': "厨房用电合理。建议使用高能效等级电器。"
+                    'Medium': "Kitchen usage is reasonable. Recommend using high energy-efficiency appliances."
                 },
                 'Laundry': {
-                    'Medium': "洗衣设备使用正常。可选择快洗模式以节约时间和电能。"
+                    'Medium': "Laundry usage is normal. Can choose quick wash mode to save time and energy."
                 }
             },
             'Lower': {
                 'ClimateControl': {
-                    'Low': "能耗水平低，已达到节能目标。继续保持良好习惯。"
+                    'Low': "Energy level is low, target reached. Continue good habits."
                 },
                 'Season': {
-                    'Spring': "春季气候宜人，无需空调。建议开窗通风，享受自然通风。",
-                    'Fall': "秋季温度适中。建议减少空调使用，利用自然温度调节。"
+                    'Spring': "Pleasant spring weather, no AC needed. Suggest natural ventilation.",
+                    'Fall': "Moderate autumn temps. Suggest reducing AC and utilizing natural temp regulation."
                 },
                 'Weekend': {
-                    'No': "工作日外出时间长，用电自然较低。建议出门前检查所有电器是否关闭。"
+                    'No': "Long hours away on workdays keep usage naturally low. Suggest checking all devices are off before leaving."
                 }
             }
         }
@@ -2419,34 +2429,34 @@ class RecommendationGenerator:
                                 evidence: Dict[str, str],
                                 top_n: int = 3) -> List[Dict]:
         """
-        生成推荐列表
+        Generate Recommendation List
         
-        输入:
-            current_state: 当前EDP状态 ('Peak', 'Normal', 'Lower')
-            evidence: 当前观测变量值
-            top_n: 返回Top-N推荐
+        Input:
+            current_state: Current EDP state ('Peak', 'Normal', 'Lower')
+            evidence: Current observed variable values
+            top_n: Return Top-N recommendations
         
-        输出:
-            推荐列表 [{'variable': ..., 'action': ..., 'impact': ..., 'text': ...}, ...]
+        Output:
+            Recommendation list [{'variable': ..., 'action': ..., 'impact': ..., 'text': ...}, ...]
         """
-        logger.info(f"生成推荐: 状态={current_state}, 证据数={len(evidence)}")
+        logger.info(f"Generating Recommendations: State={current_state}, Evidence count={len(evidence)}")
         
         recommendations = []
         
-        # 1. 识别关键因素
+        # 1. Identify key factors
         key_factors = self.engine.explain_state(
             target='EDP',
             target_state=current_state,
             evidence=evidence,
-            top_n=top_n * 2  # 多取一些，后续筛选
+            top_n=top_n * 2  # Take extra for filtering
         )
         
-        # 2. 为每个关键因素生成推荐
+        # 2. Generate recommendation for each key factor
         for var, row in key_factors.iterrows():
             var_value = row['Value']
             contribution = row['Contribution']
             
-            # 查找模板
+            # Find template
             recommendation_text = self._get_template(
                 state=current_state,
                 variable=var,
@@ -2454,7 +2464,7 @@ class RecommendationGenerator:
             )
             
             if recommendation_text is None:
-                # 无模板，生成通用推荐
+                # No template, generate generic recommendation
                 recommendation_text = self._generate_generic_recommendation(
                     state=current_state,
                     variable=var,
@@ -2462,7 +2472,7 @@ class RecommendationGenerator:
                     contribution=contribution
                 )
             
-            # 计算干预影响
+            # Estimate intervention impact
             impact = self._estimate_impact(
                 variable=var,
                 current_value=var_value,
@@ -2479,20 +2489,20 @@ class RecommendationGenerator:
                 'text': recommendation_text
             })
         
-        # 3. 按影响排序，返回Top-N
+        # 3. Sort by impact and return Top-N
         recommendations = sorted(
             recommendations,
             key=lambda x: abs(x['impact']),
             reverse=True
         )[:top_n]
         
-        logger.info(f"生成 {len(recommendations)} 条推荐")
+        logger.info(f"Generated {len(recommendations)} recommendations")
         
         return recommendations
     
     def _get_template(self, state: str, variable: str, value: str) -> str:
         """
-        从模板库中获取推荐文本
+        Retrieve recommendation text from template library
         """
         try:
             return self.templates[state][variable][value]
@@ -2505,37 +2515,37 @@ class RecommendationGenerator:
                                         value: str,
                                         contribution: float) -> str:
         """
-        生成通用推荐文本
+        Generate generic recommendation text
         """
         if state == 'Peak':
             if contribution > 0.1:
-                return f"{variable}当前为{value}，是导致峰值用电的重要因素。建议调整或减少使用。"
+                return f"{variable} is currently {value}, which is a significant factor in peak usage. Suggest adjusting or reducing use."
             else:
-                return f"{variable}={value}对当前用电有一定影响，可考虑优化。"
+                return f"{variable}={value} has some impact on current usage; consider optimizing."
         
         elif state == 'Lower':
-            return f"{variable}={value}有助于保持低能耗。继续保持当前设置。"
+            return f"{variable}={value} helps maintain low energy usage. Keep current settings."
         
         else:  # Normal
-            return f"{variable}={value}，用电处于正常水平。"
+            return f"{variable}={value}, energy usage is at normal levels."
     
     def _suggest_action(self, variable: str, value: str, state: str) -> str:
         """
-        建议具体操作
+        Suggest specific actions
         """
         action_map = {
             'Peak': {
                 'ClimateControl': {
-                    'VeryHigh': '调高空调温度2-3度',
-                    'High': '切换到节能模式'
+                    'VeryHigh': 'Raise AC temp by 2-3°C',
+                    'High': 'Switch to eco mode'
                 },
                 'Kitchen': {
-                    'VeryHigh': '错峰使用大功率厨电',
-                    'High': '减少同时使用多个厨电'
+                    'VeryHigh': 'Off-peak use of high-power appliances',
+                    'High': 'Reduce concurrent use of multiple appliances'
                 },
                 'Laundry': {
-                    'VeryHigh': '延迟到夜间低峰运行',
-                    'High': '使用冷水/快洗模式'
+                    'VeryHigh': 'Delay operation to off-peak night hours',
+                    'High': 'Use cold wash / quick wash mode'
                 }
             }
         }
@@ -2543,7 +2553,7 @@ class RecommendationGenerator:
         try:
             return action_map[state][variable][value]
         except KeyError:
-            return '优化使用方式'
+            return 'Optimize usage pattern'
     
     def _estimate_impact(self,
                         variable: str,
@@ -2551,23 +2561,23 @@ class RecommendationGenerator:
                         target_state: str,
                         evidence: Dict[str, str]) -> float:
         """
-        估算干预影响（降低Peak概率的幅度）
+        Estimate intervention impact (magnitude of Peak probability reduction)
         
-        输出:
-            影响系数（-1到1，负值表示降低Peak概率）
+        Output:
+            Impact coefficient (-1 to 1, negative indicates reduction of Peak prob)
         """
-        # 当前概率
+        # Current probability
         current_prob = self.bn.query(
             variables=['EDP'],
             evidence=evidence
         ).values
         
-        # 获取Peak状态的索引
+        # Get index for Peak state
         edp_cpd = self.bn.get_cpd('EDP')
         peak_idx = list(edp_cpd.state_names['EDP']).index(target_state)
         current_peak_prob = current_prob[peak_idx]
         
-        # 尝试改变此变量到最优值
+        # Try changing this variable to optimal value
         var_cpd = self.bn.get_cpd(variable)
         var_states = var_cpd.state_names[variable]
         
@@ -2577,7 +2587,7 @@ class RecommendationGenerator:
             if alt_value == current_value:
                 continue
             
-            # 干预证据
+            # Intervention evidence
             intervention_evidence = evidence.copy()
             intervention_evidence[variable] = alt_value
             
@@ -2599,23 +2609,23 @@ class RecommendationGenerator:
     
     def format_recommendations(self, recommendations: List[Dict]) -> str:
         """
-        格式化推荐为可读文本
+        Format recommendations as readable text
         
-        输入:
-            recommendations: 推荐列表
+        Input:
+            recommendations: Recommendation list
         
-        输出:
-            格式化的文本字符串
+        Output:
+            Formatted text string
         """
         if len(recommendations) == 0:
-            return "当前用电模式良好，无需特别调整。"
+            return "Current usage pattern is good, no adjustments needed."
         
-        output = "=== 节能建议 ===\n\n"
+        output = "=== Energy Saving Recommendations ===\n\n"
         
         for i, rec in enumerate(recommendations, 1):
             output += f"{i}. {rec['text']}\n"
-            output += f"   操作: {rec['action']}\n"
-            output += f"   预期影响: {rec['impact']:.1%}\n"
+            output += f"    Action: {rec['action']}\n"
+            output += f"    Expected Impact: {rec['impact']:.1%}\n"
             output += "\n"
         
         return output
@@ -2624,22 +2634,22 @@ class RecommendationGenerator:
                            recommendations: List[Dict],
                            filename: str):
         """
-        保存推荐到文件
+        Save recommendations to file
         """
         text = self.format_recommendations(recommendations)
         
         with open(filename, 'w', encoding='utf-8') as f:
             f.write(text)
         
-        logger.info(f"推荐已保存到 {filename}")
+        logger.info(f"Recommendations saved to {filename}")
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
     from bayesian_net import CausalBayesianNetwork
     from causal_inference import CausalInferenceEngine
     
-    # 构建BN
+    # Build BN
     np.random.seed(42)
     data = pd.DataFrame({
         'Season': np.random.choice(['Spring', 'Summer', 'Fall', 'Winter'], 1000),
@@ -2654,11 +2664,11 @@ if __name__ == "__main__":
     structure = bn.learn_structure(data)
     bn.learn_parameters(data)
     
-    # 创建推荐生成器
+    # Create Recommendation Generator
     engine = CausalInferenceEngine(bn)
     recommender = RecommendationGenerator(engine)
     
-    # 生成推荐
+    # Generate recommendations
     current_evidence = {
         'Season': 'Summer',
         'ClimateControl': 'VeryHigh',
@@ -2673,23 +2683,23 @@ if __name__ == "__main__":
         top_n=3
     )
     
-    # 打印推荐
+    # Print recommendations
     print(recommender.format_recommendations(recommendations))
     
-    # 保存推荐
+    # Save recommendations
     recommender.save_recommendations(recommendations, 'recommendations.txt')
+
 ```
 
 ---
 
+### 2.10 Training Pipeline
 
-### 2.10 训练流水线
-
-#### 文件: `src/pipeline/train_pipeline.py`
+#### File: `src/pipeline/train_pipeline.py`
 
 ```python
 """
-完整训练流水线
+Full Training Pipeline
 """
 
 import pandas as pd
@@ -2705,18 +2715,18 @@ logger = logging.getLogger(__name__)
 
 class TrainingPipeline:
     """
-    端到端训练流水线
+    End-to-End Training Pipeline
     
-    包含：数据预处理 → 模型训练 → 状态分类 → 离散化 → 聚类 → 关联规则 → 贝叶斯网络
+    Includes: Data Preprocessing -> Model Training -> State Classification -> Discretization -> Clustering -> Association Rules -> Bayesian Network
     """
     
     def __init__(self, config: dict):
         """
-        参数:
-            config: 配置字典
+        Parameters:
+            config: Config dictionary
                 {
-                    'data_path': 数据文件路径,
-                    'output_dir': 输出目录,
+                    'data_path': Path to data file,
+                    'output_dir': Output directory,
                     'model_params': {...},
                     'training_params': {...},
                     ...
@@ -2726,7 +2736,7 @@ class TrainingPipeline:
         self.output_dir = Path(config['output_dir'])
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
-        # 各模块组件
+        # Module components
         self.preprocessor = None
         self.predictor = None
         self.classifier = None
@@ -2738,66 +2748,66 @@ class TrainingPipeline:
     
     def run(self):
         """
-        执行完整训练流水线
+        Execute full training pipeline
         """
         logger.info("=" * 80)
-        logger.info("开始完整训练流水线")
+        logger.info("Starting Full Training Pipeline")
         logger.info("=" * 80)
         
-        # 步骤1: 数据加载与预处理
+        # Step 1: Data loading and preprocessing
         X_train, y_train, X_val, y_val, X_test, y_test = self.prepare_data()
         
-        # 步骤2: 训练预测模型
+        # Step 2: Train prediction model
         self.train_predictor(X_train, y_train, X_val, y_val)
         
-        # 步骤3: 评估预测性能
+        # Step 3: Evaluate prediction performance
         self.evaluate_predictor(X_test, y_test)
         
-        # 步骤4: 状态分类（Sn scale）
+        # Step 4: State classification (Sn scale)
         edp_states = self.classify_states(y_test)
         
-        # 步骤5: 离散化
+        # Step 5: Discretization
         discrete_data = self.discretize_features(X_test, edp_states)
         
-        # 步骤6: DLP聚类
+        # Step 6: DLP clustering
         discrete_data = self.cluster_dlp(X_test, discrete_data)
         
-        # 步骤7: 关联规则挖掘
+        # Step 7: Association rule mining
         self.mine_association_rules(discrete_data)
         
-        # 步骤8: 贝叶斯网络构建
+        # Step 8: Bayesian Network construction
         self.build_bayesian_network(discrete_data)
         
-        # 步骤9: 保存所有模型
+        # Step 9: Save all models
         self.save_models()
         
         logger.info("=" * 80)
-        logger.info("训练流水线完成!")
+        logger.info("Training Pipeline Complete!")
         logger.info("=" * 80)
     
     def prepare_data(self):
         """
-        步骤1: 数据准备
+        Step 1: Data Preparation
         """
-        logger.info("\n[步骤1] 数据加载与预处理...")
+        logger.info("\n[Step 1] Data loading and preprocessing...")
         
         from ..preprocessing.data_preprocessor import EnergyDataPreprocessor
         
-        # 加载数据
+        # Load data
         df = pd.read_csv(self.config['data_path'])
-        logger.info(f"数据集大小: {df.shape}")
+        logger.info(f"Dataset size: {df.shape}")
         
-        # 初始化预处理器
+        # Init preprocessor
         self.preprocessor = EnergyDataPreprocessor(
             sequence_length=self.config.get('sequence_length', 60),
             feature_cols=self.config.get('feature_cols'),
             target_col=self.config.get('target_col', 'GlobalActivePower')
         )
         
-        # 预处理
+        # Preprocess
         X, y = self.preprocessor.fit_transform(df)
         
-        # 分割数据集
+        # Split dataset
         train_ratio = self.config.get('train_ratio', 0.7)
         val_ratio = self.config.get('val_ratio', 0.15)
         
@@ -2813,29 +2823,29 @@ class TrainingPipeline:
         X_test = X[train_size+val_size:]
         y_test = y[train_size+val_size:]
         
-        logger.info(f"训练集: {len(X_train)}, 验证集: {len(X_val)}, 测试集: {len(X_test)}")
+        logger.info(f"Train: {len(X_train)}, Val: {len(X_val)}, Test: {len(X_test)}")
         
         return X_train, y_train, X_val, y_val, X_test, y_test
     
     def train_predictor(self, X_train, y_train, X_val, y_val):
         """
-        步骤2: 训练并行CNN-LSTM-Attention模型
+        Step 2: Train Parallel CNN-LSTM-Attention Model
         """
-        logger.info("\n[步骤2] 训练预测模型...")
+        logger.info("\n[Step 2] Training prediction model...")
         
         from ..models.predictor import ParallelCNNLSTMAttention
         
-        # 模型参数
+        # Model parameters
         input_shape = (X_train.shape[1], X_train.shape[2])
         model_params = self.config.get('model_params', {})
         
-        # 构建模型
+        # Build model
         self.predictor = ParallelCNNLSTMAttention(
             input_shape=input_shape,
             **model_params
         )
         
-        # 编译
+        # Compile
         self.predictor.model.compile(
             optimizer=tf.keras.optimizers.Adam(
                 learning_rate=self.config.get('learning_rate', 0.001)
@@ -2844,7 +2854,7 @@ class TrainingPipeline:
             metrics=['mae', 'mape']
         )
         
-        # 回调
+        # Callbacks
         callbacks = [
             tf.keras.callbacks.EarlyStopping(
                 monitor='val_loss',
@@ -2863,7 +2873,7 @@ class TrainingPipeline:
             )
         ]
         
-        # 训练
+        # Train
         history = self.predictor.model.fit(
             X_train, y_train,
             validation_data=(X_val, y_val),
@@ -2873,22 +2883,22 @@ class TrainingPipeline:
             verbose=1
         )
         
-        # 保存历史
+        # Save history
         with open(self.output_dir / 'training_history.json', 'w') as f:
             json.dump(history.history, f, indent=2)
         
-        logger.info("模型训练完成")
+        logger.info("Model training complete")
     
     def evaluate_predictor(self, X_test, y_test):
         """
-        步骤3: 评估预测性能
+        Step 3: Evaluate Prediction Performance
         """
-        logger.info("\n[步骤3] 评估预测模型...")
+        logger.info("\n[Step 3] Evaluating prediction model...")
         
-        # 预测
+        # Predict
         y_pred = self.predictor.predict(X_test)
         
-        # 计算指标
+        # Compute metrics
         mse = np.mean((y_test - y_pred) ** 2)
         mae = np.mean(np.abs(y_test - y_pred))
         rmse = np.sqrt(mse)
@@ -2901,9 +2911,9 @@ class TrainingPipeline:
             'MAPE': float(mape)
         }
         
-        logger.info(f"预测性能: MSE={mse:.4f}, MAE={mae:.4f}, RMSE={rmse:.4f}, MAPE={mape:.2f}%")
+        logger.info(f"Performance: MSE={mse:.4f}, MAE={mae:.4f}, RMSE={rmse:.4f}, MAPE={mape:.2f}%")
         
-        # 保存指标
+        # Save metrics
         with open(self.output_dir / 'prediction_metrics.json', 'w') as f:
             json.dump(metrics, f, indent=2)
         
@@ -2911,47 +2921,47 @@ class TrainingPipeline:
     
     def classify_states(self, y_test):
         """
-        步骤4: 使用Sn尺度估计器分类EDP状态
+        Step 4: State Classification using Sn scale estimator
         """
-        logger.info("\n[步骤4] 状态分类...")
+        logger.info("\n[Step 4] State Classification...")
         
         from ..models.state_classifier import SnStateClassifier
         
-        # 初始化分类器
+        # Init classifier
         self.classifier = SnStateClassifier(
             n_states=self.config.get('n_states', 3),
             state_names=self.config.get('state_names', ['Lower', 'Normal', 'Peak'])
         )
         
-        # 拟合并预测
+        # Fit and predict
         edp_states = self.classifier.fit_predict(y_test.flatten())
         
-        # 统计分布
+        # Statistics
         unique, counts = np.unique(edp_states, return_counts=True)
         distribution = dict(zip(unique, counts))
         
-        logger.info(f"状态分布: {distribution}")
+        logger.info(f"State distribution: {distribution}")
         
         return edp_states
     
     def discretize_features(self, X_test, edp_states):
         """
-        步骤5: 特征离散化
+        Step 5: Feature Discretization
         """
-        logger.info("\n[步骤5] 特征离散化...")
+        logger.info("\n[Step 5] Feature Discretization...")
         
         from ..models.discretizer import QuantileDiscretizer
         
-        # 从序列数据中提取最后时刻的特征
+        # Extract last-step features from sequence data
         X_last = X_test[:, -1, :]
         
-        # 初始化离散化器
+        # Init discretizer
         self.discretizer = QuantileDiscretizer(n_bins=4)
         
-        # 离散化
+        # Discretize
         discrete_features = self.discretizer.fit_transform(X_last)
         
-        # 组合为DataFrame
+        # Combine into DataFrame
         feature_names = self.preprocessor.feature_cols
         
         discrete_data = pd.DataFrame(
@@ -2959,25 +2969,25 @@ class TrainingPipeline:
             columns=feature_names
         )
         
-        # 添加EDP状态
+        # Add EDP state
         discrete_data['EDP'] = edp_states
         
-        logger.info(f"离散化后数据: {discrete_data.shape}")
+        logger.info(f"Discretized data shape: {discrete_data.shape}")
         
         return discrete_data
     
     def cluster_dlp(self, X_test, discrete_data):
         """
-        步骤6: DLP聚类
+        Step 6: DLP Clustering
         """
-        logger.info("\n[步骤6] DLP聚类...")
+        logger.info("\n[Step 6] DLP Clustering...")
         
         from ..models.clustering import DLPClusterer, AttentionClusterer
         
-        # 提取CAM
+        # Extract CAM
         cam_values = self.predictor.extract_cam(X_test)
         
-        # CAM聚类
+        # CAM clustering
         self.cam_clusterer = DLPClusterer(
             n_clusters=self.config.get('cam_clusters', 3),
             dlp_type='CAM'
@@ -2986,10 +2996,10 @@ class TrainingPipeline:
         
         discrete_data['CAM_type'] = [f'Type{i+1}' for i in cam_labels]
         
-        # 提取Attention权重
+        # Extract Attention weights
         att_weights = self.predictor.extract_attention_weights(X_test)
         
-        # Attention聚类
+        # Attention clustering
         self.att_clusterer = AttentionClusterer(
             n_clusters=self.config.get('att_clusters', 3)
         )
@@ -2997,15 +3007,15 @@ class TrainingPipeline:
         
         discrete_data['ATT_type'] = self.att_clusterer.cluster_names_[att_labels]
         
-        logger.info("DLP聚类完成")
+        logger.info("DLP Clustering Complete")
         
         return discrete_data
     
     def mine_association_rules(self, discrete_data):
         """
-        步骤7: 关联规则挖掘
+        Step 7: Association Rule Mining
         """
-        logger.info("\n[步骤7] 关联规则挖掘...")
+        logger.info("\n[Step 7] Association Rule Mining...")
         
         from ..models.association import AssociationRuleMiner
         
@@ -3015,94 +3025,94 @@ class TrainingPipeline:
             min_lift=self.config.get('min_lift', 1.2)
         )
         
-        # 准备数据
+        # Prepare data
         df_encoded = self.rule_miner.prepare_data(discrete_data)
         
-        # 挖掘
+        # Mine
         self.rule_miner.mine_frequent_itemsets(df_encoded)
         rules = self.rule_miner.generate_rules()
         
-        # 保存规则
+        # Save rules
         rules.to_csv(self.output_dir / 'association_rules.csv', index=False)
         
-        # 打印摘要
+        # Print summary
         self.rule_miner.print_rules_summary(n=3)
         
-        logger.info(f"挖掘到 {len(rules)} 条规则")
+        logger.info(f"Mined {len(rules)} rules")
     
     def build_bayesian_network(self, discrete_data):
         """
-        步骤8: 贝叶斯网络构建
+        Step 8: Bayesian Network Construction
         """
-        logger.info("\n[步骤8] 贝叶斯网络构建...")
+        logger.info("\n[Step 8] Bayesian Network Construction...")
         
         from ..models.bayesian_net import CausalBayesianNetwork
         
-        # 初始化BN
+        # Init BN
         domain_knowledge = self.config.get('domain_knowledge', None)
         self.bn = CausalBayesianNetwork(domain_knowledge=domain_knowledge)
         
-        # 结构学习
+        # Structure learning
         structure = self.bn.learn_structure(discrete_data)
-        logger.info(f"学习到 {len(structure.edges())} 条边")
+        logger.info(f"Learned {len(structure.edges())} edges")
         
-        # 参数学习
+        # Parameter learning
         self.bn.learn_parameters(discrete_data)
         
-        # 可视化
+        # Visualize
         self.bn.visualize(filename=str(self.output_dir / 'bn_structure.png'))
         
-        logger.info("贝叶斯网络构建完成")
+        logger.info("Bayesian Network Construction Complete")
     
     def save_models(self):
         """
-        步骤9: 保存所有模型
+        Step 9: Save All Models
         """
-        logger.info("\n[步骤9] 保存模型...")
+        logger.info("\n[Step 9] Saving Models...")
         
         models_dir = self.output_dir / 'models'
         models_dir.mkdir(exist_ok=True)
         
-        # 保存预处理器
+        # Save preprocessor
         with open(models_dir / 'preprocessor.pkl', 'wb') as f:
             pickle.dump(self.preprocessor, f)
         
-        # 保存预测模型
+        # Save prediction model
         self.predictor.save(str(models_dir / 'predictor.h5'))
         
-        # 保存分类器
+        # Save classifier
         with open(models_dir / 'classifier.pkl', 'wb') as f:
             pickle.dump(self.classifier, f)
         
-        # 保存离散化器
+        # Save discretizer
         with open(models_dir / 'discretizer.pkl', 'wb') as f:
             pickle.dump(self.discretizer, f)
         
-        # 保存聚类器
+        # Save clusterers
         with open(models_dir / 'cam_clusterer.pkl', 'wb') as f:
             pickle.dump(self.cam_clusterer, f)
         
         with open(models_dir / 'att_clusterer.pkl', 'wb') as f:
             pickle.dump(self.att_clusterer, f)
         
-        # 保存规则挖掘器
+        # Save rule miner
         with open(models_dir / 'rule_miner.pkl', 'wb') as f:
             pickle.dump(self.rule_miner, f)
         
-        # 保存贝叶斯网络
+        # Save Bayesian Network
         self.bn.save(str(models_dir / 'bayesian_network.pkl'))
         
-        logger.info(f"所有模型已保存到 {models_dir}")
+        logger.info(f"All models saved to {models_dir}")
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # 配置
+    # Config
     config = {
         'data_path': 'data/household_power_consumption.txt',
         'output_dir': 'outputs/training',
         
-        # 数据参数
+        # Data params
         'sequence_length': 60,
         'feature_cols': [
             'GlobalActivePower', 'GlobalReactivePower',
@@ -3113,7 +3123,7 @@ if __name__ == "__main__":
         'train_ratio': 0.7,
         'val_ratio': 0.15,
         
-        # 模型参数
+        # Model params
         'model_params': {
             'cnn_filters': 64,
             'lstm_units': 128,
@@ -3121,12 +3131,12 @@ if __name__ == "__main__":
             'dense_units': [64, 32]
         },
         
-        # 训练参数
+        # Training params
         'epochs': 100,
         'batch_size': 64,
         'learning_rate': 0.001,
         
-        # 其他参数
+        # Other params
         'n_states': 3,
         'state_names': ['Lower', 'Normal', 'Peak'],
         'cam_clusters': 3,
@@ -3136,20 +3146,21 @@ if __name__ == "__main__":
         'min_lift': 1.2
     }
     
-    # 运行流水线
+    # Run pipeline
     pipeline = TrainingPipeline(config)
     pipeline.run()
+
 ```
 
 ---
 
-### 2.11 推理流水线
+### 2.11 Inference Pipeline
 
-#### 文件: `src/pipeline/inference_pipeline.py`
+#### File: `src/pipeline/inference_pipeline.py`
 
 ```python
 """
-推理流水线（单样本预测+因果解释+推荐）
+Inference Pipeline (Single sample prediction + Causal explanation + Recommendation)
 """
 
 import pandas as pd
@@ -3163,104 +3174,104 @@ logger = logging.getLogger(__name__)
 
 class InferencePipeline:
     """
-    推理流水线
+    Inference Pipeline
     
-    输入：新样本 → 预测 → 因果解释 → 生成推荐
+    Input: New Sample -> Prediction -> Causal Explanation -> Recommendation Generation
     """
     
     def __init__(self, models_dir: str):
         """
-        参数:
-            models_dir: 模型目录（包含所有训练好的模型）
+        Parameters:
+            models_dir: Directory containing all trained models
         """
         self.models_dir = Path(models_dir)
         
-        # 加载所有模型
+        # Load all models
         self.load_models()
     
     def load_models(self):
         """
-        加载所有训练好的模型
+        Load all trained models
         """
-        logger.info("加载模型...")
+        logger.info("Loading models...")
         
-        # 预处理器
+        # Preprocessor
         with open(self.models_dir / 'preprocessor.pkl', 'rb') as f:
             self.preprocessor = pickle.load(f)
         
-        # 预测模型
+        # Prediction Model
         from ..models.predictor import ParallelCNNLSTMAttention
         self.predictor = ParallelCNNLSTMAttention.load(
             str(self.models_dir / 'predictor.h5')
         )
         
-        # 状态分类器
+        # State Classifier
         with open(self.models_dir / 'classifier.pkl', 'rb') as f:
             self.classifier = pickle.load(f)
         
-        # 离散化器
+        # Discretizer
         with open(self.models_dir / 'discretizer.pkl', 'rb') as f:
             self.discretizer = pickle.load(f)
         
-        # 聚类器
+        # Clusterers
         with open(self.models_dir / 'cam_clusterer.pkl', 'rb') as f:
             self.cam_clusterer = pickle.load(f)
         
         with open(self.models_dir / 'att_clusterer.pkl', 'rb') as f:
             self.att_clusterer = pickle.load(f)
         
-        # 贝叶斯网络
+        # Bayesian Network
         from ..models.bayesian_net import CausalBayesianNetwork
         self.bn = CausalBayesianNetwork()
         self.bn.load(str(self.models_dir / 'bayesian_network.pkl'))
         
-        # 因果推断引擎
+        # Causal Inference Engine
         from ..inference.causal_inference import CausalInferenceEngine
         self.causal_engine = CausalInferenceEngine(self.bn)
         
-        # 推荐生成器
+        # Recommendation Generator
         from ..inference.recommendation import RecommendationGenerator
         self.recommender = RecommendationGenerator(self.causal_engine)
         
-        logger.info("所有模型加载完成")
+        logger.info("All models loaded successfully")
     
     def predict(self, raw_input: pd.DataFrame) -> dict:
         """
-        完整推理流程
+        Full inference process
         
-        输入:
-            raw_input: 原始输入数据（可以是单条或多条）
+        Input:
+            raw_input: Raw input data (single or multiple)
         
-        输出:
-            推理结果字典
+        Output:
+            Inference results dictionary
         """
-        logger.info("开始推理...")
+        logger.info("Starting inference...")
         
-        # 1. 预处理
+        # 1. Preprocess
         X = self.preprocessor.transform(raw_input)
         
-        # 2. 预测
+        # 2. Predict
         y_pred = self.predictor.predict(X)
         
-        # 3. 状态分类
-        edp_state = self.classifier.predict(y_pred.flatten())[-1]  # 取最后一个
+        # 3. State Classification
+        edp_state = self.classifier.predict(y_pred.flatten())[-1]  # Take the last one
         
-        # 4. 提取DLP
+        # 4. Extract DLP
         cam = self.predictor.extract_cam(X)
         att = self.predictor.extract_attention_weights(X)
         
-        # 5. DLP聚类
+        # 5. DLP Clustering
         cam_label = self.cam_clusterer.predict(cam)[-1]
         att_label = self.att_clusterer.predict(att)[-1]
         
         cam_type = f'Type{cam_label + 1}'
         att_type = self.att_clusterer.cluster_names_[att_label]
         
-        # 6. 离散化特征
-        X_last = X[-1, -1, :]  # 最后一个样本的最后时刻
+        # 6. Discretize Features
+        X_last = X[-1, -1, :]  # Last step of the last sample
         discrete_features = self.discretizer.transform(X_last.reshape(1, -1))[0]
         
-        # 7. 构建证据
+        # 7. Construct Evidence
         evidence = {}
         for i, col in enumerate(self.preprocessor.feature_cols):
             evidence[col] = discrete_features[i]
@@ -3268,20 +3279,20 @@ class InferencePipeline:
         evidence['CAM_type'] = cam_type
         evidence['ATT_type'] = att_type
         
-        # 8. 因果推断
+        # 8. Causal Inference
         query_result = self.bn.query(
             variables=['EDP'],
             evidence=evidence
         )
         
-        # 9. 生成推荐
+        # 9. Generate Recommendations
         recommendations = self.recommender.generate_recommendations(
             current_state=edp_state,
             evidence=evidence,
             top_n=3
         )
         
-        # 10. 整合结果
+        # 10. Integrate Results
         result = {
             'prediction': {
                 'value': float(y_pred[-1]),
@@ -3303,33 +3314,33 @@ class InferencePipeline:
             'recommendation_text': self.recommender.format_recommendations(recommendations)
         }
         
-        logger.info(f"推理完成: 预测={y_pred[-1]:.4f}, 状态={edp_state}")
+        logger.info(f"Inference complete: Pred={y_pred[-1]:.4f}, State={edp_state}")
         
         return result
     
     def explain(self, raw_input: pd.DataFrame, detailed: bool = False) -> dict:
         """
-        详细解释（包含敏感性分析、反事实等）
+        Detailed Explanation (includes sensitivity, counterfactuals, etc.)
         
-        输入:
-            raw_input: 原始输入
-            detailed: 是否包含详细分析
+        Input:
+            raw_input: Raw input
+            detailed: Whether to include detailed analysis
         
-        输出:
-            解释结果
+        Output:
+            Explanation results
         """
-        # 基础推理
+        # Base inference
         result = self.predict(raw_input)
         
         if not detailed:
             return result
         
-        logger.info("生成详细解释...")
+        logger.info("Generating detailed explanation...")
         
         evidence = result['evidence']
         state = result['prediction']['state']
         
-        # 敏感性分析
+        # Sensitivity analysis
         sensitivity = self.causal_engine.sensitivity_analysis(
             target='EDP',
             variables=list(self.preprocessor.feature_cols),
@@ -3338,7 +3349,7 @@ class InferencePipeline:
         
         result['sensitivity'] = sensitivity.to_dict()
         
-        # 关键因素解释
+        # Key factor explanation
         key_factors = self.causal_engine.explain_state(
             target='EDP',
             target_state=state,
@@ -3348,19 +3359,19 @@ class InferencePipeline:
         
         result['key_factors'] = key_factors.to_dict()
         
-        logger.info("详细解释生成完成")
+        logger.info("Detailed explanation generated")
         
         return result
     
     def batch_predict(self, raw_inputs: pd.DataFrame) -> list:
         """
-        批量推理
+        Batch Inference
         
-        输入:
-            raw_inputs: 多条原始输入
+        Input:
+            raw_inputs: Multiple raw inputs
         
-        输出:
-            结果列表
+        Output:
+            List of results
         """
         results = []
         
@@ -3372,12 +3383,12 @@ class InferencePipeline:
         return results
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # 初始化流水线
+    # Init pipeline
     pipeline = InferencePipeline(models_dir='outputs/training/models')
     
-    # 准备测试数据
+    # Prepare test data
     test_input = pd.DataFrame({
         'Date': ['2025-06-15 14:30:00'],
         'GlobalActivePower': [4.5],
@@ -3389,76 +3400,79 @@ if __name__ == "__main__":
         'ClimateControl': [3.5]
     })
     
-    # 推理
+    # Inference
     result = pipeline.predict(test_input)
     
-    print("\n=== 推理结果 ===")
-    print(f"预测值: {result['prediction']['value']:.4f}")
-    print(f"状态: {result['prediction']['state']}")
+    print("\n=== Inference Result ===")
+    print(f"Prediction Value: {result['prediction']['value']:.4f}")
+    print(f"State: {result['prediction']['state']}")
     print(f"\nDLP: CAM={result['dlp']['cam_type']}, Attention={result['dlp']['attention_type']}")
-    print(f"\n因果概率: {result['causal_probability']}")
+    print(f"\nCausal Probabilities: {result['causal_probability']}")
     print(f"\n{result['recommendation_text']}")
     
-    # 详细解释
+    # Detailed Explanation
     detailed_result = pipeline.explain(test_input, detailed=True)
     
-    print("\n=== 敏感性分析 ===")
+    print("\n=== Sensitivity Analysis ===")
     for var, score in detailed_result['sensitivity'].items():
         print(f"{var}: {score:.4f}")
+
 ```
 
 ---
 
-## 3. 总结
+## 3. Summary
 
-### 3.1 模块间依赖关系
+### 3.1 Inter-module Dependencies
 
 ```
-数据预处理 (preprocessing/data_preprocessor.py)
+Data Preprocessing (preprocessing/data_preprocessor.py)
     ↓
-预测模型 (models/predictor.py)
+Prediction Model (models/predictor.py)
     ↓
-状态分类 (models/state_classifier.py)
+State Classification (models/state_classifier.py)
     ↓
-离散化 (models/discretizer.py) + DLP聚类 (models/clustering.py)
+Discretization (models/discretizer.py) + DLP Clustering (models/clustering.py)
     ↓
-关联规则 (models/association.py) → 贝叶斯网络 (models/bayesian_net.py)
+Association Rules (models/association.py) → Bayesian Network (models/bayesian_net.py)
     ↓
-因果推断 (inference/causal_inference.py)
+Causal Inference (inference/causal_inference.py)
     ↓
-推荐生成 (inference/recommendation.py)
+Recommendation Generation (inference/recommendation.py)
     ↓
-流水线集成 (pipeline/train_pipeline.py, pipeline/inference_pipeline.py)
+Pipeline Integration (pipeline/train_pipeline.py, pipeline/inference_pipeline.py)
+
 ```
 
-### 3.2 关键技术要点
+### 3.2 Key Technical Highlights
 
-1. **并行架构**: CNN和LSTM-Attention并行处理，通过融合层整合
-2. **稳健分类**: Sn尺度估计器处理异常值
-3. **DLP解释**: CAM和Attention权重聚类提供可解释性
-4. **因果推断**: 贝叶斯网络结合领域知识约束
-5. **一致性**: 解释结果高度稳定（论文中达到0.999+余弦相似度）
+1. **Parallel Architecture**: CNN and LSTM-Attention processed in parallel, integrated via a fusion layer.
+2. **Robust Classification**: Sn scale estimator handles outliers effectively.
+3. **DLP Explanation**: Clustering of CAM and Attention weights provides interpretability.
+4. **Causal Inference**: Bayesian Networks combined with domain knowledge constraints.
+5. **Consistency**: Explanation results are highly stable (cosine similarity reaches 0.999+ as per the paper).
 
-### 3.3 下一步工作
+### 3.3 Next Steps
 
-参考《项目设计文档.md》第11节"开发计划"，按照以下顺序实现：
+Refer to Section 11 "Development Plan" in `Project_Design_Doc.md`, following this implementation order:
 
-1. ✅ **完成实现文档编写**（当前任务）
-2. ⬜ 搭建项目目录结构
-3. ⬜ 实现数据预处理模块
-4. ⬜ 实现并行CNN-LSTM-Attention模型
-5. ⬜ 实现状态分类和离散化
-6. ⬜ 实现DLP聚类
-7. ⬜ 实现关联规则和贝叶斯网络
-8. ⬜ 实现因果推断和推荐生成
-9. ⬜ 集成训练和推理流水线
-10. ⬜ 单元测试和集成测试
-11. ⬜ 数据集准备和模型训练
-12. ⬜ 性能评估和调优
+1. ✅ **Complete Implementation Document writing** (Current Task)
+2. ⬜ Set up project directory structure
+3. ⬜ Implement Data Preprocessing module
+4. ⬜ Implement Parallel CNN-LSTM-Attention model
+5. ⬜ Implement State Classification and Discretization
+6. ⬜ Implement DLP Clustering
+7. ⬜ Implement Association Rules and Bayesian Network
+8. ⬜ Implement Causal Inference and Recommendation Generation
+9. ⬜ Integrate Training and Inference pipelines
+10. ⬜ Unit Testing and Integration Testing
+11. ⬜ Dataset preparation and model training
+12. ⬜ Performance evaluation and tuning
 
 ---
 
-**文档版本**: v1.0  
-**最后更新**: 2025-01-XX  
-**作者**: Severin YE
+**Document Version**: v1.0
 
+**Author**: Severin YE
+
+Would you like me to start creating the actual directory structure and the corresponding Python files based on this document?

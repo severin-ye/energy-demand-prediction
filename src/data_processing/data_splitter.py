@@ -1,10 +1,10 @@
 """
-数据集划分器
+Dataset Splitter
 
-功能：
-1. 按比例划分训练集和测试集
-2. 支持时间序列数据的顺序划分
-3. 支持随机划分
+Functions:
+1. Split training and test sets by ratio
+2. Support sequential splitting for time-series data
+3. Support random splitting
 """
 import logging
 import pandas as pd
@@ -15,32 +15,33 @@ logger = logging.getLogger(__name__)
 
 
 class DataSplitter:
-    """数据集划分器"""
+    """Dataset Splitter"""
     
     def __init__(self, output_dir='data/uci/splits'):
         """
-        初始化划分器
+        Initialize the splitter
         
         Args:
-            output_dir: 输出目录
+            output_dir: Output directory
         """
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
     
     def split_sequential(self, df, test_ratio=0.05):
         """
-        顺序划分（用于时间序列数据）
+        Sequential Splitting (for time-series data)
         
-        将数据按时间顺序划分，前面的作为训练集，后面的作为测试集
+        Splits data chronologically, using the earlier portion as the training set 
+        and the later portion as the test set.
         
         Args:
-            df: 数据集
-            test_ratio: 测试集比例
+            df: Dataset
+            test_ratio: Ratio of the test set
             
         Returns:
             tuple: (train_df, test_df)
         """
-        logger.info(f"顺序划分数据集 (测试集比例: {test_ratio*100:.1f}%)")
+        logger.info(f"Splitting dataset sequentially (Test ratio: {test_ratio*100:.1f}%)")
         
         n_samples = len(df)
         n_test = int(n_samples * test_ratio)
@@ -49,24 +50,24 @@ class DataSplitter:
         train_df = df.iloc[:n_train].copy()
         test_df = df.iloc[n_train:].copy()
         
-        logger.info(f"  训练集: {len(train_df):,} 样本 ({len(train_df)/n_samples*100:.1f}%)")
-        logger.info(f"  测试集: {len(test_df):,} 样本 ({len(test_df)/n_samples*100:.1f}%)")
+        logger.info(f"  Training set: {len(train_df):,} samples ({len(train_df)/n_samples*100:.1f}%)")
+        logger.info(f"  Test set: {len(test_df):,} samples ({len(test_df)/n_samples*100:.1f}%)")
         
         return train_df, test_df
     
     def split_random(self, df, test_ratio=0.05, random_state=42):
         """
-        随机划分
+        Random Splitting
         
         Args:
-            df: 数据集
-            test_ratio: 测试集比例
-            random_state: 随机种子
+            df: Dataset
+            test_ratio: Ratio of the test set
+            random_state: Random seed
             
         Returns:
             tuple: (train_df, test_df)
         """
-        logger.info(f"随机划分数据集 (测试集比例: {test_ratio*100:.1f}%)")
+        logger.info(f"Splitting dataset randomly (Test ratio: {test_ratio*100:.1f}%)")
         
         from sklearn.model_selection import train_test_split
         
@@ -76,8 +77,8 @@ class DataSplitter:
             random_state=random_state
         )
         
-        logger.info(f"  训练集: {len(train_df):,} 样本")
-        logger.info(f"  测试集: {len(test_df):,} 样本")
+        logger.info(f"  Training set: {len(train_df):,} samples")
+        logger.info(f"  Test set: {len(test_df):,} samples")
         
         return train_df, test_df
     
@@ -85,16 +86,16 @@ class DataSplitter:
                     train_filename='train.csv', 
                     test_filename='test.csv'):
         """
-        保存划分后的数据集
+        Save the split datasets
         
         Args:
-            train_df: 训练集
-            test_df: 测试集
-            train_filename: 训练集文件名
-            test_filename: 测试集文件名
+            train_df: Training set
+            test_df: Test set
+            train_filename: Filename for training set
+            test_filename: Filename for test set
             
         Returns:
-            dict: 保存的文件路径
+            dict: Paths to the saved files
         """
         train_path = self.output_dir / train_filename
         test_path = self.output_dir / test_filename
@@ -102,8 +103,8 @@ class DataSplitter:
         train_df.to_csv(train_path, index=False)
         test_df.to_csv(test_path, index=False)
         
-        logger.info(f"✅ 保存训练集: {train_path}")
-        logger.info(f"✅ 保存测试集: {test_path}")
+        logger.info(f"✅ Training set saved: {train_path}")
+        logger.info(f"✅ Test set saved: {test_path}")
         
         return {
             'train': train_path,
@@ -112,14 +113,14 @@ class DataSplitter:
     
     def get_split_info(self, train_df, test_df):
         """
-        获取划分信息统计
+        Get statistics about the split
         
         Args:
-            train_df: 训练集
-            test_df: 测试集
+            train_df: Training set
+            test_df: Test set
             
         Returns:
-            dict: 统计信息
+            dict: Statistical information
         """
         total = len(train_df) + len(test_df)
         
@@ -131,7 +132,7 @@ class DataSplitter:
             'test_ratio': len(test_df) / total,
         }
         
-        # 如果有datetime列，添加时间信息
+        # If datetime column exists, add time-range information
         if 'datetime' in train_df.columns:
             info['train_time_range'] = {
                 'start': train_df['datetime'].min(),

@@ -1,36 +1,36 @@
-# ⚡ 快速开始指南
+# ⚡ Quick Start Guide
 
-## 环境准备
+## Environment Preparation
 
-### 1. 安装依赖
+### 1. Install Dependencies
 
 ```bash
 cd /home/severin/Codelib/YS
 
-# 激活虚拟环境（如果已配置）
+# Activate virtual environment (if configured)
 source .venv/bin/activate
 
-# 安装所有依赖
+# Install all dependencies
 pip install -r requirements.txt
 ```
 
-### 2. 验证安装
+### 2. Verify Installation
 
 ```bash
-# 运行核心模块测试（约30秒）
+# Run core module tests (approx. 30 seconds)
 python tests/test_core_modules.py
 ```
 
-预期输出：
+Expected Output:
 ```
 ✅ All 5 core modules tested successfully!
 ```
 
 ---
 
-## 使用方式
+## Usage Methods
 
-### 方式一：训练新模型
+### Option 1: Training a New Model
 
 ```python
 import sys
@@ -40,32 +40,32 @@ from src.pipeline.train_pipeline import TrainPipeline
 import pandas as pd
 import numpy as np
 
-# 1. 准备数据（示例：使用随机数据）
+# 1. Prepare data (Example: Using random data)
 np.random.seed(42)
 n_samples = 500
 
 train_data = pd.DataFrame({
-    'Temperature': np.random.randn(n_samples) * 10 + 20,  # 温度
-    'Humidity': np.random.randn(n_samples) * 15 + 60,     # 湿度
-    'WindSpeed': np.random.randn(n_samples) * 5 + 10,     # 风速
-    'EDP': np.random.randn(n_samples) * 30 + 100           # 能耗
+    'Temperature': np.random.randn(n_samples) * 10 + 20,
+    'Humidity': np.random.randn(n_samples) * 15 + 60,
+    'WindSpeed': np.random.randn(n_samples) * 5 + 10,
+    'EDP': np.random.randn(n_samples) * 30 + 100
 })
 
-# 2. 创建训练流水线
+# 2. Create training pipeline
 pipeline = TrainPipeline(output_dir='./outputs')
 
-# 3. 运行完整训练流程（9步）
+# 3. Run full training process (9 steps)
 results = pipeline.run(train_data)
 
-# 4. 查看结果
-print("\n训练完成！")
-print(f"数据形状: {results['data_shapes']}")
-print(f"状态分布: {results['state_distribution']}")
-print(f"候选边数量: {len(results['candidate_edges'])}")
-print(f"贝叶斯网络边: {results['bn_edges']}")
+# 4. View results
+print("\nTraining completed!")
+print(f"Data shapes: {results['data_shapes']}")
+print(f"State distribution: {results['state_distribution']}")
+print(f"Number of candidate edges: {len(results['candidate_edges'])}")
+print(f"Bayesian Network edges: {results['bn_edges']}")
 ```
 
-**输出目录结构**:
+**Output Directory Structure**:
 ```
 outputs/
 ├── models/
@@ -84,73 +84,73 @@ outputs/
 
 ---
 
-### 方式二：使用已训练模型推理
+### Option 2: Inference with a Trained Model
 
 ```python
 from src.pipeline.inference_pipeline import InferencePipeline
 import pandas as pd
 import numpy as np
 
-# 1. 加载模型
+# 1. Load model
 pipeline = InferencePipeline(models_dir='./outputs/models')
 
-# 2. 准备新数据（至少20行，因为sequence_length=20）
+# 2. Prepare new data (minimum 20 rows, as sequence_length=20)
 new_data = pd.DataFrame({
     'Temperature': [25.3] * 25,
     'Humidity': [62.5] * 25,
     'WindSpeed': [8.2] * 25
 })
 
-# 3. 单样本预测 + 生成建议
+# 3. Single sample prediction + recommendation generation
 report = pipeline.predict_single(new_data, verbose=True)
 print(report)
 ```
 
-**输出示例**:
+**Output Example**:
 ```
 ============================================================
-           预测结果
+           Prediction Result
 ============================================================
-预测负荷: 125.50 kWh
-负荷状态: Peak
-CAM聚类: 1
-注意力类型: Early
+Predicted Load: 125.50 kWh
+Load State: Peak
+CAM Cluster: 1
+Attention Type: Early
 
 
 ============================================================
-           能源消耗预测与优化建议报告
+   Energy Consumption Prediction & Optimization Report
 ============================================================
 
-【当前状态】
-  温度: High
-  湿度: Medium
-  风速: Low
+【Current State】
+  Temperature: High
+  Humidity: Medium
+  Wind Speed: Low
 
-【预测负荷】
+【Predicted Load】
   125.50 kWh
 
-【优化建议】（共3条）
+【Optimization Recommendations】 (3 total)
 
-1. 建议降低室内温度设定，例如调低空调温度至Low℃左右，预计可显著降低高峰负荷概率（约23.5%）
-   当前: 温度=High → 推荐: Low
-   预期效果: 高峰概率从 68.2% 降至 44.7%
+1. It is recommended to lower the indoor temperature setting, e.g., adjusting air conditioning to Low, which is expected to significantly reduce peak load probability (approx. 23.5%).
+   Current: Temperature=High → Recommended: Low
+   Expected Effect: Peak probability drops from 68.2% to 44.7%
 
-2. 建议提高除湿设备功率，但注意能耗平衡，预计可明显降低高峰负荷概率（约18.3%）
-   当前: 湿度=Medium → 推荐: High
-   预期效果: 高峰概率从 68.2% 降至 49.9%
+2. It is recommended to increase dehumidification power, but notice energy balance; this is expected to noticeably reduce peak load probability (approx. 18.3%).
+   Current: Humidity=Medium → Recommended: High
+   Expected Effect: Peak probability drops from 68.2% to 49.9%
 
 3. ...
 
 ============================================================
-注：以上建议基于因果贝叶斯网络推断，供参考。
+Note: These recommendations are based on Causal Bayesian Network inference and are for reference only.
 ```
 
 ---
 
-### 方式三：批量预测（无解释）
+### Option 3: Batch Prediction (No Explanation)
 
 ```python
-# 批量预测多个样本
+# Batch predict multiple samples
 results_df = pipeline.batch_predict(
     new_data,
     output_path='./outputs/predictions.csv'
@@ -159,7 +159,7 @@ results_df = pipeline.batch_predict(
 print(results_df)
 ```
 
-输出：
+Output:
 ```
    Prediction  EDP_State  CAM_Cluster Attention_Type
 0      125.50       Peak            1          Early
@@ -169,42 +169,42 @@ print(results_df)
 
 ---
 
-## 常用功能
+## Common Features
 
-### 1. 敏感性分析
+### 1. Sensitivity Analysis
 
 ```python
 from src.models.bayesian_net import CausalBayesianNetwork
 from src.inference.causal_inference import CausalInference
 
-# 加载贝叶斯网络
+# Load Bayesian Network
 bn = CausalBayesianNetwork()
 bn.load_model('./outputs/models/bayesian_network.bif')
 
-# 创建因果推断工具
+# Create Causal Inference tool
 ci = CausalInference(bn, target_var='EDP_State')
 
-# 敏感性分析
+# Sensitivity analysis
 features = ['Temperature', 'Humidity', 'WindSpeed']
 sensitivity = ci.sensitivity_analysis(features, target_state='Peak')
 
 print(sensitivity[['Feature', 'Prob_Range', 'Max_Value', 'Max_Prob']])
 ```
 
-### 2. 龙卷风图可视化
+### 2. Tornado Chart Visualization
 
 ```python
-# 生成龙卷风图
+# Generate Tornado Chart
 ci.tornado_chart(
     top_k=5,
     output_path='./outputs/tornado_chart.png'
 )
 ```
 
-### 3. 反事实推断
+### 3. Counterfactual Inference
 
 ```python
-# 如果温度从High变为Low会怎样？
+# What if temperature changes from High to Low?
 counterfactual = ci.counterfactual_analysis(
     actual_evidence={'Temperature': 'High', 'Humidity': 'Medium'},
     intervention={'Temperature': 'Low'},
@@ -214,10 +214,10 @@ counterfactual = ci.counterfactual_analysis(
 print(counterfactual['interpretation'])
 ```
 
-### 4. 平均因果效应
+### 4. Average Causal Effect (ACE)
 
 ```python
-# 计算温度High vs Low的平均因果效应
+# Calculate ACE for Temperature High vs Low
 ace = ci.average_causal_effect(
     treatment_var='Temperature',
     treatment_value='High',
@@ -230,17 +230,17 @@ print(f"ACE: {ace:.3f}")
 
 ---
 
-## 使用真实数据
+## Using Real Data
 
-### UCI Household数据集示例
+### UCI Household Dataset Example
 
 ```python
-# 下载并准备UCI数据
+# Download and prepare UCI data
 # https://archive.ics.uci.edu/ml/datasets/individual+household+electric+power+consumption
 
 import pandas as pd
 
-# 读取数据
+# Load data
 df = pd.read_csv(
     'household_power_consumption.txt',
     sep=';',
@@ -248,38 +248,38 @@ df = pd.read_csv(
     na_values=['?']
 )
 
-# 预处理
+# Preprocessing
 df = df.dropna()
 df = df.set_index('Datetime')
 
-# 重采样为小时频率
+# Resample to hourly frequency
 df_hourly = df.resample('H').mean()
 
-# 选择特征
+# Select features
 train_data = df_hourly[['Global_active_power', 'Voltage', 'Global_intensity']].copy()
-train_data.columns = ['EDP', 'Temperature', 'Humidity']  # 重命名为模型需要的列
+train_data.columns = ['EDP', 'Temperature', 'Humidity']  # Rename to columns required by model
 
-# 添加风速特征（示例）
+# Add WindSpeed feature (Example)
 train_data['WindSpeed'] = np.random.randn(len(train_data)) * 5 + 10
 
-# 训练
+# Train
 pipeline = TrainPipeline(output_dir='./outputs_uci')
-results = pipeline.run(train_data[:5000])  # 使用前5000条数据
+results = pipeline.run(train_data[:5000])  # Use first 5000 rows
 ```
 
 ---
 
-## 配置自定义参数
+## Configuring Custom Parameters
 
 ```python
-# 自定义配置
+# Custom configuration
 custom_config = {
-    'sequence_length': 30,  # 改为30时间步
-    'epochs': 100,          # 训练100轮
-    'batch_size': 64,       # 批大小64
-    'n_states': 5,          # 5个状态分类
+    'sequence_length': 30,  # Change to 30 time steps
+    'epochs': 100,          # Train for 100 epochs
+    'batch_size': 64,       # Batch size 64
+    'n_states': 5,          # 5 state classifications
     'state_names': ['VeryLow', 'Low', 'Normal', 'High', 'VeryHigh'],
-    'min_support': 0.03,    # 更低的支持度阈值
+    'min_support': 0.03,    # Lower support threshold
 }
 
 pipeline = TrainPipeline(
@@ -290,56 +290,56 @@ pipeline = TrainPipeline(
 
 ---
 
-## 故障排查
+## Troubleshooting
 
-### 问题1：CUDA警告
+### Problem 1: CUDA Warning
 ```
 UserWarning: CUDA not available
 ```
-**解决**: 这是正常的，代码会自动使用CPU。如果有GPU，安装`tensorflow-gpu`。
+**Solution**: This is normal; the code will automatically fall back to CPU. If you have a GPU, install `tensorflow-gpu`.
 
-### 问题2：模块导入错误
+### Problem 2: Module Import Error
 ```
 ModuleNotFoundError: No module named 'src'
 ```
-**解决**: 确保运行代码前添加了：
+**Solution**: Ensure you have added the following before running the code:
 ```python
 import sys
 sys.path.append('/home/severin/Codelib/YS')
 ```
 
-### 问题3：数据形状错误
+### Problem 3: Data Shape Error
 ```
 ValueError: Input data must have at least 20 rows
 ```
-**解决**: 数据至少需要`sequence_length`行（默认20行）。
+**Solution**: Data must have at least `sequence_length` rows (default is 20).
 
-### 问题4：模型文件未找到
+### Problem 4: Model File Not Found
 ```
 FileNotFoundError: [Errno 2] No such file or directory: './outputs/models/predictor.h5'
 ```
-**解决**: 先运行训练流水线生成模型文件。
+**Solution**: Run the training pipeline first to generate model files.
 
 ---
 
-## 性能优化建议
+## Performance Optimization Suggestions
 
-1. **GPU加速**: 安装`tensorflow-gpu`可将训练速度提升10-100倍
-2. **批大小**: 增大`batch_size`可提升训练速度（需要更多内存）
-3. **序列长度**: 减小`sequence_length`可减少计算量
-4. **并行处理**: 使用`joblib`并行处理多个样本
-
----
-
-## 下一步学习
-
-1. 阅读 [实现文档.md](doc/实现文档.md) 了解算法细节
-2. 查看 [项目设计文档.md](doc/项目设计文档.md) 理解系统架构
-3. 阅读论文PDF了解理论背景
-4. 修改代码适配自己的数据集
+1. **GPU Acceleration**: Installing `tensorflow-gpu` can speed up training by 10-100x.
+2. **Batch Size**: Increasing `batch_size` can improve training speed (requires more memory).
+3. **Sequence Length**: Reducing `sequence_length` can decrease computational load.
+4. **Parallel Processing**: Use `joblib` to process multiple samples in parallel.
 
 ---
 
-**更多帮助**: 查看各模块的文档字符串（`help(module)`）或源代码注释
+## Next Steps
 
-**最后更新**: 2026-01-16
+1. Read [IMPLEMENTATION.md](../IMPLEMENTATION.md) for algorithm details.
+2. Check [DESIGN.md](../DESIGN.md) for system architecture.
+3. Read the paper PDF for theoretical background.
+4. Modify code to adapt to your own dataset.
+
+---
+
+**More Help**: Check docstrings of each module (`help(module)`) or source code comments.
+
+**Last Updated**: 2026-01-16
