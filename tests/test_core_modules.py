@@ -1,5 +1,5 @@
 """
-简单测试脚本 - 验证核心模块
+Simple Test Script - Verifying Core Modules
 """
 
 import sys
@@ -8,16 +8,16 @@ sys.path.insert(0, '/home/severin/Codelib/YS')
 import numpy as np
 
 print("=" * 60)
-print("测试核心模块")
+print("Testing Core Modules")
 print("=" * 60)
 
-# 测试1: 数据预处理器
-print("\n[1] 测试数据预处理器...")
+# Test 1: Data Preprocessor
+print("\n[1] Testing Data Preprocessor...")
 try:
     from src.preprocessing.data_preprocessor import EnergyDataPreprocessor
     import pandas as pd
     
-    # 创建模拟数据
+    # Create simulated data
     df = pd.DataFrame({
         'Date': pd.date_range('2025-01-01', periods=200, freq='15min'),
         'GlobalActivePower': np.random.randn(200) * 0.5 + 2.0,
@@ -32,12 +32,12 @@ try:
     )
     
     X, y = preprocessor.fit_transform(df)
-    print(f"✓ 数据预处理成功！X shape: {X.shape}, y shape: {y.shape}")
+    print(f"✓ Data preprocessing successful! X shape: {X.shape}, y shape: {y.shape}")
 except Exception as e:
-    print(f"✗ 数据预处理失败: {e}")
+    print(f"✗ Data preprocessing failed: {e}")
 
-# 测试2: 预测模型
-print("\n[2] 测试预测模型...")
+# Test 2: Prediction Model
+print("\n[2] Testing Prediction Model...")
 try:
     from src.models.predictor import ParallelCNNLSTMAttention, AttentionLayer
     
@@ -47,12 +47,12 @@ try:
         lstm_units=64
     )
     
-    print(f"✓ 模型构建成功！参数量: {model.model.count_params():,}")
+    print(f"✓ Model construction successful! Parameters: {model.model.count_params():,}")
 except Exception as e:
-    print(f"✗ 模型构建失败: {e}")
+    print(f"✗ Model construction failed: {e}")
 
-# 测试3: 状态分类器
-print("\n[3] 测试状态分类器...")
+# Test 3: State Classifier
+print("\n[3] Testing State Classifier...")
 try:
     from src.models.state_classifier import SnStateClassifier
     
@@ -61,12 +61,12 @@ try:
     states = classifier.fit_predict(data)
     
     unique, counts = np.unique(states, return_counts=True)
-    print(f"✓ 状态分类成功！分布: {dict(zip(unique, counts))}")
+    print(f"✓ State classification successful! Distribution: {dict(zip(unique, counts))}")
 except Exception as e:
-    print(f"✗ 状态分类失败: {e}")
+    print(f"✗ State classification failed: {e}")
 
-# 测试4: 离散化器
-print("\n[4] 测试离散化器...")
+# Test 4: Discretizer
+print("\n[4] Testing Discretizer...")
 try:
     from src.models.discretizer import QuantileDiscretizer
     
@@ -74,12 +74,12 @@ try:
     discretizer = QuantileDiscretizer(n_bins=4)
     X_disc = discretizer.fit_transform(X_cont)
     
-    print(f"✓ 离散化成功！示例: {X_disc[0]}")
+    print(f"✓ Discretization successful! Example: {X_disc[0]}")
 except Exception as e:
-    print(f"✗ 离散化失败: {e}")
+    print(f"✗ Discretization failed: {e}")
 
-# 测试5: DLP聚类
-print("\n[5] 测试DLP聚类...")
+# Test 5: DLP Clustering
+print("\n[5] Testing DLP Clustering...")
 try:
     from src.models.clustering import DLPClusterer, AttentionClusterer
     
@@ -91,11 +91,11 @@ try:
     att_clusterer = AttentionClusterer(n_clusters=3)
     att_labels = att_clusterer.fit_predict(att_data)
     
-    print(f"✓ DLP聚类成功！CAM聚类: {np.unique(cam_labels)}, "
-          f"Attention类型: {att_clusterer.cluster_names_}")
+    print(f"✓ DLP clustering successful! CAM Clusters: {np.unique(cam_labels)}, "
+          f"Attention Types: {att_clusterer.cluster_names_}")
 except Exception as e:
-    print(f"✗ DLP聚类失败: {e}")
+    print(f"✗ DLP clustering failed: {e}")
 
 print("\n" + "=" * 60)
-print("所有测试完成！")
+print("All tests completed!")
 print("=" * 60)

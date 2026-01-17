@@ -1,5 +1,5 @@
 """
-数据预处理模块
+Data Preprocessing Module
 """
 
 import pandas as pd
@@ -13,13 +13,13 @@ logger = logging.getLogger(__name__)
 
 class EnergyDataPreprocessor:
     """
-    能源数据预处理器
+    Energy Data Preprocessor
     
-    功能:
-        1. 数据清洗（缺失值处理、异常值处理）
-        2. 时间特征提取
-        3. 滑动窗口序列构造
-        4. 特征标准化
+    Functions:
+        1. Data Cleaning (Handling missing values and outliers)
+        2. Time Feature Extraction
+        3. Sliding Window Sequence Construction
+        4. Feature Standardization
     """
     
     def __init__(self, 
@@ -27,10 +27,10 @@ class EnergyDataPreprocessor:
                  feature_cols: List[str] = None,
                  target_col: str = 'GlobalActivePower'):
         """
-        参数:
-            sequence_length: 时间窗口长度
-            feature_cols: 特征列名列表
-            target_col: 目标变量列名
+        Parameters:
+            sequence_length: Length of the time window
+            feature_cols: List of feature column names
+            target_col: Name of the target variable column
         """
         self.sequence_length = sequence_length
         self.feature_cols = feature_cols or []
@@ -41,22 +41,22 @@ class EnergyDataPreprocessor:
     
     def clean_data(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        数据清洗
+        Data Cleaning
         
-        步骤:
-            1. 处理缺失值（前向+后向填充）
-            2. 处理异常值（IQR截断）
+        Steps:
+            1. Handle missing values (Forward + Backward fill)
+            2. Handle outliers (IQR clipping)
         """
-        logger.info("开始数据清洗...")
+        logger.info("Starting data cleaning...")
         
-        # 处理缺失值
+        # Handle missing values
         df = df.fillna(method='ffill').fillna(method='bfill')
         
-        # 如果还有缺失值，用列均值填充
+        # If missing values remain, fill with column mean
         if df.isnull().any().any():
             df = df.fillna(df.mean())
         
-        # 处理异常值（IQR方法）
+        # Handle outliers (IQR method)
         for col in self.feature_cols:
             if col in df.columns and df[col].dtype in [np.float64, np.float32, np.int64, np.int32]:
                 Q1 = df[col].quantile(0.01)
@@ -68,21 +68,21 @@ class EnergyDataPreprocessor:
                 
                 df[col] = df[col].clip(lower=lower_bound, upper=upper_bound)
         
-        logger.info(f"数据清洗完成，样本数: {len(df)}")
+        logger.info(f"Data cleaning complete, sample count: {len(df)}")
         return df
     
     def extract_time_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        提取时间特征
+        Extract Time Features
         
-        特征:
-            - Date: 日期（1-31）
-            - Day: 星期（0-6）
-            - Month: 月份（1-12）
-            - Season: 季节（0-3）
-            - Weekend: 是否周末（0/1）
+        Features:
+            - Date: Day of the month (1-31)
+            - Day: Day of the week (0-6)
+            - Month: Month (1-12)
+            - Season: Season (0-3)
+            - Weekend: Is weekend (0/1)
         """
-        logger.info("提取时间特征...")
+        logger.info("Extracting time features...")
         
         if 'Date' in df.columns:
             df['Date'] = pd.to_datetime(df['Date'])
@@ -96,15 +96,15 @@ class EnergyDataPreprocessor:
     
     def create_sequences(self, data: np.ndarray, target: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
-        创建滑动窗口序列
+        Create Sliding Window Sequences
         
-        输入:
-            data: 特征数据 [样本数, 特征数]
-            target: 目标数据 [样本数,]
+        Input:
+            data: Feature data [n_samples, n_features]
+            target: Target data [n_samples,]
         
-        输出:
-            X: [样本数, 序列长度, 特征数]
-            y: [样本数,]
+        Output:
+            X: [n_samples, sequence_length, n_features]
+            y: [n_samples,]
         """
         X, y = [], []
         
@@ -116,57 +116,57 @@ class EnergyDataPreprocessor:
     
     def fit_transform(self, df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
         """
-        训练数据的完整预处理流程
+        Full preprocessing workflow for training data
         
-        输入:
-            df: 原始数据框
+        Input:
+            df: Raw DataFrame
         
-        输出:
-            X: 序列特征
-            y: 目标值
+        Output:
+            X: Sequence features
+            y: Target values
         """
-        logger.info("开始数据预处理...")
+        logger.info("Starting data preprocessing...")
         
-        # 1. 清洗
+        # 1. Clean
         df = self.clean_data(df)
         
-        # 2. 时间特征
+        # 2. Time features
         df = self.extract_time_features(df)
         
-        # 3. 提取特征和目标
+        # 3. Extract features and target
         features = df[self.feature_cols].values
         target = df[self.target_col].values
         
-        # 4. 标准化
+        # 4. Standardize
         features = self.scaler.fit_transform(features)
         self.fitted = True
         
-        # 5. 创建序列
+        # 5. Create sequences
         X, y = self.create_sequences(features, target)
         
-        logger.info(f"预处理完成，序列数: {len(X)}, 特征维度: {X.shape}")
+        logger.info(f"Preprocessing complete, sequence count: {len(X)}, feature dimensions: {X.shape}")
         
         return X, y
     
     def transform(self, df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarray]:
         """
-        测试数据的预处理流程（使用已拟合的scaler）
+        Preprocessing workflow for test data (using fitted scaler)
         """
         if not self.fitted:
-            raise ValueError("请先调用 fit_transform() 拟合预处理器")
+            raise ValueError("Please call fit_transform() first to fit the preprocessor")
         
-        # 清洗和特征提取
+        # Clean and extract features
         df = self.clean_data(df)
         df = self.extract_time_features(df)
         
-        # 提取特征
+        # Extract features
         features = df[self.feature_cols].values
         target = df[self.target_col].values
         
-        # 标准化
+        # Standardize
         features = self.scaler.transform(features)
         
-        # 创建序列
+        # Create sequences
         X, y = self.create_sequences(features, target)
         
         return X, y

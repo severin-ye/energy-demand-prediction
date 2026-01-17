@@ -1,149 +1,150 @@
-# 能源需求预测的因果可解释AI系统
+# Causal Explainable AI System for Energy Demand Prediction
 
-基于论文 *"Causally explainable artificial intelligence on deep learning model for energy demand prediction"* (Erlangga & Cho, 2025) 的完整代码复现。
+Complete code reproduction based on the paper *"Causally explainable artificial intelligence on deep learning model for energy demand prediction"* (Erlangga & Cho, 2025).
 
-## 项目简介
+## Project Overview
 
-本项目实现了一个结合深度学习预测和因果解释的能源需求预测系统：
+This project implements an energy demand prediction system combining deep learning prediction and causal explanation:
 
-- **预测模块**: 并行CNN-LSTM-Attention架构，实现高精度能源需求预测
-- **解释模块**: 贝叶斯网络结合深度学习参数(DLP)，提供稳定的因果解释
-- **推荐模块**: 基于因果推断生成可操作的节能建议
+- **Prediction Module**: Parallel CNN-LSTM-Attention architecture for high-precision energy demand prediction
+- **Explanation Module**: Bayesian Network combined with Deep Learning Parameters (DLP) for stable causal explanation
+- **Recommendation Module**: Actionable energy-saving recommendations based on causal inference
 
-## 核心特性
+## Core Features
 
-✅ **高性能预测**: 相比串行架构提升34.84% (UCI) 和 13.63% (REFIT)  
-✅ **稳定解释**: 余弦相似度达0.999+（SHAP仅0.95-0.96）  
-✅ **因果推理**: 基于领域知识约束的贝叶斯网络  
-✅ **可操作建议**: 针对Peak/Normal/Lower状态生成具体推荐  
-✅ **HTML可视化**: 精美的10步推理流程可视化报告
+✅ **High-performance Prediction**: 34.84% improvement over serial architecture (UCI) and 13.63% (REFIT)  
+✅ **Stable Explanation**: Cosine similarity of 0.999+ (SHAP only 0.95-0.96)  
+✅ **Causal Reasoning**: Bayesian Network with domain knowledge constraints  
+✅ **Actionable Recommendations**: Specific recommendations for Peak/Normal/Lower states  
+✅ **HTML Visualization**: Beautiful 10-step inference process visualization reports
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
 YS/
-├── src/                      # 源代码
-│   ├── preprocessing/        # 数据预处理
-│   ├── models/              # 核心模型
-│   │   ├── predictor.py     # CNN-LSTM-Attention预测器
-│   │   ├── state_classifier.py  # 状态分类器
-│   │   ├── discretizer.py   # 特征离散化
-│   │   ├── clustering.py    # DLP特征聚类
-│   │   ├── association.py   # 关联规则挖掘
-│   │   └── bayesian_net.py  # 贝叶斯网络
-│   ├── inference/           # 推理模块
-│   │   ├── causal_inference.py  # 因果推断
-│   │   └── recommendation.py    # 智能推荐
-│   ├── pipeline/            # 流水线
-│   │   ├── train_pipeline.py    # 训练流水线
-│   │   └── inference_pipeline.py # 推理流水线
-│   ├── data_processing/     # 数据处理
-│   │   ├── uci_loader.py    # UCI数据加载器
-│   │   └── data_splitter.py # 数据集分割
-│   └── visualization/       # 可视化
-│       └── inference_visualizer.py  # HTML报告生成
+├── src/                      # Source code
+│   ├── preprocessing/        # Data preprocessing
+│   ├── models/              # Core models
+│   │   ├── predictor.py     # CNN-LSTM-Attention predictor
+│   │   ├── state_classifier.py  # State classifier
+│   │   ├── discretizer.py   # Feature discretization
+│   │   ├── clustering.py    # DLP feature clustering
+│   │   ├── association.py   # Association rule mining
+│   │   └── bayesian_net.py  # Bayesian Network
+│   ├── inference/           # Inference module
+│   │   ├── causal_inference.py  # Causal inference
+│   │   └── recommendation.py    # Intelligent recommendations
+│   ├── pipeline/            # Pipelines
+│   │   ├── train_pipeline.py    # Training pipeline
+│   │   └── inference_pipeline.py # Inference pipeline
+│   ├── data_processing/     # Data processing
+│   │   ├── uci_loader.py    # UCI data loader
+│   │   └── data_splitter.py # Dataset splitting
+│   └── visualization/       # Visualization
+│       └── inference_visualizer.py  # HTML report generation
 │
-├── scripts/                  # 脚本工具
-│   ├── download_uci_data.py # UCI数据下载
-│   ├── split_uci_dataset.py # 数据集分割
-│   ├── run_training.py      # 训练脚本
-│   └── run_inference_uci.py # 推理脚本
+├── scripts/                  # Script tools
+│   ├── download_uci_data.py # UCI data download
+│   ├── split_uci_dataset.py # Dataset splitting
+│   ├── run_training.py      # Training script
+│   ├── run_inference_uci.py # Inference script
+│   └── view_html_reports.sh # HTML report viewer
 │
-├── data/                     # 数据目录
-│   ├── uci/                 # UCI数据集
-│   │   ├── raw/             # 原始数据
-│   │   ├── processed/       # 预处理后
-│   │   └── splits/          # 训练/测试集
-│   └── synthetic/           # 合成数据
+├── data/                     # Data directory
+│   ├── uci/                 # UCI dataset
+│   │   ├── raw/             # Raw data
+│   │   ├── processed/       # Preprocessed
+│   │   └── splits/          # Train/test splits
+│   └── synthetic/           # Synthetic data
 │
-├── outputs/                  # 输出结果
-│   ├── training_uci/        # 训练输出
-│   │   ├── models/          # 保存的模型
-│   │   └── results/         # 训练结果
-│   └── inference_uci/       # 推理输出
-│       └── html_reports/    # HTML可视化报告
+├── outputs/                  # Output results
+│   ├── training_uci/        # Training output
+│   │   ├── models/          # Saved models
+│   │   └── results/         # Training results
+│   └── inference_uci/       # Inference output
+│       └── html_reports/    # HTML visualization reports
 │
-├── doc/                      # 文档目录
-│   ├── guides/              # 使用指南
-│   │   ├── QUICKSTART.md    # 快速开始
-│   │   ├── QUICK_REFERENCE.md  # 快速参考
-│   │   └── HTML_DEMO.md     # HTML可视化演示
-│   ├── summaries/           # 进度总结
-│   └── ChatGPT-详细整理论文.md  # 论文解读
+├── doc/                      # Documentation directory
+│   ├── guides/              # User guides
+│   │   ├── QUICKSTART.md    # Quick start
+│   │   ├── QUICK_REFERENCE.md  # Quick reference
+│   │   └── HTML_DEMO.md     # HTML visualization demo
+│   ├── summaries/           # Progress summaries
+│   └── ChatGPT-Detailed Paper Summary.md  # Paper interpretation
 │
-├── tests/                    # 测试代码
-├── logs/                     # 训练日志
-└── README.md                 # 本文件
+├── tests/                    # Test code
+├── logs/                     # Training logs
+└── README.md                 # This file
 ```
 
-## 快速开始
+## Quick Start
 
-### 📖 详细指南
+### 📖 Detailed Guides
 
-- **[快速开始指南](doc/guides/QUICKSTART.md)** - 完整的安装和使用教程
-- **[快速参考](doc/guides/QUICK_REFERENCE.md)** - 常用命令速查表
-- **[HTML可视化演示](doc/guides/HTML_DEMO.md)** - 推理流程可视化使用指南
+- **[Quick Start Guide](doc/guides/QUICKSTART.md)** - Complete installation and usage tutorial
+- **[Quick Reference](doc/guides/QUICK_REFERENCE.md)** - Command cheat sheet
+- **[HTML Visualization Demo](doc/guides/HTML_DEMO.md)** - Inference process visualization usage guide
 
-### ⚡ 30秒快速启动
+### ⚡ 30-Second Quick Launch
 
 ```bash
-# 1. 环境配置
+# 1. Environment setup
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# 2. 下载UCI数据集（约127MB）
+# 2. Download UCI dataset (~127MB)
 python scripts/download_uci_data.py --method direct --preprocess
 
-# 3. 分割数据集（95%训练/5%测试）
+# 3. Split dataset (95% train / 5% test)
 python scripts/split_uci_dataset.py --test-ratio 0.05
 
-# 4. 训练模型（约5分钟，CPU）
+# 4. Train model (~5 minutes, CPU)
 python scripts/run_training.py \
   --data data/uci/splits/train.csv \
   --epochs 20 \
   --batch-size 64
 
-# 5. 推理测试（生成HTML可视化）
+# 5. Inference testing (generate HTML visualization)
 python scripts/run_inference_uci.py --n-samples 100
 
-# 6. 查看HTML报告
-./view_html_reports.sh
+# 6. View HTML reports
+./scripts/view_html_reports.sh
 ```
 
-### 📊 UCI数据集完整流程
+### 📊 UCI Dataset Complete Workflow
 
-**数据准备**
+**Data Preparation**
 ```bash
-# 下载并预处理UCI数据
+# Download and preprocess UCI data
 python scripts/download_uci_data.py --method direct --preprocess
 
-# 查看数据集信息
+# View dataset information
 python scripts/download_uci_data.py --info
 
-# 分割为训练集和测试集
+# Split into training and test sets
 python scripts/split_uci_dataset.py \
   --input data/uci/processed/uci_household_clean.csv \
   --output-dir data/uci/splits \
   --test-ratio 0.05
 ```
 
-**模型训练**
+**Model Training**
 ```bash
-# 使用UCI数据训练（自动检测数据类型）
+# Train using UCI data (auto-detect data type)
 python scripts/run_training.py \
   --data data/uci/splits/train.csv \
   --epochs 20 \
   --batch-size 64 \
   --output-dir outputs/training_uci
 
-# 训练完成后查看报告
+# View report after training
 cat outputs/training_uci/TRAINING_REPORT.md
 ```
 
-**推理测试**
+**Inference Testing**
 ```bash
-# 运行推理并生成HTML可视化
+# Run inference and generate HTML visualization
 python scripts/run_inference_uci.py \
   --model-dir outputs/training_uci/models \
   --test-data data/uci/splits/test.csv \
@@ -197,237 +198,200 @@ python scripts/run_inference_uci.py \
 - **[项目进度](doc/summaries/PROGRESS_SUMMARY.md)** - 整体进度追踪
 
 ### 输出报告
-- **[训练报告](outputs/training_uci/TRAINING_REPORT.md)** - UCI数据训练结果
-- **[推理摘要](outputs/inference_uci/INFERENCE_SUMMARY.md)** - 推理测试结果摘要
-- **[HTML报告](outputs/inference_uci/html_reports/index.html)** - 可视化推理报告
+- **[Training Report](outputs/training_uci/TRAINING_REPORT.md)** - UCI data training results
+- **[Inference Summary](outputs/inference_uci/INFERENCE_SUMMARY.md)** - Inference test results summary
+- **[HTML Reports](outputs/inference_uci/html_reports/index.html)** - Visualization inference reports
 
-## 核心模块说明
+## Core Module Descriptions
 
-### 1. 预测模块 (`src/models/predictor.py`)
-- 并行CNN-LSTM架构
-- Attention机制
-- 提取CAM和Attention特征（DLP）
+### 1. Prediction Module (`src/models/predictor.py`)
+- Parallel CNN-LSTM architecture
+- Attention mechanism
+- Extract CAM and Attention features (DLP)
 
-### 2. 状态分类 (`src/models/state_classifier.py`)
-- 将连续预测值分类为 Lower/Normal/Peak
-- 基于聚类的动态阈值
+### 2. State Classification (`src/models/state_classifier.py`)
+- Classify continuous predictions into Lower/Normal/Peak
+- Dynamic thresholds based on clustering
 
-### 3. 特征离散化 (`src/models/discretizer.py`)
-- 将连续特征转换为离散等级
-- 支持因果推理
+### 3. Feature Discretization (`src/models/discretizer.py`)
+- Convert continuous features to discrete levels
+- Support causal inference
 
-### 4. DLP聚类 (`src/models/clustering.py`)
-- CAM特征聚类（K-Means）
-- Attention类型分类（Early/Late/Other）
+### 4. DLP Clustering (`src/models/clustering.py`)
+- CAM feature clustering (K-Means)
+- Attention type classification (Early/Late/Other)
 
-### 5. 关联规则 (`src/models/association.py`)
-- Apriori算法挖掘EDP规则
-- 为贝叶斯网络提供先验知识
+### 5. Association Rules (`src/models/association.py`)
+- Apriori algorithm for EDP rule mining
+- Provide prior knowledge for Bayesian Network
 
-### 6. 贝叶斯网络 (`src/models/bayesian_net.py`)
-- 结构学习（Hill-Climbing）
-- 参数估计（Maximum Likelihood）
-- 领域知识约束
+### 6. Bayesian Network (`src/models/bayesian_net.py`)
+- Structure learning (Hill-Climbing)
+- Parameter estimation (Maximum Likelihood)
+- Domain knowledge constraints
 
-### 7. 因果推断 (`src/inference/causal_inference.py`)
-- 基于贝叶斯网络的因果推理
-- 反事实查询
-- 敏感性分析
+### 7. Causal Inference (`src/inference/causal_inference.py`)
+- Causal reasoning based on Bayesian Network
+- Counterfactual queries
+- Sensitivity analysis
 
-### 8. 智能推荐 (`src/inference/recommendation.py`)
-- 基于因果推断生成建议
-- 针对不同状态的个性化推荐
+### 8. Intelligent Recommendations (`src/inference/recommendation.py`)
+- Generate recommendations based on causal inference
+- Personalized recommendations for different states
 
-## 训练流水线
+## Training Pipeline
 
-完整的9步训练流程：
+Complete 9-step training process:
 
-1. **数据预处理** - 清洗、归一化、时间特征提取
-2. **预测器训练** - CNN-LSTM-Attention模型训练
-3. **状态分类器** - 基于预测值的状态聚类
-4. **特征离散化** - KBinsDiscretizer训练
-5. **DLP聚类** - CAM和Attention特征聚类
-6. **关联规则挖掘** - Apriori算法提取规则
-7. **贝叶斯网络学习** - 结构学习和参数估计
-8. **因果推断初始化** - 创建推理引擎
-9. **模型保存** - 保存所有训练好的模型
+1. **Data Preprocessing** - Cleaning, normalization, time feature extraction
+2. **Predictor Training** - CNN-LSTM-Attention model training
+3. **State Classifier** - State clustering based on predictions
+4. **Feature Discretization** - KBinsDiscretizer training
+5. **DLP Clustering** - CAM and Attention feature clustering
+6. **Association Rule Mining** - Apriori algorithm to extract rules
+7. **Bayesian Network Learning** - Structure learning and parameter estimation
+8. **Causal Inference Initialization** - Create inference engine
+9. **Model Saving** - Save all trained models
 
-## 推理流水线
+## Inference Pipeline
 
-完整的推理流程：
+Complete inference process:
 
-1. **加载模型** - 加载训练好的所有模型
-2. **数据预处理** - 与训练时相同的预处理
-3. **预测** - 使用CNN-LSTM-Attention生成预测
-4. **提取DLP** - 提取CAM和Attention特征
-5. **状态分类** - 分类为Lower/Normal/Peak
-6. **特征离散化** - 转换为离散等级
-7. **因果推断** - 基于贝叶斯网络推理
-8. **生成建议** - 基于当前状态生成推荐
-9. **HTML可视化** - 生成精美的可视化报告
+1. **Load Models** - Load all trained models
+2. **Data Preprocessing** - Same preprocessing as training
+3. **Prediction** - Generate predictions using CNN-LSTM-Attention
+4. **Extract DLP** - Extract CAM and Attention features
+5. **State Classification** - Classify into Lower/Normal/Peak
+6. **Feature Discretization** - Convert to discrete levels
+7. **Causal Inference** - Inference based on Bayesian Network
+8. **Generate Recommendations** - Generate recommendations based on current state
+9. **HTML Visualization** - Generate beautiful visualization reports
 
-## 性能指标
+## Performance Metrics
 
-### UCI数据集测试结果
+### UCI Dataset Test Results
 
-| 指标 | 数值 |
+| Metric | Value |
 |------|------|
 | MAE | 0.6718 kW |
 | RMSE | 0.8460 kW |
-| 样本数 | 80 |
-| 训练时间 | ~5分钟（CPU，20 epochs）|
-| 推理速度 | ~1秒/样本 |
+| Samples | 80 |
+| Training Time | ~5 minutes (CPU, 20 epochs)|
+| Inference Speed | ~1 second/sample |
 
-### 模型规模
+### Model Size
 
-| 组件 | 参数量/大小 |
+| Component | Parameters/Size |
 |------|------------|
-| Predictor | 58,867 参数 |
+| Predictor | 58,867 parameters |
 | State Classifier | ~1KB |
 | Discretizer | ~2KB |
 | CAM Clusterer | ~5KB |
 | Attention Clusterer | ~3KB |
 | Bayesian Network | ~50KB |
-| **总计** | **~2.3MB** |
+| **Total** | **~2.3MB** |
 
-## 开发工具
+## Development Tools
 
-### 测试
+### Testing
 ```bash
-# 运行核心模块测试
+# Run core module tests
 python tests/test_core_modules.py
 
-# 运行完整测试套件
+# Run complete test suite
 pytest tests/
 ```
 
-### 数据生成
+### Data Generation
 ```bash
-# 生成合成数据（用于开发测试）
+# Generate synthetic data (for development testing)
 python scripts/generate_synthetic_data.py \
   --n-samples 10000 \
   --scenario heatwave \
   --output data/synthetic/scenario_heatwave.csv
 ```
 
-### 数据集对比
+### Dataset Comparison
 ```bash
-# 对比UCI和合成数据
+# Compare UCI and synthetic data
 python scripts/compare_datasets.py
 ```
 
-## 常见问题
+## Frequently Asked Questions
 
-### Q: 为什么只生成10个HTML报告？
-A: 为了平衡速度和实用性。可以在 `scripts/run_inference_uci.py` 中修改 `num_samples` 参数。
+### Q: Why only generate 10 HTML reports?
+A: To balance speed and practicality. You can modify the `num_samples` parameter in `scripts/run_inference_uci.py`.
 
-### Q: 训练时间太长怎么办？
-A: 减少epochs（如 `--epochs 10`）或增加batch size（如 `--batch-size 128`）。
+### Q: What if training takes too long?
+A: Reduce epochs (e.g., `--epochs 10`) or increase batch size (e.g., `--batch-size 128`).
 
-### Q: 如何使用GPU加速？
-A: 安装GPU版本的TensorFlow：`pip install tensorflow-gpu`
+### Q: How to use GPU acceleration?
+A: Install GPU version of TensorFlow: `pip install tensorflow-gpu`
 
-### Q: 数据集太大，内存不足？
-A: 使用 `--n-samples` 参数限制样本数量。
+### Q: Dataset too large, insufficient memory?
+A: Use `--n-samples` parameter to limit the number of samples.
 
-## 参考文献
+## References
 
 1. Erlangga, D., & Cho, S. (2025). Causally explainable artificial intelligence on deep learning model for energy demand prediction. *Applied Energy*.
 
 2. UCI Machine Learning Repository. (2012). Individual Household Electric Power Consumption Data Set. https://archive.ics.uci.edu/ml/datasets/individual+household+electric+power+consumption
 
-## 许可证
+## License
 
-本项目仅用于学术研究和学习目的。
+This project is for academic research and learning purposes only.
 
-## 联系方式
+## Contact
 
-如有问题或建议，欢迎提Issue或Pull Request。
+Welcome to submit Issues or Pull Requests if you have questions or suggestions.
 
 ---
 
-**最后更新**: 2026-01-16  
-**版本**: v1.0  
-**状态**: ✅ 完全可用
+**Last Updated**: 2026-01-16  
+**Version**: v1.0  
+**Status**: ✅ Fully Functional
 
-config = {
-    'data_path': 'data/household_power_consumption.txt',
-    'output_dir': 'outputs/training',
-    'sequence_length': 60,
-    'epochs': 100,
-    'batch_size': 64
-}
+## Technical Architecture
 
-pipeline = TrainingPipeline(config)
-pipeline.run()
-```
+### Prediction Model
+- **Parallel Architecture**: CNN branch + LSTM-Attention branch
+- **Feature Extraction**: Time series sliding window + time feature engineering
+- **Robust Classification**: Sn scale estimator for outlier handling
 
-### 4. 推理预测
+### Explanation Model
+- **DLP Clustering**: CAM and Attention weight clustering
+- **Association Rules**: Apriori algorithm for mining candidate causal relationships
+- **Bayesian Network**: Structure learning with domain knowledge constraints
 
-```python
-from src.pipeline.inference_pipeline import InferencePipeline
-import pandas as pd
+### Causal Inference
+- **Do-Calculus**: Calculate intervention effects
+- **Sensitivity Analysis**: Tornado diagram visualization
+- **Counterfactual Analysis**: Compare factual and counterfactual distributions
 
-# 加载模型
-pipeline = InferencePipeline(models_dir='outputs/training/models')
+## Performance Metrics
 
-# 准备输入
-test_data = pd.DataFrame({
-    'Date': ['2025-06-15 14:30:00'],
-    'GlobalActivePower': [4.5],
-    'Kitchen': [2.0],
-    'ClimateControl': [3.5]
-})
-
-# 推理
-result = pipeline.predict(test_data)
-
-print(f"预测值: {result['prediction']['value']:.4f}")
-print(f"状态: {result['prediction']['state']}")
-print(result['recommendation_text'])
-```
-
-## 技术架构
-
-### 预测模型
-- **并行架构**: CNN分支 + LSTM-Attention分支
-- **特征提取**: 时间序列滑动窗口 + 时间特征工程
-- **稳健分类**: Sn尺度估计器处理异常值
-
-### 解释模型
-- **DLP聚类**: CAM和Attention权重聚类
-- **关联规则**: Apriori算法挖掘候选因果关系
-- **贝叶斯网络**: 领域知识约束的结构学习
-
-### 因果推断
-- **Do-演算**: 计算干预效应
-- **敏感性分析**: Tornado图可视化
-- **反事实分析**: 对比事实与反事实分布
-
-## 性能指标
-
-### 预测性能（vs 串行CNN-LSTM）
-| 数据集 | MSE改进 | MAPE改进 |
+### Prediction Performance (vs Serial CNN-LSTM)
+| Dataset | MSE Improvement | MAPE Improvement |
 |--------|---------|----------|
 | UCI    | 34.84%  | 32.71%   |
 | REFIT  | 13.63%  | 11.45%   |
 
-### 解释一致性（余弦相似度）
-| 方法      | UCI数据集 | REFIT数据集 |
+### Explanation Consistency (Cosine Similarity)
+| Method      | UCI Dataset | REFIT Dataset |
 |-----------|-----------|-------------|
-| 本方法(BN) | 0.99940   | 0.99983     |
+| This Method (BN) | 0.99940   | 0.99983     |
 | SHAP      | 0.95210   | 0.96478     |
 
-## 参考文献
+## References
 
 Gatum Erlangga, Sung-Bae Cho. *Causally explainable artificial intelligence on deep learning model for energy demand prediction*. Engineering Applications of Artificial Intelligence, Volume 162, 2025.
 
 
 
-## 许可证
+## License
 
 MIT License
 
-## 作者
+## Author
 
-Severin YE - 基于原始论文的代码复现
+Severin YE - Code reproduction based on the original paper

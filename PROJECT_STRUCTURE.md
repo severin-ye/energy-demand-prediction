@@ -1,77 +1,77 @@
-# 项目结构说明
+# Project Structure Documentation
 
-## 📁 完整目录树
+## 📁 Complete Directory Tree
 
-生成时间: 2026-01-16
+Generated: 2026-01-16
 
 ```
 YS/
-├── README.md                 # 项目主文档（入口）
-├── requirements.txt          # Python依赖列表
-├── tree.md                   # 项目结构树（本文件的原始版本）
-├── view_html_reports.sh      # HTML报告快捷查看脚本
+├── README.md                 # Main project documentation (entry point)
+├── requirements.txt          # Python dependencies list
+├── tree.md                   # Project structure tree (original version of this file)
 │
-├── src/                      # 源代码目录
+├── src/                      # Source code directory
 │   ├── __init__.py          
 │   │
-│   ├── preprocessing/        # 数据预处理模块
+│   ├── preprocessing/        # Data preprocessing module
 │   │   ├── __init__.py
-│   │   └── data_preprocessor.py    # 数据清洗、归一化、特征提取
+│   │   └── data_preprocessor.py    # Data cleaning, normalization, feature extraction
 │   │
-│   ├── models/              # 核心模型模块
+│   ├── models/              # Core model module
 │   │   ├── __init__.py
-│   │   ├── predictor.py            # CNN-LSTM-Attention预测器（核心）
-│   │   ├── state_classifier.py     # 状态分类器（Lower/Normal/Peak）
-│   │   ├── discretizer.py          # 特征离散化器
-│   │   ├── clustering.py           # DLP特征聚类（CAM + Attention）
-│   │   ├── association.py          # 关联规则挖掘（Apriori）
-│   │   └── bayesian_net.py         # 贝叶斯网络（结构学习+参数估计）
+│   │   ├── predictor.py            # CNN-LSTM-Attention predictor (core)
+│   │   ├── state_classifier.py     # State classifier (Lower/Normal/Peak)
+│   │   ├── discretizer.py          # Feature discretizer
+│   │   ├── clustering.py           # DLP feature clustering (CAM + Attention)
+│   │   ├── association.py          # Association rule mining (Apriori)
+│   │   └── bayesian_net.py         # Bayesian Network (structure learning + parameter estimation)
 │   │
-│   ├── inference/           # 推理和推荐模块
+│   ├── inference/           # Inference and recommendation module
 │   │   ├── __init__.py
-│   │   ├── causal_inference.py     # 因果推断引擎
-│   │   └── recommendation.py       # 智能推荐引擎
+│   │   ├── causal_inference.py     # Causal inference engine
+│   │   └── recommendation.py       # Intelligent recommendation engine
 │   │
-│   ├── pipeline/            # 训练和推理流水线
+│   ├── pipeline/            # Training and inference pipelines
 │   │   ├── __init__.py
-│   │   ├── train_pipeline.py       # 9步训练流水线
-│   │   └── inference_pipeline.py   # 完整推理流水线
+│   │   ├── train_pipeline.py       # 9-step training pipeline
+│   │   └── inference_pipeline.py   # Complete inference pipeline
 │   │
-│   ├── data_processing/     # 数据处理工具
+│   ├── data_processing/     # Data processing tools
 │   │   ├── __init__.py
-│   │   ├── uci_loader.py           # UCI数据加载和预处理
-│   │   └── data_splitter.py        # 数据集分割工具
+│   │   ├── uci_loader.py           # UCI data loading and preprocessing
+│   │   └── data_splitter.py        # Dataset splitting tool
 │   │
-│   └── visualization/       # 可视化模块
+│   └── visualization/       # Visualization module
 │       ├── __init__.py
-│       └── inference_visualizer.py # HTML报告生成器
+│       └── inference_visualizer.py # HTML report generator
 │
-├── scripts/                 # 可执行脚本
-│   ├── README_synthetic_data.md    # 合成数据说明
-│   ├── download_uci_data.py        # UCI数据下载脚本
-│   ├── split_uci_dataset.py        # 数据集分割脚本
-│   ├── run_training.py             # 训练脚本（主）
-│   ├── run_inference_uci.py        # 推理脚本（主）
-│   ├── generate_synthetic_data.py  # 合成数据生成
-│   ├── compare_datasets.py         # 数据集对比工具
-│   └── prepare_data.py             # 数据准备脚本（已弃用）
+├── scripts/                 # Executable scripts
+│   ├── README_synthetic_data.md    # Synthetic data description
+│   ├── download_uci_data.py        # UCI data download script
+│   ├── split_uci_dataset.py        # Dataset splitting script
+│   ├── run_training.py             # Training script (main)
+│   ├── run_inference_uci.py        # Inference script (main)
+│   ├── generate_synthetic_data.py  # Synthetic data generation
+│   ├── compare_datasets.py         # Dataset comparison tool
+│   ├── prepare_data.py             # Data preparation script (deprecated)
+│   └── view_html_reports.sh        # Quick view script for HTML reports
 │
-├── data/                    # 数据目录
-│   ├── README.md            # 数据目录说明
+├── data/                    # Data directory
+│   ├── README.md            # Data directory description
 │   │
-│   ├── uci/                # UCI数据集
-│   │   ├── raw/            # 原始下载数据（127MB，gitignored）
+│   ├── uci/                # UCI dataset
+│   │   ├── raw/            # Raw downloaded data (127MB, gitignored)
 │   │   │   └── household_power_consumption.txt
-│   │   ├── processed/      # 预处理后数据（16MB，gitignored）
+│   │   ├── processed/      # Preprocessed data (16MB, gitignored)
 │   │   │   └── uci_household_clean.csv
-│   │   └── splits/         # 训练/测试集（gitignored）
-│   │       ├── train.csv   # 训练集（95%，131,435样本）
-│   │       └── test.csv    # 测试集（5%，6,917样本）
+│   │   └── splits/         # Train/test splits (gitignored)
+│   │       ├── train.csv   # Training set (95%, 131,435 samples)
+│   │       └── test.csv    # Test set (5%, 6,917 samples)
 │   │
-│   ├── synthetic/          # 合成数据（用于开发测试）
+│   ├── synthetic/          # Synthetic data (for development testing)
 │   │   ├── raw/
 │   │   │   └── training_data.csv
-│   │   ├── scenarios/      # 各种场景数据
+│   │   ├── scenarios/      # Various scenario data
 │   │   │   ├── heatwave.csv
 │   │   │   ├── coldwave.csv
 │   │   │   ├── peak_hour.csv
@@ -79,154 +79,154 @@ YS/
 │   │   │   └── moderate.csv
 │   │   └── scenario_custom.csv
 │   │
-│   ├── processed/          # 通用处理数据（已弃用）
+│   ├── processed/          # Generic processed data (deprecated)
 │   │   └── synthetic_energy_data.csv
 │   │
-│   └── raw/                # 通用原始数据（空）
+│   └── raw/                # Generic raw data (empty)
 │
-├── outputs/                 # 输出结果目录
+├── outputs/                 # Output results directory
 │   │
-│   ├── training_uci/       # UCI数据训练输出
-│   │   ├── TRAINING_REPORT.md      # 训练结果报告
-│   │   ├── config.json             # 训练配置
-│   │   ├── models/                 # 保存的模型（7个文件，2.3MB）
-│   │   │   ├── predictor.keras     # CNN-LSTM-Attention模型
-│   │   │   ├── preprocessor.pkl    # 预处理器
-│   │   │   ├── state_classifier.pkl # 状态分类器
-│   │   │   ├── discretizer.pkl     # 离散化器
-│   │   │   ├── cam_clusterer.pkl   # CAM聚类器
-│   │   │   ├── attention_clusterer.pkl # Attention聚类器
-│   │   │   └── bayesian_network.bif # 贝叶斯网络
-│   │   └── results/                # 训练结果
-│   │       ├── association_rules.csv   # 关联规则
-│   │       └── bayesian_network.png    # 贝叶斯网络图
+│   ├── training_uci/       # UCI data training output
+│   │   ├── TRAINING_REPORT.md      # Training results report
+│   │   ├── config.json             # Training configuration
+│   │   ├── models/                 # Saved models (7 files, 2.3MB)
+│   │   │   ├── predictor.keras     # CNN-LSTM-Attention model
+│   │   │   ├── preprocessor.pkl    # Preprocessor
+│   │   │   ├── state_classifier.pkl # State classifier
+│   │   │   ├── discretizer.pkl     # Discretizer
+│   │   │   ├── cam_clusterer.pkl   # CAM clusterer
+│   │   │   ├── attention_clusterer.pkl # Attention clusterer
+│   │   │   └── bayesian_network.bif # Bayesian Network
+│   │   └── results/                # Training results
+│   │       ├── association_rules.csv   # Association rules
+│   │       └── bayesian_network.png    # Bayesian Network diagram
 │   │
-│   ├── inference_uci/      # UCI数据推理输出
-│   │   ├── INFERENCE_SUMMARY.md    # 推理结果摘要
-│   │   ├── HTML_VISUALIZATION_GUIDE.md # HTML使用指南
-│   │   ├── inference_report.txt    # 文本报告
-│   │   ├── inference_details.csv   # 详细结果（CSV）
-│   │   ├── inference_results.json  # 结构化结果（JSON）
-│   │   └── html_reports/           # HTML可视化报告
-│   │       ├── index.html          # 索引页面（入口）
-│   │       ├── sample_000.html     # 样本0详细报告
-│   │       ├── sample_001.html     # 样本1详细报告
-│   │       └── ...                 # 更多样本（共10个）
+│   ├── inference_uci/      # UCI data inference output
+│   │   ├── INFERENCE_SUMMARY.md    # Inference results summary
+│   │   ├── HTML_VISUALIZATION_GUIDE.md # HTML usage guide
+│   │   ├── inference_report.txt    # Text report
+│   │   ├── inference_details.csv   # Detailed results (CSV)
+│   │   ├── inference_results.json  # Structured results (JSON)
+│   │   └── html_reports/           # HTML visualization reports
+│   │       ├── index.html          # Index page (entry point)
+│   │       ├── sample_000.html     # Sample 0 detailed report
+│   │       ├── sample_001.html     # Sample 1 detailed report
+│   │       └── ...                 # More samples (10 total)
 │   │
-│   ├── inference/          # 旧版推理输出（空）
-│   └── inference_results/  # 旧版推理结果
+│   ├── inference/          # Legacy inference output (empty)
+│   └── inference_results/  # Legacy inference results
 │       └── inference_results.json
 │
-├── doc/                     # 文档目录
+├── doc/                     # Documentation directory
 │   │
-│   ├── guides/             # 使用指南
-│   │   ├── QUICKSTART.md           # 快速开始指南（详细教程）
-│   │   ├── QUICK_REFERENCE.md      # 快速参考（命令速查）
-│   │   └── HTML_DEMO.md            # HTML可视化演示说明
+│   ├── guides/             # User guides
+│   │   ├── QUICKSTART.md           # Quick start guide (detailed tutorial)
+│   │   ├── QUICK_REFERENCE.md      # Quick reference (command cheat sheet)
+│   │   └── HTML_DEMO.md            # HTML visualization demo description
 │   │
-│   ├── summaries/          # 进度总结
-│   │   ├── IMPLEMENTATION_SUMMARY.md  # 实现总结
-│   │   ├── PROGRESS.md             # 项目进度
-│   │   └── PROGRESS_SUMMARY.md     # 进度汇总
+│   ├── summaries/          # Progress summaries
+│   │   ├── IMPLEMENTATION_SUMMARY.md  # Implementation summary
+│   │   ├── PROGRESS.md             # Project progress
+│   │   └── PROGRESS_SUMMARY.md     # Progress summary
 │   │
-│   ├── ChatGPT-详细整理论文.md     # 论文完整解读（教学式）
-│   ├── 项目设计文档.md             # 系统架构设计
-│   ├── 实现文档.md                 # 代码实现说明
-│   ├── 数据集说明-UCI_Household.md # UCI数据集详解
-│   └── 能源预测--基于深度学习模型的因果可解释人工智能在能源需求预测中的应用.pdf
+│   ├── ChatGPT-Detailed Paper Summary.md     # Complete paper interpretation (tutorial-style)
+│   ├── Project Design Document.md             # System architecture design
+│   ├── Implementation Document.md                 # Code implementation description
+│   ├── Dataset Description-UCI_Household.md # UCI dataset detailed explanation
+│   └── Energy Prediction--Causally explainable artificial intelligence on deep learning model for energy demand prediction.pdf
 │
-├── tests/                   # 测试代码
-│   └── test_core_modules.py        # 核心模块测试
+├── tests/                   # Test code
+│   └── test_core_modules.py        # Core module tests
 │
-├── logs/                    # 训练日志
-│   ├── training_uci.log            # UCI训练日志（1.1MB）
-│   ├── training_complete.log       # 完整训练日志
-│   ├── training_full.log           # 全量训练日志
-│   └── training_output.log         # 训练输出日志
+├── logs/                    # Training logs
+│   ├── training_uci.log            # UCI training log (1.1MB)
+│   ├── training_complete.log       # Complete training log
+│   ├── training_full.log           # Full training log
+│   └── training_output.log         # Training output log
 │
-├── notebooks/              # Jupyter笔记本（空，预留）
+├── notebooks/              # Jupyter notebooks (empty, reserved)
 │
-└── config/                 # 配置文件（空，预留）
+└── config/                 # Configuration files (empty, reserved)
 ```
 
-## 📊 统计信息
+## 📊 Statistics
 
-- **总目录数**: 38
-- **总文件数**: 115+
-- **代码文件**: ~30个Python文件
-- **文档文件**: ~15个Markdown文件
-- **模型文件**: 7个训练好的模型
-- **数据文件**: UCI数据集 + 合成数据
+- **Total directories**: 38
+- **Total files**: 115+
+- **Code files**: ~30 Python files
+- **Documentation files**: ~15 Markdown files
+- **Model files**: 7 trained models
+- **Data files**: UCI dataset + synthetic data
 
-## 🔗 重要文件引用关系
+## 🔗 Key File Reference Relationships
 
-### 主入口文件
-- `README.md` → 项目主文档，引用所有其他文档
+### Main Entry Files
+- `README.md` → Main project documentation, referencing all other documents
 
-### 核心脚本
-- `scripts/run_training.py` → 使用 `src/pipeline/train_pipeline.py`
-- `scripts/run_inference_uci.py` → 使用 `src/pipeline/inference_pipeline.py`
-- `scripts/download_uci_data.py` → 使用 `src/data_processing/uci_loader.py`
+### Core Scripts
+- `scripts/run_training.py` → Uses `src/pipeline/train_pipeline.py`
+- `scripts/run_inference_uci.py` → Uses `src/pipeline/inference_pipeline.py`
+- `scripts/download_uci_data.py` → Uses `src/data_processing/uci_loader.py`
 
-### 流水线依赖
-- `src/pipeline/train_pipeline.py` → 依赖所有 `src/models/` 中的模块
-- `src/pipeline/inference_pipeline.py` → 依赖所有训练好的模型
+### Pipeline Dependencies
+- `src/pipeline/train_pipeline.py` → Depends on all modules in `src/models/`
+- `src/pipeline/inference_pipeline.py` → Depends on all trained models
 
-### 文档引用
+### Documentation References
 - `README.md` → `doc/guides/QUICKSTART.md`
 - `README.md` → `doc/guides/QUICK_REFERENCE.md`
 - `README.md` → `doc/guides/HTML_DEMO.md`
 - `doc/guides/HTML_DEMO.md` → `outputs/inference_uci/HTML_VISUALIZATION_GUIDE.md`
 
-### 模型依赖图
+### Model Dependency Diagram
 ```
 predictor.py (CNN-LSTM-Attention)
-    ├── 输出预测值 → state_classifier.py
-    ├── 输出CAM特征 → clustering.py (CAM聚类)
-    └── 输出Attention特征 → clustering.py (Attention聚类)
+    ├── Output predictions → state_classifier.py
+    ├── Output CAM features → clustering.py (CAM clustering)
+    └── Output Attention features → clustering.py (Attention clustering)
 
 state_classifier.py
-    └── 输出状态 → bayesian_net.py
+    └── Output states → bayesian_net.py
 
 discretizer.py
-    └── 输出离散特征 → association.py, bayesian_net.py
+    └── Output discrete features → association.py, bayesian_net.py
 
 association.py
-    └── 输出规则 → bayesian_net.py (先验知识)
+    └── Output rules → bayesian_net.py (prior knowledge)
 
 bayesian_net.py
-    └── 输出贝叶斯网络 → causal_inference.py
+    └── Output Bayesian Network → causal_inference.py
 
 causal_inference.py
-    └── 输出因果推断 → recommendation.py
+    └── Output causal inference → recommendation.py
 
 recommendation.py
-    └── 输出智能建议 → inference_visualizer.py (HTML)
+    └── Output intelligent recommendations → inference_visualizer.py (HTML)
 ```
 
-## 🎯 核心模块说明
+## 🎯 Core Module Descriptions
 
-### 1. 预测模块 (`src/models/`)
-- **predictor.py**: 并行CNN-LSTM-Attention架构，核心预测模型
-- **state_classifier.py**: 基于聚类的状态分类器
-- **discretizer.py**: KBinsDiscretizer，特征离散化
-- **clustering.py**: K-Means聚类DLP特征
+### 1. Prediction Module (`src/models/`)
+- **predictor.py**: Parallel CNN-LSTM-Attention architecture, core prediction model
+- **state_classifier.py**: Clustering-based state classifier
+- **discretizer.py**: KBinsDiscretizer, feature discretization
+- **clustering.py**: K-Means clustering for DLP features
 
-### 2. 因果模块 (`src/models/` + `src/inference/`)
-- **association.py**: Apriori算法挖掘关联规则
-- **bayesian_net.py**: 贝叶斯网络结构学习和参数估计
-- **causal_inference.py**: 基于贝叶斯网络的因果推断引擎
-- **recommendation.py**: 基于因果推断的智能推荐
+### 2. Causal Module (`src/models/` + `src/inference/`)
+- **association.py**: Apriori algorithm for association rule mining
+- **bayesian_net.py**: Bayesian Network structure learning and parameter estimation
+- **causal_inference.py**: Causal inference engine based on Bayesian Network
+- **recommendation.py**: Intelligent recommendations based on causal inference
 
-### 3. 流水线 (`src/pipeline/`)
-- **train_pipeline.py**: 完整的9步训练流程
-- **inference_pipeline.py**: 完整的推理流程
+### 3. Pipeline (`src/pipeline/`)
+- **train_pipeline.py**: Complete 9-step training process
+- **inference_pipeline.py**: Complete inference process
 
-### 4. 工具模块
-- **data_preprocessor.py**: 数据预处理（清洗、归一化、特征提取）
-- **uci_loader.py**: UCI数据加载、下载、预处理
-- **data_splitter.py**: 数据集分割（时间序列/随机）
-- **inference_visualizer.py**: HTML报告生成（24KB模板）
+### 4. Utility Modules
+- **data_preprocessor.py**: Data preprocessing (cleaning, normalization, feature extraction)
+- **uci_loader.py**: UCI data loading, downloading, preprocessing
+- **data_splitter.py**: Dataset splitting (time series/random)
+- **inference_visualizer.py**: HTML report generation (24KB template)
 
 ## 📝 文档分类
 
@@ -247,54 +247,50 @@ recommendation.py
 3. `outputs/inference_uci/HTML_VISUALIZATION_GUIDE.md` - HTML使用指南
 
 ### 进度文档
-1. `doc/summaries/IMPLEMENTATION_SUMMARY.md` - 实现总结
-2. `doc/summaries/PROGRESS_SUMMARY.md` - 进度汇总
+1. `doc/summaries/IMPLEMENTATION_SUMMARY.md` - Implementation summary
+2. `doc/summaries/PROGRESS_SUMMARY.md` - Progress summary
 
-## 🚀 快速导航
+## 🚀 Quick Navigation
 
-| 我想... | 去哪里 |
+| I want to... | Go to |
 |---------|--------|
-| 了解项目 | `README.md` |
-| 快速开始 | `doc/guides/QUICKSTART.md` |
-| 查命令 | `doc/guides/QUICK_REFERENCE.md` |
-| 看论文解读 | `doc/ChatGPT-详细整理论文.md` |
-| 训练模型 | `scripts/run_training.py` |
-| 运行推理 | `scripts/run_inference_uci.py` |
-| 查看训练结果 | `outputs/training_uci/TRAINING_REPORT.md` |
-| 查看推理结果 | `outputs/inference_uci/INFERENCE_SUMMARY.md` |
-| 浏览HTML报告 | `outputs/inference_uci/html_reports/index.html` |
-| 下载数据 | `scripts/download_uci_data.py` |
-| 测试代码 | `tests/test_core_modules.py` |
+| Understand the project | `README.md` |
+| Quick start | `doc/guides/QUICKSTART.md` |
+| Look up commands | `doc/guides/QUICK_REFERENCE.md` |
+| Read paper interpretation | `doc/ChatGPT-Detailed Paper Summary.md` |
+| Train model | `scripts/run_training.py` |
+| Run inference | `scripts/run_inference_uci.py` |
+| View training results | `outputs/training_uci/TRAINING_REPORT.md` |
+| View inference results | `outputs/inference_uci/INFERENCE_SUMMARY.md` |
+| Browse HTML reports | `outputs/inference_uci/html_reports/index.html` |
+| Download data | `scripts/download_uci_data.py` |
+| Test code | `tests/test_core_modules.py` |
 
-## 🔄 数据流向
+## 🔄 Data Flow
 
 ```
-1. 原始数据
+1. Raw data
    data/uci/raw/household_power_consumption.txt (127MB)
    
-2. 预处理
+2. Preprocessing
    ↓ scripts/download_uci_data.py (--preprocess)
    data/uci/processed/uci_household_clean.csv (16MB)
    
-3. 分割
+3. Splitting
    ↓ scripts/split_uci_dataset.py
-   data/uci/splits/train.csv (15MB, 131K样本)
-   data/uci/splits/test.csv (776KB, 6.9K样本)
+   data/uci/splits/train.csv (15MB, 131K samples)
+   data/uci/splits/test.csv (776KB, 6.9K samples)
    
-4. 训练
+4. Training
    ↓ scripts/run_training.py
-   outputs/training_uci/models/* (7个模型文件, 2.3MB)
+   outputs/training_uci/models/* (7 model files, 2.3MB)
    outputs/training_uci/TRAINING_REPORT.md
    
-5. 推理
+5. Inference
    ↓ scripts/run_inference_uci.py
    outputs/inference_uci/inference_report.txt
    outputs/inference_uci/inference_details.csv
-   outputs/inference_uci/html_reports/*.html (10个HTML, 250KB)
+   outputs/inference_uci/html_reports/*.html (10 HTML files, 250KB)
 ```
 
 ---
-
-**生成时间**: 2026-01-16  
-**最后更新**: 2026-01-16  
-**版本**: v1.0

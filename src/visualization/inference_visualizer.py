@@ -1,6 +1,6 @@
 """
-推理结果可视化模块 - 简洁版
-专注于展示核心信息，清晰易读
+Inference Result Visualization Module - Concise Edition
+Focuses on presenting core information with clarity and readability.
 """
 
 import json
@@ -11,26 +11,26 @@ from datetime import datetime
 
 
 class InferenceVisualizer:
-    """推理结果可视化器 - 简洁版"""
+    """Inference Result Visualizer - Concise Edition"""
     
     def __init__(self):
-        """初始化可视化器"""
+        """Initializes the visualizer"""
         self.template = self._load_template()
     
     def _load_template(self) -> str:
-        """加载简洁HTML模板"""
+        """Loads the concise HTML template"""
         return """
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分析报告 #{sample_id}</title>
+    <title>Analysis Report #{sample_id}</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: #f5f5f5;
             padding: 20px;
             line-height: 1.6;
@@ -67,7 +67,7 @@ class InferenceVisualizer:
             padding: 25px 30px;
         }}
         
-        /* 核心结果区域 */
+        /* Core Results Area */
         .summary {{
             background: #ecf0f1;
             border-left: 4px solid #3498db;
@@ -110,7 +110,7 @@ class InferenceVisualizer:
         .result-value.normal {{ color: #27ae60; }}
         .result-value.lower {{ color: #3498db; }}
         
-        /* 分析区域 */
+        /* Analysis Sections */
         .section {{
             margin-bottom: 25px;
             padding-bottom: 20px;
@@ -144,7 +144,7 @@ class InferenceVisualizer:
             margin-left: 36px;
         }}
         
-        /* 数据表格 */
+        /* Data Tables */
         table {{
             width: 100%;
             border-collapse: collapse;
@@ -168,7 +168,7 @@ class InferenceVisualizer:
         
         tr:hover {{ background: #f8f9fa; }}
         
-        /* 数据行 */
+        /* Data Rows */
         .data-row {{
             padding: 8px 0;
             display: flex;
@@ -188,7 +188,7 @@ class InferenceVisualizer:
             color: #2c3e50;
         }}
         
-        /* 信息框 */
+        /* Info Boxes */
         .info-box {{
             background: #f8f9fa;
             border-left: 3px solid #3498db;
@@ -207,7 +207,7 @@ class InferenceVisualizer:
             background: #f0f9f4;
         }}
         
-        /* 建议卡片 */
+        /* Recommendation Cards */
         .recommendation {{
             background: white;
             border: 1px solid #ddd;
@@ -237,65 +237,66 @@ class InferenceVisualizer:
 <body>
     <div class="container">
         <div class="header">
-            <h1>电力负荷预测分析报告</h1>
-            <p class="meta">样本 #{sample_id} · {timestamp}</p>
+            <h1>Power Load Forecasting Analysis Report</h1>
+            <p class="meta">Sample #{sample_id} · {timestamp}</p>
         </div>
         
         <div class="content">
-            <!-- 核心结果 -->
             <div class="summary">
-                <h2>预测结果</h2>
+                <h2>Forecast Results</h2>
                 <div class="result-grid">
                     <div class="result-item">
-                        <div class="result-label">预测负荷</div>
+                        <div class="result-label">Predicted Load</div>
                         <div class="result-value">{prediction} kW</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-label">实际负荷</div>
+                        <div class="result-label">Actual Load</div>
                         <div class="result-value">{actual} kW</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-label">预测误差</div>
+                        <div class="result-label">Forecast Error</div>
                         <div class="result-value">{error}%</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-label">负荷状态</div>
+                        <div class="result-label">Load State</div>
                         <div class="result-value {state_class}">{state}</div>
                     </div>
                 </div>
             </div>
             
-            <!-- 1. 输入数据 -->
             <div class="section">
                 <h3 class="section-title">
                     <span class="num">1</span>
-                    输入数据
+                    Input Data
                 </h3>
                 <div class="section-content">
                     <table>
-                        <tr>
-                            <th>特征</th>
-                            <th>当前值</th>
-                            <th>离散化等级</th>
-                        </tr>
-                        {input_table}
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Current Value</th>
+                                <th>Discrete Level</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {input_table}
+                        </tbody>
                     </table>
                 </div>
             </div>
             
-            <!-- 2. 模型分析 -->
             <div class="section">
                 <h3 class="section-title">
                     <span class="num">2</span>
-                    模型分析
+                    Model Analysis
                 </h3>
                 <div class="section-content">
                     <div class="data-row">
-                        <span class="data-label">CAM 聚类</span>
+                        <span class="data-label">CAM Cluster</span>
                         <span class="data-value">Cluster {cam_cluster}</span>
                     </div>
                     <div class="data-row">
-                        <span class="data-label">注意力模式</span>
+                        <span class="data-label">Attention Pattern</span>
                         <span class="data-value">{attention_type}</span>
                     </div>
                     <div class="info-box">
@@ -304,22 +305,20 @@ class InferenceVisualizer:
                 </div>
             </div>
             
-            <!-- 3. 因果分析 -->
             <div class="section">
                 <h3 class="section-title">
                     <span class="num">3</span>
-                    因果关系
+                    Causal Relationships
                 </h3>
                 <div class="section-content">
                     {causal_analysis}
                 </div>
             </div>
             
-            <!-- 4. 优化建议 -->
             <div class="section">
                 <h3 class="section-title">
                     <span class="num">4</span>
-                    优化建议
+                    Optimization Recommendations
                 </h3>
                 <div class="section-content">
                     {recommendations}
@@ -338,23 +337,23 @@ class InferenceVisualizer:
         output_path: Path
     ) -> Path:
         """
-        生成简洁的HTML报告
+        Generates a concise HTML report.
         
-        参数:
-            result: 推理结果字典
-            sample_id: 样本ID
-            output_path: 输出文件路径
+        Args:
+            result: Dictionary containing inference results.
+            sample_id: Sample ID.
+            output_path: Path to the output file.
         
-        返回:
-            Path: 生成的HTML文件路径
+        Returns:
+            Path: The generated HTML file path.
         """
-        # 提取核心数据
+        # Extract core metrics
         prediction = result.get('prediction', 0)
         actual = result.get('actual_value', 0)
         error = ((prediction - actual) / actual * 100) if actual != 0 else 0
         state = result.get('state', 'Unknown')
         
-        # 状态对应的CSS类
+        # CSS classes for states
         state_class_map = {
             'Peak': 'peak',
             'Normal': 'normal',
@@ -362,7 +361,7 @@ class InferenceVisualizer:
         }
         state_class = state_class_map.get(state, '')
         
-        # 生成输入数据表格
+        # Generate input data table rows
         input_features = result.get('input_features', {})
         discrete_features = result.get('discrete_features', {})
         
@@ -370,34 +369,34 @@ class InferenceVisualizer:
         for key, value in input_features.items():
             discrete_value = discrete_features.get(key, '-')
             input_rows.append(f"""
-                        <tr>
-                            <td>{key}</td>
-                            <td>{value:.3f}</td>
-                            <td>{discrete_value}</td>
-                        </tr>""")
+                            <tr>
+                                <td>{key}</td>
+                                <td>{value:.3f}</td>
+                                <td>{discrete_value}</td>
+                            </tr>""")
         input_table = ''.join(input_rows)
         
-        # 模式解释
+        # Pattern explanation
         cam_cluster = result.get('cam_cluster', 0)
         attention_type = result.get('attention_type', 'Unknown')
-        pattern_explanation = f"模型检测到 {attention_type} 注意力模式，CAM聚类为第 {cam_cluster} 类"
+        pattern_explanation = f"Model detected {attention_type} attention pattern; CAM cluster categorized as Type {cam_cluster}."
         
-        # 因果分析
-        causal_text = result.get('causal_explanation', '暂无因果分析数据')
+        # Causal analysis description
+        causal_text = result.get('causal_explanation', 'No causal analysis data available.')
         causal_analysis = f'<div class="info-box">{causal_text}</div>'
         
-        # 生成建议列表
+        # Generate recommendation list
         recommendations_list = result.get('recommendations', [])
         if recommendations_list:
             recs_html = []
-            for i, rec in enumerate(recommendations_list[:5], 1):  # 最多显示5条
-                title = rec.get('action', f'建议 {i}')
+            for i, rec in enumerate(recommendations_list[:5], 1):  # Display up to 5 recommendations
+                title = rec.get('action', f'Recommendation {i}')
                 content = rec.get('explanation', '')
                 impact = rec.get('expected_impact', '')
                 
                 full_content = content
                 if impact:
-                    full_content += f"<br><small>预期效果: {impact}</small>"
+                    full_content += f"<br><small>Expected Impact: {impact}</small>"
                 
                 recs_html.append(f"""
                     <div class="recommendation">
@@ -406,9 +405,9 @@ class InferenceVisualizer:
                     </div>""")
             recommendations = ''.join(recs_html)
         else:
-            recommendations = '<div class="info-box">当前状态良好，暂无优化建议</div>'
+            recommendations = '<div class="info-box">Current state is optimal; no recommendations available.</div>'
         
-        # 填充模板
+        # Render template
         html_content = self.template.format(
             sample_id=sample_id,
             timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -425,7 +424,7 @@ class InferenceVisualizer:
             recommendations=recommendations
         )
         
-        # 写入文件
+        # Write to file
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(html_content, encoding='utf-8')
         
@@ -436,18 +435,18 @@ class InferenceVisualizer:
         n_samples: int,
         output_dir: Path
     ) -> Path:
-        """生成简洁的索引页面"""
+        """Generates a concise index page for multiple reports."""
         index_template = """
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分析报告索引</title>
+    <title>Analysis Reports Index</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f5f5f5;
             padding: 20px;
         }}
@@ -488,8 +487,8 @@ class InferenceVisualizer:
 </head>
 <body>
     <div class="container">
-        <h1>电力负荷预测分析报告</h1>
-        <p>共 {n_samples} 个样本</p>
+        <h1>Power Load Forecast Analysis Reports</h1>
+        <p>Total: {n_samples} samples</p>
         <div class="grid">
             {links}
         </div>
@@ -499,7 +498,7 @@ class InferenceVisualizer:
 """
         links = []
         for i in range(n_samples):
-            links.append(f'<a href="sample_{i:03d}.html" class="sample-link">样本 #{i}</a>')
+            links.append(f'<a href="sample_{i:03d}.html" class="sample-link">Sample #{i}</a>')
         
         html = index_template.format(
             n_samples=n_samples,

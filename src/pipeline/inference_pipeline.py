@@ -1,6 +1,6 @@
 """
-推理流水线
-单样本预测 + 因果解释 + 优化推荐
+Inference Pipeline
+Single sample prediction + Causal explanation + Optimization recommendation
 """
 
 import numpy as np
@@ -15,23 +15,23 @@ logger = logging.getLogger(__name__)
 
 class InferencePipeline:
     """
-    推理流水线
+    Inference Pipeline
     
-    功能:
-    1. 加载所有训练好的模型
-    2. 对单个样本进行预测
-    3. 提取DLP并进行聚类
-    4. 因果推断分析
-    5. 生成优化建议
+    Functions:
+    1. Load all trained models and components.
+    2. Perform prediction on a single sample (sequence).
+    3. Extract DLP (Deep Learning Parameters) and perform clustering.
+    4. Conduct causal inference analysis.
+    5. Generate optimization recommendations.
     
-    参数:
-    - models_dir: 模型目录路径
+    Parameters:
+    - models_dir: Path to the directory containing trained models.
     """
     
     def __init__(self, models_dir: str = './outputs/models'):
         self.models_dir = models_dir
         
-        # 模型组件
+        # Model components
         self.preprocessor = None
         self.predictor = None
         self.state_classifier = None
@@ -42,23 +42,23 @@ class InferencePipeline:
         self.causal_inference = None
         self.recommendation_engine = None
         
-        # 加载模型
+        # Load models
         self.load_models()
         
         logger.info("InferencePipeline initialized")
     
     def load_models(self):
-        """加载所有模型"""
+        """Loads all model components"""
         logger.info(f"Loading models from {self.models_dir}...")
         
-        # 加载预处理器
+        # Load preprocessor
         self.preprocessor = joblib.load(os.path.join(self.models_dir, 'preprocessor.pkl'))
         
-        # 加载预测模型
+        # Load prediction model
         from tensorflow import keras
         from src.models.predictor import AttentionLayer
         
-        # 注册自定义层并加载模型
+        # Register custom layer and load model
         model_path = os.path.join(self.models_dir, 'predictor.keras')
         if not os.path.exists(model_path):
             model_path = os.path.join(self.models_dir, 'predictor.h5')
@@ -66,26 +66,26 @@ class InferencePipeline:
         with keras.utils.custom_object_scope({'AttentionLayer': AttentionLayer}):
             self.predictor_model = keras.models.load_model(model_path)
         
-        # 构建CAM和Attention提取模型
+        # Models for CAM and Attention extraction
         self.cam_model = None
         self.attention_model = None
         
-        # 加载状态分类器
+        # Load state classifier
         self.state_classifier = joblib.load(os.path.join(self.models_dir, 'state_classifier.pkl'))
         
-        # 加载离散化器
+        # Load discretizer
         self.discretizer = joblib.load(os.path.join(self.models_dir, 'discretizer.pkl'))
         
-        # 加载聚类器
+        # Load clusterers
         self.cam_clusterer = joblib.load(os.path.join(self.models_dir, 'cam_clusterer.pkl'))
         self.attention_clusterer = joblib.load(os.path.join(self.models_dir, 'attention_clusterer.pkl'))
         
-        # 加载贝叶斯网络
+        # Load Bayesian Network
         from src.models.bayesian_net import CausalBayesianNetwork
         self.bayesian_network = CausalBayesianNetwork()
         self.bayesian_network.load_model(os.path.join(self.models_dir, 'bayesian_network.bif'))
         
-        # 创建因果推断和推荐引擎
+        # Create Causal Inference and Recommendation Engine
         from src.inference.causal_inference import CausalInference
         from src.inference.recommendation import RecommendationEngine
         
@@ -95,7 +95,7 @@ class InferencePipeline:
         logger.info("All models loaded successfully")
     
     def _extract_cam(self, X):
-        """提取CAM特征"""
+        """Extracts CAM features"""
         from tensorflow import keras
         import numpy as np
         if self.cam_model is None:
@@ -108,7 +108,7 @@ class InferencePipeline:
         return np.mean(cam_output, axis=-1)
     
     def _extract_attention(self, X):
-        """提取Attention权重"""
+        """Extracts Attention weights"""
         from tensorflow import keras
         if self.attention_model is None:
             attention_layer = self.predictor_model.get_layer('attention')
@@ -126,32 +126,32 @@ class InferencePipeline:
         generate_recommendations: bool = True
     ) -> Dict:
         """
-        对单个或多个样本进行预测和解释
+        Performs prediction and explanation for single or multiple samples
         
-        参数:
-        - data: 输入数据（包含特征列，至少sequence_length行）
-        - generate_recommendations: 是否生成优化建议
+        Parameters:
+        - data: Input data (must contain feature columns, at least sequence_length rows).
+        - generate_recommendations: Whether to generate optimization recommendations.
         
-        返回:
-        - 预测结果字典
+        Returns:
+        - Dictionary of prediction results.
         """
         logger.info("Starting inference...")
         
         results = {}
         
-        # Step 1: 预处理
+        # Step 1: Preprocessing
         X, _ = self.preprocessor.transform(data)
         results['n_samples'] = len(X)
         
-        # Step 2: 预测
+        # Step 2: Prediction
         predictions = self.predictor_model.predict(X, verbose=0)
         results['predictions'] = predictions.flatten()
         
-        # Step 3: 提取DLP
+        # Step 3: Extract DLP
         cam_features = self._extract_cam(X)
         attention_features = self._extract_attention(X)
         
-        # Step 4: DLP聚类
+        # Step 4: DLP Clustering
         cam_clusters = self.cam_clusterer.predict(cam_features)
         attention_clusters = self.attention_clusterer.predict(attention_features)
         attention_types = [
@@ -161,23 +161,23 @@ class InferencePipeline:
         results['cam_clusters'] = cam_clusters
         results['attention_types'] = attention_types
         
-        # Step 5: 状态分类
+        # Step 5: State Classification
         edp_states = self.state_classifier.predict(predictions)
         results['edp_states'] = edp_states
         
-        # Step 6: 离散化特征
+        # Step 6: Feature Discretization
         features_to_discretize = self.preprocessor.feature_cols
         discrete_data = self.discretizer.transform(
             data[features_to_discretize].iloc[:len(predictions)]
         )
         
-        # 转换为DataFrame
+        # Convert to DataFrame
         discrete_features = pd.DataFrame(
             discrete_data,
             columns=features_to_discretize
         )
         
-        # 构建当前状态字典（取最后一个样本）
+        # Build current state dictionary (using the last sample)
         current_state = discrete_features.iloc[-1].to_dict()
         current_state['EDP_State'] = edp_states[-1]
         current_state['CAM_Cluster'] = str(cam_clusters[-1])
@@ -185,9 +185,9 @@ class InferencePipeline:
         
         results['current_state'] = current_state
         
-        # Step 7: 因果推断（如果需要生成建议）
+        # Step 7: Causal Inference (if recommendations are requested)
         if generate_recommendations:
-            # 敏感性分析
+            # Sensitivity Analysis
             features_to_analyze = list(discrete_features.columns)
             sensitivity = self.causal_inference.sensitivity_analysis(
                 features_to_analyze,
@@ -195,7 +195,7 @@ class InferencePipeline:
             )
             results['sensitivity'] = sensitivity
             
-            # 生成建议
+            # Generate Recommendations
             recommendations = self.recommendation_engine.generate_recommendations(
                 current_state,
                 target_state='Peak',
@@ -203,7 +203,7 @@ class InferencePipeline:
             )
             results['recommendations'] = recommendations
             
-            # 生成报告
+            # Generate Report
             report = self.recommendation_engine.format_report(
                 recommendations,
                 current_state,
@@ -221,35 +221,35 @@ class InferencePipeline:
         verbose: bool = True
     ) -> str:
         """
-        对单个样本进行预测并生成完整报告
+        Predicts for a single sample and generates a full report
         
-        参数:
-        - data: 输入数据（至少sequence_length行）
-        - verbose: 是否打印详细信息
+        Parameters:
+        - data: Input data (at least sequence_length rows).
+        - verbose: Whether to print detailed info.
         
-        返回:
-        - 格式化的报告文本
+        Returns:
+        - Formatted report text.
         """
         results = self.predict(data, generate_recommendations=True)
         
-        # 提取关键信息
+        # Extract key info
         prediction = results['predictions'][-1]
         edp_state = results['edp_states'][-1]
         cam_cluster = results['cam_clusters'][-1]
         attention_type = results['attention_types'][-1]
         
-        # 生成简要报告
+        # Print summary
         if verbose:
             print("\n" + "="*60)
-            print("           预测结果")
+            print("           Prediction Result")
             print("="*60)
-            print(f"预测负荷: {prediction:.2f} kWh")
-            print(f"负荷状态: {edp_state}")
-            print(f"CAM聚类: {cam_cluster}")
-            print(f"注意力类型: {attention_type}")
+            print(f"Predicted Load: {prediction:.2f} kWh")
+            print(f"Load State: {edp_state}")
+            print(f"CAM Cluster: {cam_cluster}")
+            print(f"Attention Type: {attention_type}")
             print("\n")
         
-        # 返回完整报告
+        # Return full report
         return results['report']
     
     def batch_predict(
@@ -258,18 +258,18 @@ class InferencePipeline:
         output_path: Optional[str] = None
     ) -> pd.DataFrame:
         """
-        批量预测（不生成建议，仅预测）
+        Batch prediction (no recommendations, only predictions)
         
-        参数:
-        - data: 输入数据
-        - output_path: 输出CSV路径（可选）
+        Parameters:
+        - data: Input data.
+        - output_path: Path for output CSV (optional).
         
-        返回:
-        - 包含预测结果的DataFrame
+        Returns:
+        - DataFrame containing prediction results.
         """
         results = self.predict(data, generate_recommendations=False)
         
-        # 构建结果DataFrame
+        # Build results DataFrame
         df_results = pd.DataFrame({
             'Prediction': results['predictions'],
             'EDP_State': results['edp_states'],
@@ -289,23 +289,23 @@ class InferencePipeline:
         data: pd.DataFrame
     ) -> str:
         """
-        解释单个预测结果
+        Explains a single prediction result
         
-        参数:
-        - sample_idx: 样本索引
-        - data: 完整数据
+        Parameters:
+        - sample_idx: Index of the sample.
+        - data: Complete data.
         
-        返回:
-        - 解释文本
+        Returns:
+        - Explanation text.
         """
         results = self.predict(data, generate_recommendations=True)
         
-        # 提取该样本的信息
+        # Extract sample info
         prediction = results['predictions'][sample_idx]
         state = results['edp_states'][sample_idx]
         current_state = results['current_state']
         
-        # 生成解释
+        # Generate explanation
         explanation = self.causal_inference.generate_explanation(
             current_state,
             target_state=state,
@@ -313,10 +313,10 @@ class InferencePipeline:
         )
         
         full_explanation = (
-            f"样本 #{sample_idx} 预测解释\n"
+            f"Explanation for Sample #{sample_idx}\n"
             f"{'='*60}\n"
-            f"预测负荷: {prediction:.2f} kWh\n"
-            f"负荷状态: {state}\n\n"
+            f"Predicted Load: {prediction:.2f} kWh\n"
+            f"Load State: {state}\n\n"
             f"{explanation}"
         )
         
@@ -324,20 +324,20 @@ class InferencePipeline:
 
 
 if __name__ == "__main__":
-    # 示例使用
+    # Example usage
     import sys
     sys.path.append('/home/severin/Codelib/YS')
     
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
     
-    # 注意：需要先运行训练流水线生成模型
-    # 这里仅演示API用法
+    # Note: Training pipeline must be run first to generate model files.
+    # This is a demonstration of the API usage.
     
     try:
-        # 创建推理流水线
+        # Create inference pipeline
         pipeline = InferencePipeline(models_dir='./outputs/models')
         
-        # 模拟新数据
+        # Simulate new data
         np.random.seed(42)
         new_data = pd.DataFrame({
             'Temperature': np.random.randn(25) * 10 + 20,
@@ -345,9 +345,9 @@ if __name__ == "__main__":
             'WindSpeed': np.random.randn(25) * 5 + 10
         })
         
-        # 单样本预测
+        # Single sample prediction
         report = pipeline.predict_single(new_data, verbose=True)
         print(report)
         
     except FileNotFoundError:
-        print("模型文件未找到，请先运行训练流水线")
+        print("Model files not found. Please run the training pipeline first.")

@@ -1,5 +1,5 @@
 """
-DLP聚类模块（CAM和Attention权重聚类）
+DLP Clustering Module (CAM and Attention Weight Clustering)
 """
 
 import numpy as np
@@ -12,16 +12,16 @@ logger = logging.getLogger(__name__)
 
 class DLPClusterer:
     """
-    深度学习参数(DLP)聚类器 - CAM聚类
+    Deep Learning Parameters (DLP) Clusterer - CAM Clustering
     
-    对CAM值进行累积预处理后聚类
+    Performs clustering on CAM values after cumulative preprocessing.
     """
     
     def __init__(self, n_clusters=3, dlp_type='CAM'):
         """
-        参数:
-            n_clusters: 聚类数量
-            dlp_type: DLP类型标识
+        Parameters:
+            n_clusters: Number of clusters
+            dlp_type: DLP type identifier
         """
         self.n_clusters = n_clusters
         self.dlp_type = dlp_type
@@ -33,47 +33,47 @@ class DLPClusterer:
     
     def cumulative_preprocess(self, cam_values):
         """
-        累积预处理
+        Cumulative Preprocessing
         
-        输入:
-            cam_values: [样本数, 时间步]
+        Input:
+            cam_values: [n_samples, n_timesteps]
         
-        输出:
-            累积CAM: [样本数, 时间步]
+        Output:
+            Cumulative CAM: [n_samples, n_timesteps]
         """
         return np.cumsum(cam_values, axis=1)
     
     def fit(self, cam_values):
         """
-        拟合聚类器
+        Fit Clusterer
         
-        输入:
-            cam_values: CAM值 [样本数, 时间步]
+        Input:
+            cam_values: CAM values [n_samples, n_timesteps]
         """
-        logger.info(f"{self.dlp_type} 聚类拟合...")
+        logger.info(f"{self.dlp_type} Clustering Fit...")
         
-        # 累积预处理
+        # Cumulative preprocessing
         cam_cumulative = self.cumulative_preprocess(cam_values)
         
-        # 标准化
+        # Standardization
         cam_scaled = self.scaler.fit_transform(cam_cumulative)
         
-        # K-means聚类
+        # K-means clustering
         self.kmeans.fit(cam_scaled)
         
-        logger.info(f"{self.dlp_type} 聚类完成，聚类数: {self.n_clusters}")
+        logger.info(f"{self.dlp_type} clustering complete, n_clusters: {self.n_clusters}")
         
         return self
     
     def predict(self, cam_values):
         """
-        预测聚类标签
+        Predict cluster labels
         
-        输入:
-            cam_values: CAM值 [样本数, 时间步]
+        Input:
+            cam_values: CAM values [n_samples, n_timesteps]
         
-        输出:
-            聚类标签 [样本数,]
+        Output:
+            Cluster labels [n_samples,]
         """
         cam_cumulative = self.cumulative_preprocess(cam_values)
         cam_scaled = self.scaler.transform(cam_cumulative)
@@ -83,22 +83,22 @@ class DLPClusterer:
         return labels
     
     def fit_predict(self, cam_values):
-        """拟合并预测"""
+        """Fit and predict"""
         self.fit(cam_values)
         return self.predict(cam_values)
 
 
 class AttentionClusterer:
     """
-    Attention权重聚类器
+    Attention Weight Clusterer
     
-    识别Early/Late/Other时序关注模式
+    Identifies Early/Late/Other temporal focus patterns.
     """
     
     def __init__(self, n_clusters=3):
         """
-        参数:
-            n_clusters: 聚类数量
+        Parameters:
+            n_clusters: Number of clusters
         """
         self.n_clusters = n_clusters
         
@@ -109,34 +109,34 @@ class AttentionClusterer:
     
     def fit(self, attention_weights):
         """
-        拟合聚类器
+        Fit Clusterer
         
-        输入:
-            attention_weights: [样本数, 时间步]
+        Input:
+            attention_weights: [n_samples, n_timesteps]
         """
-        logger.info("Attention权重聚类拟合...")
+        logger.info("Attention weight clustering fit...")
         
-        # 标准化
+        # Standardization
         att_scaled = self.scaler.fit_transform(attention_weights)
         
-        # K-means聚类
+        # K-means clustering
         self.kmeans.fit(att_scaled)
         
-        # 分析聚类中心特征，命名聚类
+        # Analyze cluster center characteristics and name them
         self._analyze_clusters(attention_weights)
         
-        logger.info(f"Attention聚类完成，聚类: {self.cluster_names_}")
+        logger.info(f"Attention clustering complete, clusters: {self.cluster_names_}")
         
         return self
     
     def _analyze_clusters(self, attention_weights):
         """
-        分析聚类中心特征，分配语义名称
+        Analyze cluster center features to assign semantic names
         
-        逻辑:
-            - Early: 高权重集中在前1/3
-            - Late: 高权重集中在后1/3
-            - Other: 均匀分布或中间集中
+        Logic:
+            - Early: High weights concentrated in the first 1/3
+            - Late: High weights concentrated in the last 1/3
+            - Other: Uniform distribution or center concentration
         """
         centers = self.kmeans.cluster_centers_
         n_timesteps = centers.shape[1]
@@ -167,13 +167,13 @@ class AttentionClusterer:
     
     def predict(self, attention_weights):
         """
-        预测聚类标签
+        Predict cluster labels
         
-        输入:
-            attention_weights: [样本数, 时间步]
+        Input:
+            attention_weights: [n_samples, n_timesteps]
         
-        输出:
-            聚类标签 [样本数,]
+        Output:
+            Cluster labels [n_samples,]
         """
         att_scaled = self.scaler.transform(attention_weights)
         labels = self.kmeans.predict(att_scaled)
@@ -181,35 +181,35 @@ class AttentionClusterer:
         return labels
     
     def fit_predict(self, attention_weights):
-        """拟合并预测"""
+        """Fit and predict"""
         self.fit(attention_weights)
         return self.predict(attention_weights)
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
     np.random.seed(42)
     
-    # 模拟CAM数据
+    # Mock CAM data
     cam_data = np.random.rand(100, 20)
     
-    # CAM聚类
+    # CAM Clustering
     cam_clusterer = DLPClusterer(n_clusters=3)
     cam_labels = cam_clusterer.fit_predict(cam_data)
     
-    print("CAM聚类结果:")
+    print("CAM Clustering Results:")
     unique, counts = np.unique(cam_labels, return_counts=True)
     for label, count in zip(unique, counts):
         print(f"  {cam_clusterer.cluster_names_[label]}: {count}")
     
-    # 模拟Attention数据
+    # Mock Attention data
     att_data = np.random.rand(100, 60)
     
-    # Attention聚类
+    # Attention Clustering
     att_clusterer = AttentionClusterer(n_clusters=3)
     att_labels = att_clusterer.fit_predict(att_data)
     
-    print("\nAttention聚类结果:")
+    print("\nAttention Clustering Results:")
     unique, counts = np.unique(att_labels, return_counts=True)
     for label, count in zip(unique, counts):
         print(f"  {att_clusterer.cluster_names_[label]}: {count}")

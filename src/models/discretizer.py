@@ -1,5 +1,5 @@
 """
-分位数离散化器
+Quantile Discretizer
 """
 
 import numpy as np
@@ -12,16 +12,16 @@ logger = logging.getLogger(__name__)
 
 class QuantileDiscretizer:
     """
-    分位数离散化器
+    Quantile Discretizer
     
-    将连续变量按分位数切分为4个等级: Low, Medium, High, VeryHigh
+    Partitions continuous variables based on quantiles into 4 levels: Low, Medium, High, VeryHigh.
     """
     
     def __init__(self, n_bins=4, strategy='quantile'):
         """
-        参数:
-            n_bins: 离散化级数（默认4）
-            strategy: 离散化策略（'quantile', 'uniform', 'kmeans'）
+        Parameters:
+            n_bins: Number of discretization bins (default 4)
+            strategy: Discretization strategy ('quantile', 'uniform', 'kmeans')
         """
         self.n_bins = n_bins
         self.strategy = strategy
@@ -31,10 +31,10 @@ class QuantileDiscretizer:
     
     def fit(self, X):
         """
-        拟合离散化器
+        Fit the discretizer
         
-        输入:
-            X: [样本数, 特征数] 或 DataFrame
+        Input:
+            X: [n_samples, n_features] or DataFrame
         """
         if isinstance(X, pd.DataFrame):
             feature_names = X.columns
@@ -42,9 +42,9 @@ class QuantileDiscretizer:
         else:
             feature_names = [f'feature_{i}' for i in range(X.shape[1])]
         
-        logger.info(f"拟合离散化器，特征数: {X.shape[1]}")
+        logger.info(f"Fitting discretizer, feature count: {X.shape[1]}")
         
-        # 为每个特征创建离散化器
+        # Create a discretizer for each feature
         for i, name in enumerate(feature_names):
             discretizer = KBinsDiscretizer(
                 n_bins=self.n_bins,
@@ -55,19 +55,19 @@ class QuantileDiscretizer:
             discretizer.fit(X[:, i].reshape(-1, 1))
             self.discretizers[name] = discretizer
         
-        logger.info("离散化器拟合完成")
+        logger.info("Discretizer fit complete")
         
         return self
     
     def transform(self, X):
         """
-        转换为离散标签
+        Transform to discrete labels
         
-        输入:
-            X: [样本数, 特征数] 或 DataFrame
+        Input:
+            X: [n_samples, n_features] or DataFrame
         
-        输出:
-            离散标签数组 [样本数, 特征数]，值为字符串标签
+        Output:
+            Discrete label array [n_samples, n_features] with string labels as values
         """
         if isinstance(X, pd.DataFrame):
             feature_names = X.columns
@@ -80,28 +80,28 @@ class QuantileDiscretizer:
         for i, name in enumerate(feature_names):
             discretizer = self.discretizers[name]
             
-            # 转换为bin索引
+            # Convert to bin indices
             bin_indices = discretizer.transform(X[:, i].reshape(-1, 1)).flatten().astype(int)
             
-            # 映射到标签
+            # Map to labels
             result[:, i] = [self.labels[idx] for idx in bin_indices]
         
         return result
     
     def fit_transform(self, X):
-        """拟合并转换"""
+        """Fit and transform"""
         self.fit(X)
         return self.transform(X)
     
     def inverse_transform(self, X_discrete):
         """
-        反向转换（返回每个bin的中心值）
+        Inverse transformation (returns the center value of each bin)
         
-        输入:
-            X_discrete: 离散标签数组
+        Input:
+            X_discrete: Discrete label array
         
-        输出:
-            连续值数组
+        Output:
+            Array of continuous values
         """
         feature_names = list(self.discretizers.keys())
         result = np.zeros(X_discrete.shape)
@@ -109,14 +109,14 @@ class QuantileDiscretizer:
         for i, name in enumerate(feature_names):
             discretizer = self.discretizers[name]
             
-            # 将标签转换回bin索引
+            # Map labels back to bin indices
             label_to_idx = {label: idx for idx, label in enumerate(self.labels)}
             bin_indices = np.array([label_to_idx[label] for label in X_discrete[:, i]])
             
-            # 获取bin边界
+            # Get bin edges
             bin_edges = discretizer.bin_edges_[0]
             
-            # 计算每个bin的中心值
+            # Calculate the center value for each bin
             bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
             
             result[:, i] = bin_centers[bin_indices]
@@ -124,24 +124,24 @@ class QuantileDiscretizer:
         return result
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # 模拟数据
+    # Mock data
     np.random.seed(42)
     
     X = np.random.randn(1000, 5) * 10 + 50
     
-    # 离散化
+    # Discretization
     discretizer = QuantileDiscretizer(n_bins=4)
     X_discrete = discretizer.fit_transform(X)
     
-    print("原始数据样本:")
+    print("Original Data Sample:")
     print(X[:5])
     
-    print("\n离散化后:")
+    print("\nAfter Discretization:")
     print(X_discrete[:5])
     
-    # 统计每个特征的分布
+    # Statistical distribution per feature
     for i in range(X_discrete.shape[1]):
         unique, counts = np.unique(X_discrete[:, i], return_counts=True)
-        print(f"\n特征 {i}: {dict(zip(unique, counts))}")
+        print(f"\nFeature {i}: {dict(zip(unique, counts))}")

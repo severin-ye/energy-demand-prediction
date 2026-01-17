@@ -1,5 +1,5 @@
 """
-并行CNN-LSTM-Attention预测模型
+Parallel CNN-LSTM-Attention Prediction Model
 """
 
 import tensorflow as tf
@@ -13,11 +13,11 @@ logger = logging.getLogger(__name__)
 
 class AttentionLayer(layers.Layer):
     """
-    自定义注意力机制层
+    Custom Attention Mechanism Layer
     
-    计算: score = tanh(W * h + b)
-         attention_weights = softmax(score)
-         context = sum(attention_weights * h)
+    Calculation: score = tanh(W * h + b)
+                attention_weights = softmax(score)
+                context = sum(attention_weights * h)
     """
     
     def __init__(self, units=64, **kwargs):
@@ -47,8 +47,8 @@ class AttentionLayer(layers.Layer):
     
     def call(self, inputs):
         """
-        输入: [batch, timesteps, features]
-        输出: context_vector [batch, features], attention_weights [batch, timesteps]
+        Input: [batch, timesteps, features]
+        Output: context_vector [batch, features], attention_weights [batch, timesteps]
         """
         # score = tanh(W*h + b)
         score = tf.nn.tanh(tf.tensordot(inputs, self.W, axes=1) + self.b)
@@ -72,12 +72,12 @@ class AttentionLayer(layers.Layer):
 
 class ParallelCNNLSTMAttention:
     """
-    并行CNN-LSTM-Attention架构
+    Parallel CNN-LSTM-Attention Architecture
     
-    结构:
-        - CNN分支: 1D卷积提取局部模式
-        - LSTM-Attention分支: 长期依赖+注意力
-        - 融合层: 拼接后MLP回归
+    Structure:
+        - CNN Branch: 1D convolution to extract local patterns
+        - LSTM-Attention Branch: Long-term dependencies + Attention
+        - Fusion Layer: Concatenation followed by MLP regression
     """
     
     def __init__(self,
@@ -87,12 +87,12 @@ class ParallelCNNLSTMAttention:
                  attention_units: int = 64,
                  dense_units: list = [64, 32]):
         """
-        参数:
+        Parameters:
             input_shape: (sequence_length, n_features)
-            cnn_filters: CNN卷积核数量
-            lstm_units: LSTM隐藏单元数
-            attention_units: 注意力层单元数
-            dense_units: 全连接层单元数列表
+            cnn_filters: Number of CNN filters
+            lstm_units: Number of LSTM hidden units
+            attention_units: Number of units in Attention layer
+            dense_units: List of units for fully connected layers
         """
         self.input_shape = input_shape
         self.cnn_filters = cnn_filters
@@ -105,11 +105,11 @@ class ParallelCNNLSTMAttention:
         self.attention_model = None
     
     def _build_model(self):
-        """构建并行架构"""
-        # 输入
+        """Constructs the parallel architecture"""
+        # Input
         inputs = layers.Input(shape=self.input_shape, name='input')
         
-        # ===== CNN分支 =====
+        # ===== CNN Branch =====
         cnn_branch = layers.Conv1D(
             filters=self.cnn_filters,
             kernel_size=3,
@@ -128,44 +128,44 @@ class ParallelCNNLSTMAttention:
             name='cnn_conv2'
         )(cnn_branch)
         
-        # 保存用于CAM提取
+        # Save for CAM extraction
         cnn_features = layers.GlobalAveragePooling1D(name='cnn_gap')(cnn_branch)
         
-        # ===== LSTM-Attention分支 =====
+        # ===== LSTM-Attention Branch =====
         lstm_branch = layers.LSTM(
             units=self.lstm_units,
             return_sequences=True,
             name='lstm'
         )(inputs)
         
-        # 注意力层
+        # Attention Layer
         attention_output, attention_weights = AttentionLayer(
             units=self.attention_units,
             name='attention'
         )(lstm_branch)
         
-        # ===== 融合 =====
+        # ===== Fusion =====
         merged = layers.Concatenate(name='merge')([cnn_features, attention_output])
         
-        # 全连接层
+        # Fully Connected Layers
         x = merged
         for i, units in enumerate(self.dense_units):
             x = layers.Dense(units, activation='relu', name=f'dense{i+1}')(x)
             x = layers.Dropout(0.3, name=f'dropout{i+1}')(x)
         
-        # 输出层
+        # Output Layer
         outputs = layers.Dense(1, activation='linear', name='output')(x)
         
-        # 构建模型
+        # Build Model
         model = keras.Model(inputs=inputs, outputs=outputs, name='ParallelCNNLSTMAttention')
         
-        logger.info("模型构建完成")
-        logger.info(f"参数量: {model.count_params():,}")
+        logger.info("Model construction complete")
+        logger.info(f"Total Parameters: {model.count_params():,}")
         
         return model
     
     def compile(self, optimizer='adam', loss='mse', metrics=None):
-        """编译模型"""
+        """Compiles the model"""
         if metrics is None:
             metrics = ['mae', 'mape']
         
@@ -176,7 +176,7 @@ class ParallelCNNLSTMAttention:
         )
     
     def fit(self, X_train, y_train, validation_data=None, **kwargs):
-        """训练模型"""
+        """Trains the model"""
         return self.model.fit(
             X_train, y_train,
             validation_data=validation_data,
@@ -184,18 +184,18 @@ class ParallelCNNLSTMAttention:
         )
     
     def predict(self, X):
-        """预测"""
+        """Prediction"""
         return self.model.predict(X)
     
     def extract_cam(self, X):
         """
-        提取CAM (Class Activation Mapping)
+        Extracts CAM (Class Activation Mapping)
         
-        输出:
-            CAM值数组 [样本数, 时间步]
+        Output:
+            Array of CAM values [samples, timesteps]
         """
         if self.cam_model is None:
-            # 构建CAM提取模型
+            # Construct CAM extraction model
             cnn_conv2_output = self.model.get_layer('cnn_conv2').output
             self.cam_model = keras.Model(
                 inputs=self.model.input,
@@ -204,24 +204,24 @@ class ParallelCNNLSTMAttention:
         
         cam_output = self.cam_model.predict(X)
         
-        # 全局平均池化得到CAM
+        # Global Average Pooling to get CAM
         cam = np.mean(cam_output, axis=-1)
         
         return cam
     
     def extract_attention_weights(self, X):
         """
-        提取Attention权重
+        Extracts Attention weights
         
-        输出:
-            Attention权重数组 [样本数, 时间步]
+        Output:
+            Array of Attention weights [samples, timesteps]
         """
         if self.attention_model is None:
-            # 构建Attention提取模型
+            # Construct Attention extraction model
             attention_layer = self.model.get_layer('attention')
             lstm_output = self.model.get_layer('lstm').output
             
-            # 重新应用attention层获取权重
+            # Re-apply attention layer to get weights
             _, attention_weights = attention_layer(lstm_output)
             
             self.attention_model = keras.Model(
@@ -234,35 +234,35 @@ class ParallelCNNLSTMAttention:
         return attention_weights
     
     def save(self, filepath):
-        """保存模型"""
+        """Saves the model"""
         self.model.save(filepath)
-        logger.info(f"模型已保存到 {filepath}")
+        logger.info(f"Model saved to {filepath}")
     
     @classmethod
     def load(cls, filepath):
-        """加载模型"""
+        """Loads the model"""
         model = keras.models.load_model(
             filepath,
             custom_objects={'AttentionLayer': AttentionLayer}
         )
         
-        # 创建实例并设置模型
+        # Create instance and set model
         instance = cls.__new__(cls)
         instance.model = model
         instance.cam_model = None
         instance.attention_model = None
         
-        logger.info(f"模型已从 {filepath} 加载")
+        logger.info(f"Model loaded from {filepath}")
         return instance
     
     def summary(self):
-        """打印模型结构"""
+        """Prints model summary"""
         return self.model.summary()
 
 
-# 使用示例
+# Usage Example
 if __name__ == "__main__":
-    # 构建模型
+    # Build Model
     model = ParallelCNNLSTMAttention(
         input_shape=(60, 10),
         cnn_filters=64,
@@ -273,17 +273,17 @@ if __name__ == "__main__":
     
     model.summary()
     
-    # 编译
+    # Compile
     model.compile(optimizer='adam', loss='mse')
     
-    # 模拟数据
+    # Mock Data
     X_train = np.random.randn(1000, 60, 10)
     y_train = np.random.randn(1000, 1)
     
-    # 训练
+    # Train
     model.fit(X_train, y_train, epochs=2, batch_size=32, verbose=1)
     
-    # 提取DLP
+    # Extract DLPs (Deep Learning Parameters)
     cam = model.extract_cam(X_train[:10])
     att = model.extract_attention_weights(X_train[:10])
     
