@@ -126,6 +126,12 @@ def main():
         default=64,
         help='批次大小'
     )
+    parser.add_argument(
+        '--sequence-length',
+        type=int,
+        default=20,
+        help='时间序列长度（时间步数）'
+    )
     
     args = parser.parse_args()
     
@@ -172,7 +178,7 @@ def main():
     
     config = {
         # 数据预处理
-        'sequence_length': 20,
+        'sequence_length': args.sequence_length,
         'feature_cols': feature_cols,
         'target_col': target_col,
         
