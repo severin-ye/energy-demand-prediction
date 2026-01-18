@@ -1,0 +1,2 @@
+antecedents,consequents,antecedent support,consequent support,support,confidence,lift,representativity,leverage,conviction,zhangs_metric,jaccard,certainty,kulczynski
+"Voltage=Low, Attention_Type=Other",EDP_State=Lower,0.08453372902636686,0.56886200205456,0.05886694821747898,0.6963723107390404,1.224149808255695,1.0,0.010778921882402266,1.4199561278315722,0.20001448800388386,0.09901446307436323,0.2957528895437713,0.39992712945890313
