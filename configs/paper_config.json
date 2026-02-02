@@ -1,0 +1,95 @@
+{
+  "description": "论文标准配置 - 基于Erlangga & Cho (2025)",
+  "model_name": "Parallel-CNN-LSTM-Attention",
+  
+  "_comment_data": "数据处理参数",
+  "sequence_length": 80,
+  "prediction_steps": 1,
+  "time_resolution": "15min",
+  "validation_split": 0.2,
+  
+  "_comment_features": "特征配置",
+  "feature_cols": [
+    "Global_active_power",
+    "Global_reactive_power",
+    "Voltage",
+    "Global_intensity",
+    "Sub_metering_1",
+    "Sub_metering_2",
+    "Sub_metering_3"
+  ],
+  "target_col": "Global_active_power",
+  "time_features": ["Hour", "Day", "Month", "Season", "Weekend"],
+  
+  "_comment_model": "模型架构参数（论文配置）",
+  "cnn_filters": [64, 128],
+  "cnn_kernel_size": 3,
+  "cnn_pool_size": 2,
+  "lstm_units": 128,
+  "attention_units": 64,
+  "dense_units": [64, 32],
+  "dropout_rate": 0.3,
+  
+  "_comment_training": "训练参数",
+  "learning_rate": 0.001,
+  "optimizer": "adam",
+  "loss": "mse",
+  "metrics": ["mae", "mse"],
+  "epochs": 50,
+  "batch_size": 64,
+  "early_stopping_patience": 15,
+  
+  "_comment_state_classification": "状态分类参数（Sn方法）",
+  "n_states": 3,
+  "state_names": ["Lower", "Normal", "Peak"],
+  "sn_c_factor": 1.1926,
+  "sn_alpha": 1.4285,
+  "sn_threshold": 2.0,
+  
+  "_comment_discretization": "离散化参数",
+  "n_bins": 4,
+  "bin_labels": ["Low", "Medium", "High", "VeryHigh"],
+  "discretization_method": "quantile",
+  
+  "_comment_dlp_clustering": "深度学习参数聚类",
+  "n_cam_clusters": 3,
+  "n_attention_clusters": 3,
+  "cam_cluster_names": ["Type1", "Type2", "Type3"],
+  "attention_cluster_names": ["Early", "Late", "Other"],
+  
+  "_comment_association_rules": "关联规则挖掘",
+  "min_support": 0.05,
+  "min_confidence": 0.6,
+  "min_lift": 1.2,
+  "max_rules": 50,
+  
+  "_comment_bayesian_network": "贝叶斯网络",
+  "bn_score_fn": "bic",
+  "bn_max_iter": 100,
+  "bn_max_indegree": 5,
+  "bn_estimator": "mle",
+  
+  "_comment_domain_knowledge": "领域知识约束",
+  "domain_edges": [
+    ["Season", "EDP_State"],
+    ["Month", "EDP_State"],
+    ["Weekend", "EDP_State"],
+    ["Global_active_power", "EDP_State"],
+    ["Global_intensity", "EDP_State"],
+    ["Sub_metering_1", "Global_active_power"],
+    ["Sub_metering_2", "Global_active_power"],
+    ["Sub_metering_3", "Global_active_power"]
+  ],
+  
+  "forbidden_edges": [
+    ["EDP_State", "Season"],
+    ["EDP_State", "Month"],
+    ["EDP_State", "Weekend"]
+  ],
+  
+  "_comment_paths": "路径配置",
+  "data_dir": "data/uci",
+  "output_dir": "outputs/training_paper_config",
+  "model_save_dir": "outputs/training_paper_config/models",
+  "results_dir": "outputs/training_paper_config/results"
+}

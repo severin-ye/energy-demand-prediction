@@ -1,10 +1,9 @@
 """
-Sn尺度状态分类器
+Sn尺度状态分类器（基于论文公式5-7）
 """
 
 import numpy as np
 from scipy import stats
-from sklearn.cluster import KMeans
 import logging
 
 logger = logging.getLogger(__name__)
@@ -14,55 +13,92 @@ class SnStateClassifier:
     """
     基于Sn鲁棒尺度估计器的状态分类器
     
-    Sn尺度估计器对异常值鲁棒，适合能源数据
-    使用K-means将数据分为Peak/Normal/Lower三个状态
+    论文公式:
+    - Sn = c · median_m { median_n |x_m - x_n| }  (公式5)
+    - Z_Sn(x_i) = |x_i - MED(X)| / (α × Sn)      (公式6)
+    - 状态判定: Peak/Normal/Lower                (公式7)
+    
+    其中:
+    - c = 1.1926 (正态分布修正因子)
+    - α = 1.4285 (论文参数)
     """
     
-    def __init__(self, n_states=3, state_names=None):
+    def __init__(self, n_states=3, state_names=None, threshold=2.0):
         """
         参数:
             n_states: 状态数量（默认3: Lower/Normal/Peak）
             state_names: 状态名称列表
+            threshold: Z分数阈值（默认2.0）
         """
         self.n_states = n_states
         self.state_names = state_names or ['Lower', 'Normal', 'Peak']
+        self.threshold = threshold
+        
+        # 论文常量
+        self.c = 1.1926  # Sn修正因子
+        self.alpha = 1.4285  # Z分数修正系数
         
         self.sn_scale_ = None
         self.median_ = None
-        self.kmeans = KMeans(n_clusters=n_states, random_state=42)
-        self.cluster_to_state_ = None
     
     def compute_sn_scale(self, data):
         """
-        计算Sn尺度估计器
+        计算Sn尺度估计器（论文公式5）
         
-        Sn = c * median_i { median_j |x_i - x_j| }
+        Sn = c · median_m { median_n |x_m - x_n| }
         
-        其中 c 是修正因子，使其在正态分布下无偏
+        其中 c = 1.1926 是修正因子，使其在正态分布下无偏
         """
         data = np.asarray(data).flatten()
         n = len(data)
         
         # 计算所有成对差异的中位数
+        # 对于大数据集，采样以提高效率
+        sample_size = min(n, 1000)
+        if n > sample_size:
+            indices = np.random.choice(n, sample_size, replace=False)
+            data_sample = data[indices]
+        else:
+            data_sample = data
+        
         diffs = []
-        for i in range(min(n, 1000)):  # 限制计算量
-            diffs.append(np.median(np.abs(data[i] - data)))
+        for i in range(len(data_sample)):
+            diffs.append(np.median(np.abs(data_sample[i] - data_sample)))
         
         sn = np.median(diffs)
         
-        # 修正因子（正态分布下）
-        c = 1.1926
+        # 应用修正因子
+        return self.c * sn
+    
+    def compute_z_score(self, value, window_data):
+        """
+        计算鲁棒Z分数（论文公式6）
         
-        return c * sn
+        Z_Sn(x_i) = |x_i - MED(X)| / (α × Sn)
+        
+        参数:
+            value: 要评估的值
+            window_data: 观测窗口数据
+        
+        返回:
+            鲁棒Z分数
+        """
+        median = np.median(window_data)
+        sn = self.compute_sn_scale(window_data)
+        
+        # 避免除零
+        if sn < 1e-10:
+            return 0.0
+        
+        z_score = abs(value - median) / (self.alpha * sn)
+        return z_score
     
     def fit(self, data):
         """
-        拟合分类器
+        拟合分类器（计算全局统计量）
         
-        步骤:
-            1. 计算Sn尺度和中位数
-            2. 使用K-means聚类
-            3. 映射聚类标签到状态名称
+        参数:
+            data: 训练数据
         """
         data = np.asarray(data).flatten()
         
@@ -71,50 +107,92 @@ class SnStateClassifier:
         self.median_ = np.median(data)
         
         logger.info(f"中位数: {self.median_:.4f}, Sn尺度: {self.sn_scale_:.4f}")
-        
-        # 标准化后聚类
-        data_normalized = (data - self.median_) / self.sn_scale_
-        
-        logger.info("K-means聚类...")
-        self.kmeans.fit(data_normalized.reshape(-1, 1))
-        
-        # 映射聚类中心到状态
-        centers = self.kmeans.cluster_centers_.flatten()
-        center_order = np.argsort(centers)  # 从小到大排序
-        
-        self.cluster_to_state_ = {}
-        for i, cluster_id in enumerate(center_order):
-            self.cluster_to_state_[cluster_id] = self.state_names[i]
-        
-        logger.info(f"聚类中心: {centers}")
-        logger.info(f"状态映射: {self.cluster_to_state_}")
+        logger.info(f"α系数: {self.alpha}, 阈值: {self.threshold}")
         
         return self
     
-    def predict(self, data):
+    def predict(self, data, window_data=None):
         """
-        预测状态
+        预测状态（基于论文公式7）
         
-        输入:
-            data: 能源需求值
+        论文判定逻辑:
+        - 如果 Z_Sn(x_i) > threshold 且 x_i > median: Peak
+        - 如果 Z_Sn(x_i) > threshold 且 x_i < median: Lower
+        - 否则: Normal
         
-        输出:
-            状态标签数组
+        参数:
+            data: 能源需求值（单个值或数组）
+            window_data: 观测窗口数据（用于计算Z分数，如果为None则使用训练数据统计量）
+        
+        返回:
+            状态标签（字符串或数组）
         """
+        is_scalar = np.isscalar(data)
         data = np.asarray(data).flatten()
         
-        # 标准化
-        data_normalized = (data - self.median_) / self.sn_scale_
+        if self.median_ is None or self.sn_scale_ is None:
+            raise ValueError("Must call fit() before predict()")
         
-        # 聚类预测
-        cluster_labels = self.kmeans.predict(data_normalized.reshape(-1, 1))
+        states = []
+        for value in data:
+            # 使用窗口数据或全局统计量计算Z分数
+            if window_data is not None:
+                z_score = self.compute_z_score(value, window_data)
+                median = np.median(window_data)
+            else:
+                # 使用训练时的全局统计量
+                z_score = abs(value - self.median_) / (self.alpha * self.sn_scale_)
+                median = self.median_
+            
+            # 论文公式7的判定逻辑
+            if z_score > self.threshold:
+                if value > median:
+                    state = self.state_names[2]  # Peak
+                else:
+                    state = self.state_names[0]  # Lower
+            else:
+                state = self.state_names[1]  # Normal
+            
+            states.append(state)
         
-        # 映射到状态
-        state_labels = np.array([
-            self.cluster_to_state_[label] for label in cluster_labels
-        ])
+        states = np.array(states)
+        return states[0] if is_scalar else states
+    
+    def predict_with_scores(self, data, window_data=None):
+        """
+        预测状态并返回Z分数
         
-        return state_labels
+        返回:
+            (states, z_scores) 元组
+        """
+        is_scalar = np.isscalar(data)
+        data = np.asarray(data).flatten()
+        
+        states = []
+        z_scores = []
+        
+        for value in data:
+            if window_data is not None:
+                z_score = self.compute_z_score(value, window_data)
+                median = np.median(window_data)
+            else:
+                z_score = abs(value - self.median_) / (self.alpha * self.sn_scale_)
+                median = self.median_
+            
+            if z_score > self.threshold:
+                state = self.state_names[2] if value > median else self.state_names[0]
+            else:
+                state = self.state_names[1]
+            
+            states.append(state)
+            z_scores.append(z_score)
+        
+        states = np.array(states)
+        z_scores = np.array(z_scores)
+        
+        if is_scalar:
+            return states[0], z_scores[0]
+        return states, z_scores
     
     def fit_predict(self, data):
         """拟合并预测"""

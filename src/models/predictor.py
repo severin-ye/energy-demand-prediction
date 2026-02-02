@@ -13,11 +13,16 @@ logger = logging.getLogger(__name__)
 
 class AttentionLayer(layers.Layer):
     """
-    自定义注意力机制层
+    自定义注意力机制层（基于论文公式1-2）
     
-    计算: score = tanh(W * h + b)
-         attention_weights = softmax(score)
-         context = sum(attention_weights * h)
+    论文公式:
+    a_n = exp(fc(o_n, h_N)) / Σ_k exp(fc(o_k, h_N))
+    c_N = Σ_k a_k · h_k
+    
+    其中:
+    - o_n: LSTM在时间步n的输出
+    - h_N: LSTM的最终隐藏状态
+    - fc(o_n, h_N): 计算o_n与h_N的相关性得分
     """
     
     def __init__(self, units=64, **kwargs):
@@ -25,9 +30,19 @@ class AttentionLayer(layers.Layer):
         self.units = units
     
     def build(self, input_shape):
-        self.W = self.add_weight(
-            name='attention_W',
-            shape=(input_shape[-1], self.units),
+        # input_shape: [batch, timesteps, features]
+        feature_dim = input_shape[-1]
+        
+        # 用于计算fc(o_n, h_N)的权重矩阵
+        self.W_o = self.add_weight(
+            name='attention_W_o',
+            shape=(feature_dim, self.units),
+            initializer='glorot_uniform',
+            trainable=True
+        )
+        self.W_h = self.add_weight(
+            name='attention_W_h',
+            shape=(feature_dim, self.units),
             initializer='glorot_uniform',
             trainable=True
         )
@@ -37,8 +52,8 @@ class AttentionLayer(layers.Layer):
             initializer='zeros',
             trainable=True
         )
-        self.u = self.add_weight(
-            name='attention_u',
+        self.v = self.add_weight(
+            name='attention_v',
             shape=(self.units,),
             initializer='glorot_uniform',
             trainable=True
@@ -47,20 +62,38 @@ class AttentionLayer(layers.Layer):
     
     def call(self, inputs):
         """
-        输入: [batch, timesteps, features]
+        输入: [batch, timesteps, features] - LSTM所有时间步的输出
         输出: context_vector [batch, features], attention_weights [batch, timesteps]
         """
-        # score = tanh(W*h + b)
-        score = tf.nn.tanh(tf.tensordot(inputs, self.W, axes=1) + self.b)
+        # 提取最终隐藏状态 h_N
+        h_final = inputs[:, -1, :]  # [batch, features]
         
-        # attention_weights = softmax(u*score)
-        attention_weights = tf.nn.softmax(tf.tensordot(score, self.u, axes=1), axis=1)
+        # 计算fc(o_n, h_N) = v^T * tanh(W_o*o_n + W_h*h_N + b)
+        # o_n: inputs [batch, timesteps, features]
+        # h_N: h_final [batch, features]
         
-        # context = weighted sum
+        # 扩展h_final维度以便广播
+        h_final_expanded = tf.expand_dims(h_final, 1)  # [batch, 1, features]
+        h_final_tiled = tf.tile(h_final_expanded, [1, tf.shape(inputs)[1], 1])  # [batch, timesteps, features]
+        
+        # W_o * o_n
+        score_o = tf.tensordot(inputs, self.W_o, axes=[[2], [0]])  # [batch, timesteps, units]
+        
+        # W_h * h_N
+        score_h = tf.tensordot(h_final_tiled, self.W_h, axes=[[2], [0]])  # [batch, timesteps, units]
+        
+        # fc(o_n, h_N) = v^T * tanh(W_o*o_n + W_h*h_N + b)
+        score = tf.nn.tanh(score_o + score_h + self.b)  # [batch, timesteps, units]
+        score = tf.tensordot(score, self.v, axes=[[2], [0]])  # [batch, timesteps]
+        
+        # 计算注意力权重 (论文公式1)
+        attention_weights = tf.nn.softmax(score, axis=1)  # [batch, timesteps]
+        
+        # 计算上下文向量 (论文公式2): c_N = Σ a_k · h_k
         context_vector = tf.reduce_sum(
             inputs * tf.expand_dims(attention_weights, -1),
             axis=1
-        )
+        )  # [batch, features]
         
         return context_vector, attention_weights
     

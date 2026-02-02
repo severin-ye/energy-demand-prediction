@@ -263,3 +263,65 @@ class UCIDataLoader:
             }
         
         return stats
+
+
+def load_uci_dataset(use_splits=True):
+    """
+    便捷函数：加载UCI数据集
+    
+    Args:
+        use_splits: 是否使用训练/测试分割（默认True）
+                   如果True，返回训练集和测试集
+                   如果False，返回完整处理后的数据集
+    
+    Returns:
+        如果use_splits=True: (train_df, test_df)
+        如果use_splits=False: df
+    """
+    loader = UCIDataLoader()
+    
+    if use_splits:
+        # 检查是否存在分割后的数据
+        train_path = loader.data_dir / 'splits' / 'train.csv'
+        test_path = loader.data_dir / 'splits' / 'test.csv'
+        
+        if train_path.exists() and test_path.exists():
+            logger.info(f"加载已分割的数据: {train_path}, {test_path}")
+            train_df = pd.read_csv(train_path)
+            test_df = pd.read_csv(test_path)
+            
+            # 转换datetime列
+            if 'datetime' in train_df.columns:
+                train_df['datetime'] = pd.to_datetime(train_df['datetime'])
+                test_df['datetime'] = pd.to_datetime(test_df['datetime'])
+            
+            return train_df, test_df
+        else:
+            logger.warning("未找到分割数据，将加载完整数据集")
+            logger.warning("请先运行 scripts/split_uci_dataset.py 进行数据分割")
+            
+    # 加载完整数据集
+    processed_path = loader.processed_dir / 'uci_household_clean.csv'
+    
+    if processed_path.exists():
+        logger.info(f"加载处理后的数据: {processed_path}")
+        df = pd.read_csv(processed_path)
+        
+        if 'datetime' in df.columns:
+            df['datetime'] = pd.to_datetime(df['datetime'])
+        
+        if use_splits:
+            # 简单分割：80% 训练，20% 测试
+            split_idx = int(len(df) * 0.8)
+            train_df = df.iloc[:split_idx].copy()
+            test_df = df.iloc[split_idx:].copy()
+            return train_df, test_df
+        else:
+            return df
+    else:
+        raise FileNotFoundError(
+            f"未找到处理后的数据集: {processed_path}\n"
+            "请先运行以下命令下载和处理数据:\n"
+            "  python scripts/download_uci_data.py\n"
+            "  python scripts/split_uci_dataset.py"
+        )
