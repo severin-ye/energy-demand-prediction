@@ -4,7 +4,7 @@
 
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from typing import Tuple, List
 import logging
 
@@ -19,7 +19,7 @@ class EnergyDataPreprocessor:
         1. 数据清洗（缺失值处理、异常值处理）
         2. 时间特征提取
         3. 滑动窗口序列构造
-        4. 特征标准化
+        4. 特征归一化（MinMaxScaler，范围[0,1]）
     """
     
     def __init__(self, 
@@ -36,7 +36,9 @@ class EnergyDataPreprocessor:
         self.feature_cols = feature_cols or []
         self.target_col = target_col
         
-        self.scaler = StandardScaler()
+        # 使用MinMaxScaler（与论文一致）
+        self.feature_scaler = MinMaxScaler(feature_range=(0, 1))
+        self.target_scaler = MinMaxScaler(feature_range=(0, 1))
         self.fitted = False
     
     def clean_data(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -137,14 +139,16 @@ class EnergyDataPreprocessor:
         features = df[self.feature_cols].values
         target = df[self.target_col].values
         
-        # 4. 标准化
-        features = self.scaler.fit_transform(features)
+        # 4. 归一化（特征和目标分别处理）
+        features = self.feature_scaler.fit_transform(features)
+        target_normalized = self.target_scaler.fit_transform(target.reshape(-1, 1)).flatten()
         self.fitted = True
         
         # 5. 创建序列
-        X, y = self.create_sequences(features, target)
+        X, y = self.create_sequences(features, target_normalized)
         
         logger.info(f"预处理完成，序列数: {len(X)}, 特征维度: {X.shape}")
+        logger.info(f"目标值范围: [{y.min():.4f}, {y.max():.4f}]")
         
         return X, y
     
@@ -159,14 +163,31 @@ class EnergyDataPreprocessor:
         df = self.clean_data(df)
         df = self.extract_time_features(df)
         
-        # 提取特征
+        # 提取特征和目标
         features = df[self.feature_cols].values
         target = df[self.target_col].values
         
-        # 标准化
-        features = self.scaler.transform(features)
+        # 归一化
+        features = self.feature_scaler.transform(features)
+        target_normalized = self.target_scaler.transform(target.reshape(-1, 1)).flatten()
         
         # 创建序列
-        X, y = self.create_sequences(features, target)
+        X, y = self.create_sequences(features, target_normalized)
         
         return X, y
+    
+    def inverse_transform_target(self, y_normalized: np.ndarray) -> np.ndarray:
+        """
+        将归一化的目标值反归一化到原始空间
+        
+        参数:
+            y_normalized: 归一化后的预测值
+        
+        返回:
+            原始空间的预测值
+        """
+        if not self.fitted:
+            raise ValueError("请先调用 fit_transform() 拟合预处理器")
+        
+        y_original = self.target_scaler.inverse_transform(y_normalized.reshape(-1, 1)).flatten()
+        return y_original

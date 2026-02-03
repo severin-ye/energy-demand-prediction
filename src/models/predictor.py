@@ -161,8 +161,13 @@ class ParallelCNNLSTMAttention:
             name='cnn_conv2'
         )(cnn_branch)
         
-        # 保存用于CAM提取
-        cnn_features = layers.GlobalAveragePooling1D(name='cnn_gap')(cnn_branch)
+        cnn_branch = layers.MaxPooling1D(pool_size=2, name='cnn_pool2')(cnn_branch)
+        
+        # Flatten展平CNN输出（论文使用Flatten保留更多特征信息）
+        cnn_features = layers.Flatten(name='cnn_flatten')(cnn_branch)
+        
+        # 降维Dense层（避免参数过多）
+        cnn_features = layers.Dense(128, activation='relu', name='cnn_dense')(cnn_features)
         
         # ===== LSTM-Attention分支 =====
         lstm_branch = layers.LSTM(

@@ -20,6 +20,14 @@ import pandas as pd
 from datetime import datetime
 import logging
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+import random
+import tensorflow as tf
+
+# 固定随机种子（确保实验可重复）
+SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)
+tf.random.set_seed(SEED)
 
 from src.preprocessing.data_preprocessor import EnergyDataPreprocessor
 from src.models.predictor import ParallelCNNLSTMAttention
@@ -145,13 +153,13 @@ class AblationStudy:
         
         callbacks = [
             EarlyStopping(
-                monitor='val_loss',
-                patience=self.config.get('early_stopping_patience', 15),
+                monitor='val_mae',
+                patience=10,
                 restore_best_weights=True,
                 verbose=1
             ),
             ReduceLROnPlateau(
-                monitor='val_loss',
+                monitor='val_mae',
                 factor=0.5,
                 patience=5,
                 min_lr=1e-6,
@@ -175,32 +183,55 @@ class AblationStudy:
         model,
         X_test,
         y_test,
-        model_name: str
+        model_name: str,
+        preprocessor=None
     ) -> dict:
-        """评估单个模型"""
+        """
+        评估单个模型
+        
+        注意：在归一化空间计算指标（与论文一致）
+        同时也报告原始空间的结果（便于理解）
+        """
         logger.info(f"评估模型: {model_name}")
         
-        y_pred = model.predict(X_test).flatten()
+        # 预测（归一化空间）
+        y_pred_norm = model.predict(X_test).flatten()
         
-        mae = mean_absolute_error(y_test, y_pred)
-        rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-        mse = mean_squared_error(y_test, y_pred)
+        # 在归一化空间计算指标（与论文Table 3/4一致）
+        mae_norm = mean_absolute_error(y_test, y_pred_norm)
+        rmse_norm = np.sqrt(mean_squared_error(y_test, y_pred_norm))
+        mse_norm = mean_squared_error(y_test, y_pred_norm)
         
         # MAPE（避免除零）
         mask = y_test > 0.01
-        mape = np.mean(np.abs((y_test[mask] - y_pred[mask]) / y_test[mask])) * 100
+        if mask.sum() > 0:
+            mape_norm = np.mean(np.abs((y_test[mask] - y_pred_norm[mask]) / y_test[mask])) * 100
+        else:
+            mape_norm = 0.0
         
         results = {
             'model': model_name,
-            'mae': mae,
-            'rmse': rmse,
-            'mse': mse,
-            'mape': mape
+            'mae': mae_norm,
+            'rmse': rmse_norm,
+            'mse': mse_norm,
+            'mape': mape_norm
         }
         
-        logger.info(f"  MAE: {mae:.4f}")
-        logger.info(f"  RMSE: {rmse:.4f}")
-        logger.info(f"  MAPE: {mape:.2f}%")
+        logger.info(f"  MAE (normalized): {mae_norm:.6f}")
+        logger.info(f"  RMSE (normalized): {rmse_norm:.6f}")
+        logger.info(f"  MSE (normalized): {mse_norm:.6f}")
+        logger.info(f"  MAPE: {mape_norm:.2f}%")
+        
+        # 同时计算原始空间的指标（便于理解实际误差）
+        if preprocessor is not None:
+            y_test_orig = preprocessor.inverse_transform_target(y_test)
+            y_pred_orig = preprocessor.inverse_transform_target(y_pred_norm)
+            
+            mae_orig = mean_absolute_error(y_test_orig, y_pred_orig)
+            rmse_orig = np.sqrt(mean_squared_error(y_test_orig, y_pred_orig))
+            
+            logger.info(f"  MAE (original kW): {mae_orig:.4f}")
+            logger.info(f"  RMSE (original kW): {rmse_orig:.4f}")
         
         return results
     
@@ -257,7 +288,9 @@ class AblationStudy:
                 )
                 
                 # 评估
-                results = self.evaluate_model(model, X_test, y_test, model_name)
+                results = self.evaluate_model(
+                    model, X_test, y_test, model_name, preprocessor
+                )
                 all_results.append(results)
                 
                 # 保存模型
