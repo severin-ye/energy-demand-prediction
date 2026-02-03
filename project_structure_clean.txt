@@ -1,0 +1,103 @@
+.
+├── PROJECT_STRUCTURE.md
+├── README.md
+├── configs
+│   └── paper_config.json
+├── data
+│   ├── README.md
+│   ├── processed
+│   │   └── synthetic_energy_data.csv
+│   ├── raw
+│   ├── synthetic
+│   │   ├── raw
+│   │   ├── scenario_custom.csv
+│   │   └── scenarios
+│   └── uci
+│       ├── processed
+│       ├── raw
+│       └── splits
+├── doc
+│   ├── INDEX.md
+│   ├── MODEL_REFACTORING.md
+│   ├── ORGANIZATION_SUMMARY.md
+│   ├── gpt-原文翻译.md
+│   ├── guides
+│   │   ├── HTML_DEMO.md
+│   │   ├── QUICKSTART.md
+│   │   └── QUICK_REFERENCE.md
+│   ├── summaries
+│   │   ├── IMPLEMENTATION_SUMMARY.md
+│   │   ├── PROGRESS.md
+│   │   └── PROGRESS_SUMMARY.md
+│   ├── 实现文档.md
+│   ├── 数据集说明-UCI_Household.md
+│   ├── 样本数限制说明.md
+│   ├── 能源预测--基于深度学习模型的因果可解释人工智能在能源需求预测中的应用.pdf
+│   ├── 输出目录结构规范.md
+│   └── 项目设计文档.md
+├── outputs
+│   ├── ablation
+│   │   ├── ABLATION_REPORT.md
+│   │   └── ablation_results.csv
+│   ├── inference
+│   │   └── 26-01-18
+│   └── training
+│       ├── 26-01-16
+│       ├── 26-01-17
+│       └── 26-01-18
+├── project_structure_clean.txt
+├── requirements.txt
+├── scripts
+│   ├── README_synthetic_data.md
+│   ├── cleanup_project.sh
+│   ├── compare_datasets.py
+│   ├── download_uci_data.py
+│   ├── explain_sequence_length.py
+│   ├── generate_synthetic_data.py
+│   ├── prepare_data.py
+│   ├── run_ablation_comparison.py
+│   ├── run_inference.py
+│   ├── run_inference_uci.py
+│   ├── run_training.py
+│   ├── split_uci_dataset.py
+│   ├── train_parallel_cnn_lstm_attention.py
+│   ├── train_serial_cnn_lstm.py
+│   └── train_serial_cnn_lstm_attention.py
+├── src
+│   ├── __init__.py
+│   ├── data_processing
+│   │   ├── __init__.py
+│   │   ├── data_splitter.py
+│   │   └── uci_loader.py
+│   ├── evaluation
+│   │   ├── __init__.py
+│   │   └── consistency.py
+│   ├── inference
+│   │   ├── __init__.py
+│   │   ├── causal_inference.py
+│   │   └── recommendation.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── association.py
+│   │   ├── base_model.py
+│   │   ├── baseline_models.py
+│   │   ├── bayesian_net.py
+│   │   ├── clustering.py
+│   │   ├── discretizer.py
+│   │   ├── predictor.py
+│   │   └── state_classifier.py
+│   ├── pipeline
+│   │   ├── __init__.py
+│   │   ├── inference_pipeline.py
+│   │   └── train_pipeline.py
+│   ├── preprocessing
+│   │   ├── __init__.py
+│   │   └── data_preprocessor.py
+│   └── visualization
+│       ├── __init__.py
+│       └── inference_visualizer.py
+├── tests
+│   └── test_core_modules.py
+└── view_html_reports.sh
+
+33 directories, 68 files

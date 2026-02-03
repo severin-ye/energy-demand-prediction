@@ -126,15 +126,10 @@ class ParallelCNNLSTMAttention(BaseTimeSeriesModel):
         # ===== CNN分支（从原始输入提取局部特征）=====
         cnn_branch = self._build_cnn_block(inputs)
         
-        # Flatten展平CNN输出（论文使用Flatten保留更多特征信息）
+        # 方案1：保留CNN的完整特征（避免信息抽象损失）
+        # Flatten展平CNN输出，直接使用所有特征（论文强调"减少信息抽象损失"）
         cnn_features = layers.Flatten(name='cnn_flatten')(cnn_branch)
-        
-        # ⚠️ 修改1：使用GlobalAveragePooling代替Flatten+Dense大幅压缩
-        # 论文中可能使用更温和的降维方式，保留更多CNN特征
-        # 选项A: 使用更大的Dense层 (512 -> 256)
-        # 选项B: 直接使用Flatten后的特征
-        # 选项C: 使用GlobalAveragePooling
-        # cnn_features = layers.Dense(256, activation='relu', name='cnn_dense')(cnn_features)
+        # 移除原来的 Dense(128) 压缩层 - 这是导致信息损失的关键问题
         
         # ===== LSTM-Attention分支（从原始输入提取长期依赖）=====
         lstm_branch = layers.LSTM(
