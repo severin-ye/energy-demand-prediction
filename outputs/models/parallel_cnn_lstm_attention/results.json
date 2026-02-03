@@ -1,0 +1,42 @@
+{
+  "model_name": "Parallel CNN-LSTM-Attention (方案1: 无CNN压缩)",
+  "timestamp": "2026-02-03 15:42:34",
+  "config": {
+    "sequence_length": 80,
+    "lstm_units": 128,
+    "attention_units": 64,
+    "cnn_filters": 64,
+    "dense_units": [
+      64,
+      32
+    ],
+    "epochs": 50,
+    "batch_size": 64,
+    "seed": 42,
+    "validation_split": 0.2
+  },
+  "model_info": {
+    "parameters": 348417,
+    "architecture": "Parallel (CNN从inputs + LSTM从inputs)，CNN特征无压缩",
+    "modification": "移除了Dense(128)压缩层，保留完整CNN特征(2560维)"
+  },
+  "training": {
+    "epochs_trained": 22,
+    "best_epoch": 7,
+    "train_samples": 105084,
+    "val_samples": 26271,
+    "test_samples": 6837
+  },
+  "results": {
+    "validation": {
+      "mae": 0.03297877732503427,
+      "rmse": 0.05493690038140541,
+      "mse": 0.0030180630235164623
+    },
+    "test": {
+      "mae": 0.032276409065661274,
+      "rmse": 0.05264253804748673,
+      "mse": 0.0027712368120810884
+    }
+  }
+}

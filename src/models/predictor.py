@@ -119,24 +119,26 @@ class ParallelCNNLSTMAttention(BaseTimeSeriesModel):
     """
     
     def _build_model(self):
-        """构建并行架构"""
+        """构建并行架构（方案A：CNN后分支）"""
         # 输入
         inputs = layers.Input(shape=self.input_shape, name='input')
         
-        # ===== CNN分支（从原始输入提取局部特征）=====
+        # ===== CNN特征提取（共享基础）=====
         cnn_branch = self._build_cnn_block(inputs)
+        # CNN输出: (batch, 20, 128) - 序列长度缩短，特征维度提升
         
-        # 方案1：保留CNN的完整特征（避免信息抽象损失）
-        # Flatten展平CNN输出，直接使用所有特征（论文强调"减少信息抽象损失"）
+        # ===== 分支1：CNN空间特征（Flatten）=====
+        # 保留CNN的完整特征（避免信息抽象损失）
         cnn_features = layers.Flatten(name='cnn_flatten')(cnn_branch)
-        # 移除原来的 Dense(128) 压缩层 - 这是导致信息损失的关键问题
+        # Flatten后: (batch, 2560) - 捕获空间模式和短期波动
         
-        # ===== LSTM-Attention分支（从原始输入提取长期依赖）=====
+        # ===== 分支2：LSTM-Attention时序特征 =====
+        # 关键修改：LSTM也从CNN输出开始，处理相同抽象层次的特征
         lstm_branch = layers.LSTM(
             units=self.lstm_units,
             return_sequences=True,
             name='lstm'
-        )(inputs)  # 注意：输入是inputs而不是cnn_branch
+        )(cnn_branch)  # 输入cnn_branch而不是inputs！
         
         # 注意力层
         attention_output, attention_weights = AttentionLayer(
