@@ -1,0 +1,12 @@
+{
+  "model_name": "P-CNN-LSTM-Att (True Parallel)",
+  "architecture": "LSTM from original input (80 steps)",
+  "val_loss": 0.0033604528289288282,
+  "val_mae": 0.03681909292936325,
+  "val_mse": 0.0033604528289288282,
+  "test_loss": 0.003052488900721073,
+  "test_mae": 0.03561482951045036,
+  "test_mse": 0.003052488900721073,
+  "params": 286465,
+  "epochs_trained": 22
+}

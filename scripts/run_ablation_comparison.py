@@ -1,232 +1,314 @@
 """
-消融实验脚本 - 加载已训练模型进行对比
+公平对比实验：训练3个模型
+- S-CNN-LSTM (串联baseline)
+- S-CNN-LSTM-Att (串联+Attention)
+- P-CNN-LSTM-Att (并行+Attention，论文方法)
 
-实验组:
-1. Serial CNN-LSTM (Baseline)
-2. Serial CNN-LSTM-Attention
-3. Parallel CNN-LSTM-Attention (论文方法 - 方案1)
-
-工作流程:
-1. 加载三个预训练模型
-2. 在相同的测试集上评估
-3. 生成对比报告
-
-注意：
-- 模型需要先用独立脚本训练好
-- 确保使用相同的数据预处理
+完全相同的训练条件，确保公平对比
 """
 
-import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
+import sys
 import json
+import logging
 import numpy as np
 import pandas as pd
 from datetime import datetime
-import logging
-from sklearn.metrics import mean_absolute_error, mean_squared_error, root_mean_squared_error
-import tensorflow as tf
-from tensorflow import keras
+from pathlib import Path
+
+# 添加项目路径
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.preprocessing.data_preprocessor import EnergyDataPreprocessor
-from src.data_processing.uci_loader import load_uci_dataset
-from src.models.predictor import AttentionLayer
+from src.models.ablation_models import SerialCNNLSTM, SerialCNNLSTMAttention, ParallelCNNLSTMAttention
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from sklearn.model_selection import train_test_split
 
+# 设置随机种子确保可重复性
+SEED = 42
+np.random.seed(SEED)
+import tensorflow as tf
+tf.random.set_seed(SEED)
+os.environ['PYTHONHASHSEED'] = str(SEED)
+os.environ['TF_DETERMINISTIC_OPS'] = '1'
+
+# 配置日志
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# 固定随机种子
-SEED = 42
-np.random.seed(SEED)
-tf.random.set_seed(SEED)
 
-print("=" * 80)
-print("消融实验：加载预训练模型进行对比")
-print("=" * 80)
+def load_and_preprocess_data():
+    """加载并预处理数据"""
+    logger.info("[1/6] 加载数据...")
+    
+    train_path = 'data/uci/splits/train.csv'
+    test_path = 'data/uci/splits/test.csv'
+    
+    train_df = pd.read_csv(train_path)
+    test_df = pd.read_csv(test_path)
+    
+    logger.info(f"训练集大小: {len(train_df)}")
+    logger.info(f"测试集大小: {len(test_df)}")
+    
+    return train_df, test_df
 
-# 1. 准备测试数据
-print("\n[1/4] 准备测试数据...")
-train_df, test_df = load_uci_dataset()
-print(f"训练集大小: {len(train_df)} (用于fit预处理器)")
-print(f"测试集大小: {len(test_df)}")
 
-preprocessor = EnergyDataPreprocessor(
-    sequence_length=80,
-    target_col='Global_active_power',
-    feature_cols=[
-        'Global_active_power',
-        'Global_reactive_power',
-        'Voltage',
-        'Global_intensity',
-        'Sub_metering_1',
-        'Sub_metering_2',
-        'Sub_metering_3'
+def prepare_sequences(train_df, test_df):
+    """准备时间序列数据"""
+    logger.info("\n[2/6] 数据预处理...")
+    
+    # 定义特征列
+    feature_cols = [
+        'Global_active_power', 'Global_reactive_power', 'Voltage', 
+        'Global_intensity', 'Sub_metering_1', 'Sub_metering_2', 'Sub_metering_3'
     ]
-)
-
-# Fit预处理器（使用训练集）
-X_train_dummy, y_train_dummy = preprocessor.fit_transform(train_df)
-print(f"预处理器已fit（使用训练集）")
-
-# Transform测试集
-X_test, y_test = preprocessor.transform(test_df)
-print(f"测试集形状: X={X_test.shape}, y={y_test.shape}")
-
-# 2. 加载模型
-print("\n[2/4] 加载预训练模型...")
-
-models = {}
-model_paths = {
-    "Serial CNN-LSTM (Baseline)": "outputs/models/serial_cnn_lstm/model.keras",
-    "Serial CNN-LSTM-Attention": "outputs/models/serial_cnn_lstm_attention/model.keras",
-    "Parallel CNN-LSTM-Attention": "outputs/models/parallel_cnn_lstm_attention/model.keras"
-}
-
-custom_objects = {'AttentionLayer': AttentionLayer}
-
-for model_name, model_path in model_paths.items():
-    if os.path.exists(model_path):
-        try:
-            models[model_name] = keras.models.load_model(model_path, custom_objects=custom_objects)
-            logger.info(f"✓ 已加载: {model_name}")
-        except Exception as e:
-            logger.error(f"✗ 加载失败 {model_name}: {e}")
-    else:
-        logger.warning(f"✗ 模型文件不存在: {model_path}")
-        logger.warning(f"  请先运行相应的训练脚本")
-
-if not models:
-    print("\n❌ 没有找到任何模型！")
-    print("请先运行训练脚本:")
-    print("  - python scripts/train_serial_cnn_lstm.py")
-    print("  - python scripts/train_serial_cnn_lstm_attention.py")
-    print("  - python scripts/train_parallel_cnn_lstm_attention.py")
-    sys.exit(1)
-
-print(f"\n成功加载 {len(models)}/3 个模型")
-
-# 3. 评估所有模型
-print("\n[3/4] 评估所有模型...")
-
-results = {}
-for model_name, model in models.items():
-    print(f"\n评估: {model_name}")
     
-    # 预测
-    y_pred = model.predict(X_test, verbose=0).flatten()
+    preprocessor = EnergyDataPreprocessor(
+        sequence_length=80,
+        feature_cols=feature_cols,
+        target_col='Global_active_power'
+    )
     
-    # 计算指标
-    mae = mean_absolute_error(y_test, y_pred)
-    rmse = root_mean_squared_error(y_test, y_pred)
-    mse = mean_squared_error(y_test, y_pred)
-    mape = np.mean(np.abs((y_test - y_pred) / (y_test + 1e-8))) * 100
+    X_train, y_train = preprocessor.fit_transform(train_df)
+    X_test, y_test = preprocessor.transform(test_df)
     
-    results[model_name] = {
-        "mae": mae,
-        "rmse": rmse,
-        "mse": mse,
-        "mape": mape,
-        "params": model.count_params()
+    logger.info(f"训练数据形状: X={X_train.shape}, y={y_train.shape}")
+    logger.info(f"测试数据形状: X={X_test.shape}, y={y_test.shape}")
+    
+    return X_train, y_train, X_test, y_test
+
+
+def split_validation(X_train, y_train, val_ratio=0.2):
+    """划分验证集"""
+    logger.info("\n[3/6] 划分验证集...")
+    
+    X_train_split, X_val, y_train_split, y_val = train_test_split(
+        X_train, y_train,
+        test_size=val_ratio,
+        random_state=SEED,
+        shuffle=True
+    )
+    
+    logger.info(f"训练集: X={X_train_split.shape}, y={y_train_split.shape}")
+    logger.info(f"验证集: X={X_val.shape}, y={y_val.shape}")
+    
+    return X_train_split, X_val, y_train_split, y_val
+
+
+def train_model(model_class, model_name, X_train, y_train, X_val, y_val, X_test, y_test):
+    """训练单个模型"""
+    logger.info(f"\n{'='*80}")
+    logger.info(f"训练模型: {model_name}")
+    logger.info(f"{'='*80}")
+    
+    # 构建模型
+    input_shape = (X_train.shape[1], X_train.shape[2])
+    model = model_class(
+        input_shape=input_shape,
+        cnn_filters=64,
+        lstm_units=128,
+        attention_units=64,
+        dense_units=[64, 32]
+    )
+    
+    # 编译模型
+    model.compile(
+        optimizer='adam',
+        loss='mse',
+        metrics=['mae', 'mse']
+    )
+    
+    # 回调函数
+    callbacks = [
+        EarlyStopping(
+            monitor='val_loss',
+            patience=15,
+            restore_best_weights=True,
+            verbose=1
+        ),
+        ReduceLROnPlateau(
+            monitor='val_loss',
+            factor=0.5,
+            patience=5,
+            min_lr=1e-6,
+            verbose=1
+        )
+    ]
+    
+    # 训练
+    history = model.fit(
+        X_train, y_train,
+        validation_data=(X_val, y_val),
+        epochs=50,
+        batch_size=64,
+        callbacks=callbacks,
+        verbose=1
+    )
+    
+    # 评估
+    logger.info("\n评估模型...")
+    val_metrics = model.model.evaluate(X_val, y_val, verbose=0)
+    test_metrics = model.model.evaluate(X_test, y_test, verbose=0)
+    
+    results = {
+        'model_name': model_name,
+        'val_loss': float(val_metrics[0]),
+        'val_mae': float(val_metrics[1]),
+        'val_mse': float(val_metrics[2]),
+        'test_loss': float(test_metrics[0]),
+        'test_mae': float(test_metrics[1]),
+        'test_mse': float(test_metrics[2]),
+        'params': int(model.model.count_params()),
+        'epochs_trained': len(history.history['loss'])
     }
     
-    print(f"  MAE:  {mae:.6f}")
-    print(f"  RMSE: {rmse:.6f}")
-    print(f"  MSE:  {mse:.8f}")
-    print(f"  MAPE: {mape:.2f}%")
-    print(f"  参数量: {model.count_params():,}")
-
-# 4. 生成对比报告
-print("\n[4/4] 生成对比报告...")
-
-# 找到baseline
-baseline_name = "Serial CNN-LSTM (Baseline)"
-if baseline_name in results:
-    baseline_mae = results[baseline_name]["mae"]
-else:
-    baseline_mae = None
-
-# 创建对比表格
-comparison_data = []
-for model_name, metrics in results.items():
-    row = {
-        "模型": model_name,
-        "MAE": f"{metrics['mae']:.6f}",
-        "RMSE": f"{metrics['rmse']:.6f}",
-        "MSE": f"{metrics['mse']:.8f}",
-        "MAPE": f"{metrics['mape']:.2f}%",
-        "参数量": f"{metrics['params']:,}"
-    }
+    logger.info(f"\n验证集:")
+    logger.info(f"  Loss: {results['val_loss']:.6f}")
+    logger.info(f"  MAE:  {results['val_mae']:.6f}")
+    logger.info(f"  MSE:  {results['val_mse']:.6f}")
     
-    if baseline_mae:
-        improvement = ((baseline_mae - metrics['mae']) / baseline_mae) * 100
-        row["vs Baseline"] = f"{improvement:+.2f}%"
+    logger.info(f"\n测试集:")
+    logger.info(f"  Loss: {results['test_loss']:.6f}")
+    logger.info(f"  MAE:  {results['test_mae']:.6f}")
+    logger.info(f"  MSE:  {results['test_mse']:.6f}")
     
-    comparison_data.append(row)
-
-df_comparison = pd.DataFrame(comparison_data)
-
-# 输出到控制台
-print("\n" + "=" * 80)
-print("消融实验结果对比")
-print("=" * 80)
-print(df_comparison.to_string(index=False))
-print("=" * 80)
-
-# 保存到文件
-output_dir = "outputs/ablation"
-os.makedirs(output_dir, exist_ok=True)
-
-# 保存CSV
-csv_path = os.path.join(output_dir, "ablation_comparison.csv")
-df_comparison.to_csv(csv_path, index=False, encoding='utf-8-sig')
-print(f"\n✓ CSV已保存: {csv_path}")
-
-# 保存JSON
-json_results = {
-    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    "test_samples": len(X_test),
-    "models": results,
-    "baseline": baseline_name if baseline_name in results else None
-}
-
-json_path = os.path.join(output_dir, "ablation_comparison.json")
-with open(json_path, 'w', encoding='utf-8') as f:
-    json.dump(json_results, f, indent=2, ensure_ascii=False)
-print(f"✓ JSON已保存: {json_path}")
-
-# 生成Markdown报告
-md_path = os.path.join(output_dir, "ABLATION_COMPARISON.md")
-with open(md_path, 'w', encoding='utf-8') as f:
-    f.write("# 消融实验对比报告\n\n")
-    f.write(f"生成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-    f.write(f"测试样本数: {len(X_test):,}\n\n")
-    f.write("## 实验结果\n\n")
-    f.write(df_comparison.to_markdown(index=False))
-    f.write("\n\n## 关键发现\n\n")
+    # 保存模型
+    timestamp = datetime.now().strftime("%y-%m-%d")
+    output_dir = Path(f'outputs/ablation/{timestamp}/{model_name}')
+    output_dir.mkdir(parents=True, exist_ok=True)
     
-    if len(results) >= 3:
-        serial_mae = results.get("Serial CNN-LSTM (Baseline)", {}).get("mae")
-        serial_att_mae = results.get("Serial CNN-LSTM-Attention", {}).get("mae")
-        parallel_mae = results.get("Parallel CNN-LSTM-Attention", {}).get("mae")
+    model.save(str(output_dir / 'model.keras'))
+    
+    # 保存结果
+    with open(output_dir / 'results.json', 'w') as f:
+        json.dump(results, f, indent=2)
+    
+    # 保存训练历史
+    history_dict = {k: [float(v) for v in vals] for k, vals in history.history.items()}
+    with open(output_dir / 'training_history.json', 'w') as f:
+        json.dump(history_dict, f, indent=2)
+    
+    logger.info(f"\n✓ 模型已保存: {output_dir}")
+    
+    return results
+
+
+def generate_comparison_report(all_results):
+    """生成对比报告"""
+    logger.info(f"\n{'='*80}")
+    logger.info("对比结果汇总")
+    logger.info(f"{'='*80}\n")
+    
+    # 创建对比表格
+    df = pd.DataFrame(all_results)
+    
+    # 按验证集MAE排序
+    df = df.sort_values('val_mae')
+    
+    # 计算相对改进
+    baseline_mae = df[df['model_name'] == 'S-CNN-LSTM']['val_mae'].values[0]
+    df['improvement_vs_baseline'] = ((baseline_mae - df['val_mae']) / baseline_mae * 100)
+    
+    # 打印表格
+    logger.info("验证集性能对比:")
+    logger.info("-" * 80)
+    for _, row in df.iterrows():
+        logger.info(f"{row['model_name']:25s} | MAE: {row['val_mae']:.6f} | "
+                   f"MSE: {row['val_mse']:.6f} | 参数: {row['params']:,} | "
+                   f"改进: {row['improvement_vs_baseline']:+.2f}%")
+    
+    logger.info("\n测试集性能对比:")
+    logger.info("-" * 80)
+    for _, row in df.iterrows():
+        logger.info(f"{row['model_name']:25s} | MAE: {row['test_mae']:.6f} | "
+                   f"MSE: {row['test_mse']:.6f}")
+    
+    # 保存对比报告
+    timestamp = datetime.now().strftime("%y-%m-%d")
+    output_dir = Path(f'outputs/ablation/{timestamp}')
+    
+    df.to_csv(output_dir / 'comparison.csv', index=False)
+    
+    # 生成Markdown报告
+    with open(output_dir / 'COMPARISON_REPORT.md', 'w') as f:
+        f.write("# 公平对比实验报告\n\n")
+        f.write(f"**日期**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+        f.write(f"**随机种子**: {SEED}\n\n")
         
-        if serial_mae and parallel_mae:
-            improvement = ((serial_mae - parallel_mae) / serial_mae) * 100
-            f.write(f"- **并行模型 vs 串行Baseline**: {improvement:+.2f}%\n")
+        f.write("## 验证集性能\n\n")
+        f.write("| 模型 | MAE | MSE | 参数量 | vs Baseline |\n")
+        f.write("|------|-----|-----|--------|-------------|\n")
+        for _, row in df.iterrows():
+            f.write(f"| {row['model_name']} | {row['val_mae']:.6f} | "
+                   f"{row['val_mse']:.6f} | {row['params']:,} | "
+                   f"{row['improvement_vs_baseline']:+.2f}% |\n")
         
-        if serial_att_mae and parallel_mae:
-            diff = ((serial_att_mae - parallel_mae) / serial_att_mae) * 100
-            f.write(f"- **并行模型 vs 串行+Attention**: {diff:+.2f}%\n")
+        f.write("\n## 测试集性能\n\n")
+        f.write("| 模型 | MAE | MSE |\n")
+        f.write("|------|-----|-----|\n")
+        for _, row in df.iterrows():
+            f.write(f"| {row['model_name']} | {row['test_mae']:.6f} | "
+                   f"{row['test_mse']:.6f} |\n")
+        
+        f.write("\n## 分析\n\n")
+        best_model = df.iloc[0]
+        f.write(f"**最佳模型**: {best_model['model_name']}\n\n")
+        f.write(f"- 验证集MAE: {best_model['val_mae']:.6f}\n")
+        f.write(f"- 测试集MAE: {best_model['test_mae']:.6f}\n")
+        f.write(f"- 相比baseline提升: {best_model['improvement_vs_baseline']:.2f}%\n")
+        f.write(f"- 参数量: {best_model['params']:,}\n")
     
-    f.write("\n## 论文对比\n\n")
-    f.write("- 论文声称: 并行架构相比串行提升6.85% (单分辨率) / 34.84% (多分辨率)\n")
-    f.write("- 本实验: 见上述对比结果\n")
+    logger.info(f"\n✓ 对比报告已保存: {output_dir}/COMPARISON_REPORT.md")
+    
+    return df
 
-print(f"✓ Markdown报告已保存: {md_path}")
 
-print("\n" + "=" * 80)
-print("消融实验完成！")
-print("=" * 80)
+def main():
+    """主函数"""
+    logger.info("="*80)
+    logger.info("公平对比实验：S-CNN-LSTM vs S-CNN-LSTM-Att vs P-CNN-LSTM-Att")
+    logger.info("="*80)
+    
+    # 加载数据
+    train_df, test_df = load_and_preprocess_data()
+    
+    # 准备序列
+    X_train, y_train, X_test, y_test = prepare_sequences(train_df, test_df)
+    
+    # 划分验证集
+    X_train_split, X_val, y_train_split, y_val = split_validation(X_train, y_train)
+    
+    # 定义要训练的模型
+    models_to_train = [
+        (SerialCNNLSTM, 'S-CNN-LSTM'),
+        (SerialCNNLSTMAttention, 'S-CNN-LSTM-Att'),
+        (ParallelCNNLSTMAttention, 'P-CNN-LSTM-Att')
+    ]
+    
+    # 训练所有模型
+    logger.info("\n[4/6] 开始训练所有模型...")
+    all_results = []
+    
+    for i, (model_class, model_name) in enumerate(models_to_train, 1):
+        logger.info(f"\n进度: {i}/{len(models_to_train)}")
+        results = train_model(
+            model_class, model_name,
+            X_train_split, y_train_split,
+            X_val, y_val,
+            X_test, y_test
+        )
+        all_results.append(results)
+    
+    # 生成对比报告
+    logger.info("\n[5/6] 生成对比报告...")
+    comparison_df = generate_comparison_report(all_results)
+    
+    logger.info("\n[6/6] 实验完成！")
+    logger.info("="*80)
+
+
+if __name__ == '__main__':
+    main()
