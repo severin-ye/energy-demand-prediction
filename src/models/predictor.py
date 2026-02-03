@@ -7,7 +7,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 import numpy as np
 import logging
-
+from .base_model import BaseTimeSeriesModel
 logger = logging.getLogger(__name__)
 
 
@@ -103,78 +103,45 @@ class AttentionLayer(layers.Layer):
         return config
 
 
-class ParallelCNNLSTMAttention:
+class ParallelCNNLSTMAttention(BaseTimeSeriesModel):
     """
-    并行CNN-LSTM-Attention架构
+    并行CNN-LSTM-Attention架构（论文方法）
     
     结构:
-        - CNN分支: 1D卷积提取局部模式
-        - LSTM-Attention分支: 长期依赖+注意力
-        - 融合层: 拼接后MLP回归
-    """
+        - CNN分支: 从原始输入提取局部模式
+        - LSTM-Attention分支: 从原始输入提取长期依赖
+        - 融合层: 拼接两路特征后MLP回归
     
-    def __init__(self,
-                 input_shape: tuple,
-                 cnn_filters: int = 64,
-                 lstm_units: int = 128,
-                 attention_units: int = 64,
-                 dense_units: list = [64, 32]):
-        """
-        参数:
-            input_shape: (sequence_length, n_features)
-            cnn_filters: CNN卷积核数量
-            lstm_units: LSTM隐藏单元数
-            attention_units: 注意力层单元数
-            dense_units: 全连接层单元数列表
-        """
-        self.input_shape = input_shape
-        self.cnn_filters = cnn_filters
-        self.lstm_units = lstm_units
-        self.attention_units = attention_units
-        self.dense_units = dense_units
-        
-        self.model = self._build_model()
-        self.cam_model = None
-        self.attention_model = None
+    特点:
+        - CNN和LSTM并行处理原始输入
+        - 双路特征互补融合
+        - 参数量较大但特征表达能力强
+    """
     
     def _build_model(self):
         """构建并行架构"""
         # 输入
         inputs = layers.Input(shape=self.input_shape, name='input')
         
-        # ===== CNN分支 =====
-        cnn_branch = layers.Conv1D(
-            filters=self.cnn_filters,
-            kernel_size=3,
-            activation='relu',
-            padding='same',
-            name='cnn_conv1'
-        )(inputs)
-        
-        cnn_branch = layers.MaxPooling1D(pool_size=2, name='cnn_pool1')(cnn_branch)
-        
-        cnn_branch = layers.Conv1D(
-            filters=self.cnn_filters * 2,
-            kernel_size=3,
-            activation='relu',
-            padding='same',
-            name='cnn_conv2'
-        )(cnn_branch)
-        
-        cnn_branch = layers.MaxPooling1D(pool_size=2, name='cnn_pool2')(cnn_branch)
+        # ===== CNN分支（从原始输入提取局部特征）=====
+        cnn_branch = self._build_cnn_block(inputs)
         
         # Flatten展平CNN输出（论文使用Flatten保留更多特征信息）
         cnn_features = layers.Flatten(name='cnn_flatten')(cnn_branch)
         
-        # 降维Dense层（避免参数过多）
-        cnn_features = layers.Dense(128, activation='relu', name='cnn_dense')(cnn_features)
+        # ⚠️ 修改1：使用GlobalAveragePooling代替Flatten+Dense大幅压缩
+        # 论文中可能使用更温和的降维方式，保留更多CNN特征
+        # 选项A: 使用更大的Dense层 (512 -> 256)
+        # 选项B: 直接使用Flatten后的特征
+        # 选项C: 使用GlobalAveragePooling
+        # cnn_features = layers.Dense(256, activation='relu', name='cnn_dense')(cnn_features)
         
-        # ===== LSTM-Attention分支 =====
+        # ===== LSTM-Attention分支（从原始输入提取长期依赖）=====
         lstm_branch = layers.LSTM(
             units=self.lstm_units,
             return_sequences=True,
             name='lstm'
-        )(inputs)
+        )(inputs)  # 注意：输入是inputs而不是cnn_branch
         
         # 注意力层
         attention_output, attention_weights = AttentionLayer(
@@ -182,48 +149,24 @@ class ParallelCNNLSTMAttention:
             name='attention'
         )(lstm_branch)
         
-        # ===== 融合 =====
+        # ===== 特征融合 =====
         merged = layers.Concatenate(name='merge')([cnn_features, attention_output])
         
-        # 全连接层
-        x = merged
-        for i, units in enumerate(self.dense_units):
-            x = layers.Dense(units, activation='relu', name=f'dense{i+1}')(x)
-            x = layers.Dropout(0.3, name=f'dropout{i+1}')(x)
-        
-        # 输出层
-        outputs = layers.Dense(1, activation='linear', name='output')(x)
+        # 全连接层（使用父类方法）
+        outputs = self._build_dense_block(merged)
         
         # 构建模型
         model = keras.Model(inputs=inputs, outputs=outputs, name='ParallelCNNLSTMAttention')
         
-        logger.info("模型构建完成")
+        logger.info("并行CNN-LSTM-Attention模型构建完成")
         logger.info(f"参数量: {model.count_params():,}")
         
         return model
     
-    def compile(self, optimizer='adam', loss='mse', metrics=None):
-        """编译模型"""
-        if metrics is None:
-            metrics = ['mae', 'mape']
-        
-        self.model.compile(
-            optimizer=optimizer,
-            loss=loss,
-            metrics=metrics
-        )
-    
-    def fit(self, X_train, y_train, validation_data=None, **kwargs):
-        """训练模型"""
-        return self.model.fit(
-            X_train, y_train,
-            validation_data=validation_data,
-            **kwargs
-        )
-    
-    def predict(self, X):
-        """预测"""
-        return self.model.predict(X)
+    @classmethod
+    def load(cls, filepath):
+        """加载模型（需要注册自定义层）"""
+        return super().load(filepath, custom_objects={'AttentionLayer': AttentionLayer})
     
     def extract_cam(self, X):
         """
@@ -232,7 +175,7 @@ class ParallelCNNLSTMAttention:
         输出:
             CAM值数组 [样本数, 时间步]
         """
-        if self.cam_model is None:
+        if not hasattr(self, 'cam_model') or self.cam_model is None:
             # 构建CAM提取模型
             cnn_conv2_output = self.model.get_layer('cnn_conv2').output
             self.cam_model = keras.Model(
@@ -254,7 +197,7 @@ class ParallelCNNLSTMAttention:
         输出:
             Attention权重数组 [样本数, 时间步]
         """
-        if self.attention_model is None:
+        if not hasattr(self, 'attention_model') or self.attention_model is None:
             # 构建Attention提取模型
             attention_layer = self.model.get_layer('attention')
             lstm_output = self.model.get_layer('lstm').output
@@ -270,32 +213,6 @@ class ParallelCNNLSTMAttention:
         attention_weights = self.attention_model.predict(X)
         
         return attention_weights
-    
-    def save(self, filepath):
-        """保存模型"""
-        self.model.save(filepath)
-        logger.info(f"模型已保存到 {filepath}")
-    
-    @classmethod
-    def load(cls, filepath):
-        """加载模型"""
-        model = keras.models.load_model(
-            filepath,
-            custom_objects={'AttentionLayer': AttentionLayer}
-        )
-        
-        # 创建实例并设置模型
-        instance = cls.__new__(cls)
-        instance.model = model
-        instance.cam_model = None
-        instance.attention_model = None
-        
-        logger.info(f"模型已从 {filepath} 加载")
-        return instance
-    
-    def summary(self):
-        """打印模型结构"""
-        return self.model.summary()
 
 
 # 使用示例
