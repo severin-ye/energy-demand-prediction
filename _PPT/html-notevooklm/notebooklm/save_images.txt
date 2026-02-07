@@ -1,0 +1,4 @@
+请将附件中的三张图片保存为以下文件名：
+1. 完整系统架构图（第一张）→ architecture-full.png
+2. 并行分支详细架构图（第二张）→ architecture-parallel.png  
+3. 关键公式（第三张）→ equations.png

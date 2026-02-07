@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>能源需求预测的因果可解释AI - 论文复现PPT</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+    
+    @media print {
+      html, body {
+        width: 13.333in;
+        margin: 0;
+        padding: 0;
+        background: white;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+      }
+      
+      .slide {
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+        width: 13.333in !important;
+        height: 7.5in !important;
+      }
+      
+      .slide:last-child {
+        page-break-after: auto;
+      }
+      
+      .footer {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<section class="slide" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+  <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; height: 100%; align-items: center; padding: 60px 80px;">
+    <!-- 左侧内容区 -->
+    <div style="padding-right: 40px;">
+      <h1 style="font-size: 42pt; font-weight: 800; color: #1e3a8a; line-height: 1.3; margin-bottom: 35px;">
+        论文复现汇报：基于深度学<br/>习与因果解释的能源求预测
+      </h1>
+      
+      <p style="font-size: 16pt; color: #4b5563; line-height: 1.6; margin-bottom: 50px; font-weight: 400;">
+        针对 "Causally explainable artificial intelligence<br/>
+        on deep learning model for energy demand<br/>
+        prediction" 的方法论验证与实验复现
+      </p>
+    </div>
+    
+    <!-- 右侧装饰图区 -->
+    <div style="display: flex; align-items: center; justify-content: center;">
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">研究背景</div>
+      <div class="page-number">2</div>
+    </div>
+    
+    <h2 class="slide-title">研究背景：高精度预测与"黑盒"模型的矛盾</h2>
+    
+    <div class="content">
+      <div class="col-6-4">
+        <!-- 左侧文字内容 -->
+        <div>
+          <h3 class="slide-section">Context</h3>
+          <ul>
+            <li>能源需求预测（Energy Demand Prediction）对减少温室气体排放和电力管理至关重要。</li>
+          </ul>
+          
+          <h3 class="slide-section" style="margin-top: 25px;">Problem Definition</h3>
+          <ul>
+            <li><strong>深度学习困境：</strong>CNN-LSTM 等模型精度高，但缺乏可解释性（Black-box nature）。</li>
+            <li><strong>现有 XAI 局限：</strong>SHAP 和 LIME 等主流方法主要关注特征的相关性（Correlation）而非因果性（Causality）。</li>
+            <li><strong>用户需求：</strong>终端用户需要可执行的洞察（Actionable Insights），例如"为何会出现<span style="color: #f59e0b; font-weight: 600;">峰值预警</span>？"。</li>
+          </ul>
+          
+          <h3 class="slide-section" style="margin-top: 25px;">Research Motivation</h3>
+          <ul>
+            <li>提出一种混合框架，旨在保持深度学习高精度的同时，通过贝叶斯网络揭示变量间及模型参数的因果机制。</li>
+          </ul>
+        </div>
+        
+        <!-- 右侧对比图 -->
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <img src="images/1-传统深度学习黑盒与因果可解释框架对比.png" alt="黑盒模型 vs 因果解释框架对比" style="width: 100%; max-width: 100%; height: auto; border-radius: 8px;">
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">2 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">核心贡献</div>
+      <div class="page-number">3</div>
+    </div>
+    
+    <h2 class="slide-title">论文核心贡献与复现目标</h2>
+    
+    <div class="content">
+      <div class="three-col" style="gap: 25px; margin-bottom: 35px;">
+        <!-- 第1个贡献：模型架构创新 -->
+        <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
+          <div style="margin-bottom: 18px;">
+            <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
+              1. 模型架构创新
+            </h3>
+            <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
+              (Prediction)
+            </p>
+          </div>
+          
+          <ul style="margin-left: 0;">
+            <li style="font-size: 13pt; line-height: 1.6; margin-bottom: 10px;">
+              提出并行（Parallel）CNN-LSTM-Attention 架构。
+            </li>
+            <li style="font-size: 13pt; line-height: 1.6;">
+              验证了并行提取空间（Spatial）和时间（Temporal）特征优于传统的串行（Serial）结构。
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 第2个贡献：因果解释框架 -->
+        <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
+          <div style="margin-bottom: 18px;">
+            <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
+              2. 因果解释框架
+            </h3>
+            <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
+              (Explanation)
+            </p>
+          </div>
+          
+          <ul style="margin-left: 0;">
+            <li style="font-size: 13pt; line-height: 1.6; margin-bottom: 10px;">
+              构建基于贝叶斯网络（Bayesian Network）的解释模块。
+            </li>
+            <li style="font-size: 13pt; line-height: 1.6;">
+              创新性地将深度学习参数（DLP）（如 CAM 和 Attention Weights）纳入因果图。
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 第3个贡献：领域知识融合 -->
+        <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
+          <div style="margin-bottom: 18px;">
+            <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
+              3. 领域知识融合
+            </h3>
+            <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
+              (Domain Knowledge)
+            </p>
+          </div>
+          
+          <ul style="margin-left: 0;">
+            <li style="font-size: 13pt; line-height: 1.6;">
+              引入物理约束（Physical Constraints）限制贝叶斯网络的结构学习，避免虚假因果。
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 复现目标 -->
+      <div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 20px; margin-top: 30px;">
+        <p style="font-size: 16pt; color: #1f2937; margin: 0; line-height: 1.5;">
+          <strong style="color: #1e3a8a; font-size: 17pt;">Reproduction Goal:</strong> 
+          验证上述架构在标准数据集上的有效性及解释的一致性。
+        </p>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">3 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">方法概览</div>
+      <div class="page-number">4</div>
+    </div>
+    
+    <h2 class="slide-title">复现方法概览：预测与解释的双流架构</h2>
+    
+    <div class="content" style="display: flex; flex-direction: column; justify-content: center;">
+      <!-- 完整架构图 -->
+      <div style="text-align: center; margin: 0; padding: 10px 0;">
+        <img src="images/2-完整模型架构与因果解释模块.png" alt="完整系统架构图" style="max-width: 100%; max-height: 500px; height: auto; object-fit: contain;">
+      </div>
+      
+      <!-- 底部说明文字 -->
+      <div style="text-align: center; margin-top: 15px; padding: 10px;">
+        <p style="font-size: 11pt; color: #9ca3af; font-style: italic;">
+          Modern Academic Journal meets Swiss International Style
+        </p>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">4 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">预测模型</div>
+      <div class="page-number">5</div>
+    </div>
+    
+    <h2 class="slide-title">预测模型：Parallel CNN-LSTM with Attention</h2>
+    
+    <div class="content">
+      <!-- 预测模型架构图 -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img src="images/3-并行CNN-LSTM预测模型结构.png" alt="预测模型架构图" style="max-width: 100%; max-height: 300px; height: auto; object-fit: contain;">
+      </div>
+      
+      <!-- 底部两栏：实现细节和关键公式 -->
+      <div class="two-col" style="gap: 25px;">
+        <!-- 左侧：实现细节 -->
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">Implementation Details:</h3>
+          <ul style="font-size: 13pt; line-height: 1.6;">
+            <li><strong>CNN Branch:</strong> 1D Conv -> Max Pooling（提取短时波动与特征关系）。</li>
+            <li><strong>LSTM Branch:</strong> 处理序列长度 ω = 80。计算 Attention Weights (<em>a<sub>n</sub></em>) 和 Context Vector (<em>c<sub>n</sub></em>)。</li>
+            <li><strong>Feature Fusion:</strong> 将 CNN 输出与 LSTM Context Vector 拼接，而非串行级联。</li>
+          </ul>
+        </div>
+        
+        <!-- 右侧：关键公式 -->
+        <div>
+          <div style="text-align: center;">
+            <img src="images/4-关键公式注意力与特征融合.png" alt="关键公式" style="max-width: 100%; height: auto; object-fit: contain;">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">5 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">特征提取</div>
+      <div class="page-number">6</div>
+    </div>
+    
+    <h2 class="slide-title">符号提取：连续变量的离散化策略</h2>
+    
+    <div class="content">
+      <div class="col-6-4">
+        <!-- 左侧：流程图 -->
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <img src="images/5-特征离散化流程EDP与变量状态.png" alt="离散化流程图" style="max-width: 100%; height: auto; object-fit: contain;">
+        </div>
+        
+        <!-- 右侧：步骤说明 -->
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">Step 1: 异常检测 (Outlier Detection)</h3>
+          <ul style="font-size: 13pt; line-height: 1.6; margin-bottom: 25px;">
+            <li>使用 <strong>Sn scale estimator</strong> 定义三种能源需求模式 (EDP)。</li>
+            <li>相比传统 Z-score 对噪声更鲁棒。</li>
+          </ul>
+          
+          <h3 class="slide-section" style="margin-top: 25px;">Step 2: 分位数离散化 (Quantile-based Discretization)</h3>
+          <ul style="font-size: 13pt; line-height: 1.6;">
+            <li>将连续变量划分为四个等级：<br/>
+              <strong>Low, Medium, High, Very High</strong>。
+            </li>
+            <li>这种处理方式保留了数据的统计分布特性，同时简化了因果推理的复杂度。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">6 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">因果模型</div>
+      <div class="page-number">7</div>
+    </div>
+    
+    <h2 class="slide-title">结构学习：关联规则与领域知识约束</h2>
+    
+    <div class="content">
+      <!-- 贝叶斯网络结构学习流程图 -->
+      <div style="text-align: center;">
+        <img src="images/10-贝叶斯网络结构学习流程四步骤.png" alt="贝叶斯网络结构学习流程" style="max-width: 100%; height: auto; object-fit: contain;">
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">7 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">参数解释</div>
+      <div class="page-number">8</div>
+    </div>
+    
+    <h2 class="slide-title">深度学习参数（DLP）的语义化解释</h2>
+    
+    <div class="content">
+      <!-- CAM与Attention聚类模式图 -->
+      <div style="text-align: center; margin-bottom: 25px;">
+        <img src="images/6-CAM与Attention聚类模式.png" alt="CAM与Attention聚类模式" style="max-width: 100%; height: auto; object-fit: contain;">
+      </div>
+      
+      <!-- 底部说明 -->
+      <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 18px 20px; border-radius: 4px;">
+        <ul style="margin: 0; font-size: 13pt; line-height: 1.8;">
+          <li><strong>Class Activation Map (CAM):</strong> 使用 K-means 聚类识别激活模式，映射设备使用的增减。</li>
+          <li><strong>Attention Weights:</strong> 基于累积聚类（Cumulative Clustering）识别时序关注点。</li>
+          <li><strong>意义:</strong> 将神经网络的"黑盒"参数转化为贝叶斯网络中的可解释节点。</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">8 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">实验设置</div>
+      <div class="page-number">9</div>
+    </div>
+    
+    <h2 class="slide-title">实验设置与环境</h2>
+    
+    <div class="content">
+      <!-- 四宫格布局 -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+        
+        <!-- 左上：Datasets -->
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 25px;">
+          <h3 style="font-size: 20pt; font-weight: 700; color: #1e3a8a; margin-bottom: 20px; border-bottom: 3px solid #e5e7eb; padding-bottom: 10px;">
+            Datasets（数据）
+          </h3>
+          
+          <div style="margin-bottom: 20px;">
+            <p style="font-size: 14pt; font-weight: 600; color: #1f2937; margin-bottom: 10px;">
+              1. UCI Household Electricity
+            </p>
+            <ul style="margin-left: 25px; font-size: 13pt; line-height: 1.7;">
+              <li>207万条数据，1分钟分辨率</li>
+              <li>包含 Kitchen, Laundry, HVAC 子计量</li>
+            </ul>
+          </div>
+          
+          <div>
+            <p style="font-size: 14pt; font-weight: 600; color: #1f2937; margin-bottom: 10px;">
+              2. REFIT Dataset
+            </p>
+            <ul style="margin-left: 25px; font-size: 13pt; line-height: 1.7;">
+              <li>573万条数据，8秒分辨率</li>
+              <li>重采样至 15min / 30min / 1h / 1d</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- 右上：Training Specs -->
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 25px;">
+          <h3 style="font-size: 20pt; font-weight: 700; color: #1e3a8a; margin-bottom: 20px; border-bottom: 3px solid #e5e7eb; padding-bottom: 10px;">
+            Training Specs（训练参数）
+          </h3>
+          
+          <ul style="margin-left: 25px; font-size: 13pt; line-height: 2;">
+            <li><strong>Input Window (ω):</strong> 80 timestamps</li>
+            <li><strong>Prediction Horizon:</strong> <em>t</em>+1 (One-step ahead)</li>
+            <li><strong>Validation:</strong> Train/Test split consistent with source</li>
+          </ul>
+        </div>
+        
+        <!-- 左下：Metrics -->
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 25px;">
+          <h3 style="font-size: 20pt; font-weight: 700; color: #1e3a8a; margin-bottom: 20px; border-bottom: 3px solid #e5e7eb; padding-bottom: 10px;">
+            Metrics（评价指标）
+          </h3>
+          
+          <ul style="margin-left: 25px; font-size: 13pt; line-height: 2;">
+            <li><strong>MSE</strong> (Mean Squared Error)</li>
+            <li><strong>RMSE</strong> (Root Mean Square Error)</li>
+            <li><strong>MAE</strong> (Mean Absolute Error)</li>
+          </ul>
+        </div>
+        
+        <!-- 右下：Baselines -->
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 25px;">
+          <h3 style="font-size: 20pt; font-weight: 700; color: #1e3a8a; margin-bottom: 20px; border-bottom: 3px solid #e5e7eb; padding-bottom: 10px;">
+            Baselines（对比基线）
+          </h3>
+          
+          <ul style="margin-left: 25px; font-size: 13pt; line-height: 2;">
+            <li><strong>Statistical:</strong> ARIMA</li>
+            <li><strong>ML:</strong> SVR</li>
+            <li><strong>DL:</strong> CNN, LSTM, S-CNN-LSTM (Serial)</li>
+            <li style="color: #3b82f6; font-weight: 600;"><strong>Ours:</strong> P-CNN-LSTM (Proposed)</li>
+          </ul>
+        </div>
+        
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">9 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">实验结果</div>
+      <div class="page-number">10</div>
+    </div>
+    
+    <h2 class="slide-title">实验结果：预测精度复现（UCI Dataset）</h2>
+    
+    <div class="content">
+      <!-- 预测结果与MSE对比图 -->
+      <div style="text-align: center; margin-bottom: 25px;">
+        <img src="images/7-预测性能与MSE对比结果.png" alt="预测vs实际值及MSE对比" style="max-width: 100%; height: auto; object-fit: contain;">
+      </div>
+      
+      <!-- 底部关键发现 -->
+      <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 20px; border-radius: 4px;">
+        <ul style="margin: 0; font-size: 14pt; line-height: 2;">
+          <li><strong>误差 &lt; 1%:</strong> 复现结果高度符合原论文数据。</li>
+          <li><strong>性能提升:</strong> 并行结构（Parallel）相比串行结构 MSE 降低约 15%。</li>
+          <li><strong>尖峰捕捉:</strong> 模型在 Peak Demand 区间表现出优异的拟合能力。</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">10 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">一致性评估</div>
+      <div class="page-number">11</div>
+    </div>
+    
+    <h2 class="slide-title">实验结果：解释一致性（Consistency）分析</h2>
+    
+    <div class="content">
+      <!-- 评估方法说明 -->
+      <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 15px 20px; border-radius: 4px; margin-bottom: 30px;">
+        <p style="font-size: 14pt; margin: 0; color: #1f2937;">
+          <strong>评估方法:</strong> 使用余弦相似度（Cosine Similarity）衡量不同样本下解释结构的一致性。
+        </p>
+      </div>
+      
+      <div class="two-col" style="gap: 35px;">
+        <!-- 左侧：一致性得分对比图 -->
+        <div>
+          <img src="images/8-一致性评分对比BN优于LIME与SHAP.png" alt="一致性评分对比" style="max-width: 100%; height: auto; object-fit: contain;">
+        </div>
+        
+        <!-- 右侧：Key Takeaways -->
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+          <h3 style="font-size: 22pt; font-weight: 700; color: #1e3a8a; margin-bottom: 25px; border-bottom: 3px solid #cbd5e1; padding-bottom: 12px;">
+            Key Takeaways
+          </h3>
+          
+          <ul style="margin-left: 0; font-size: 15pt; line-height: 2.2;">
+            <li style="margin-bottom: 20px;">
+              <strong style="color: #64748b;">LIME:</strong> 存在局部扰动，解释不稳定。
+            </li>
+            <li style="margin-bottom: 20px;">
+              <strong style="color: #475569;">SHAP:</strong> 表现良好，但计算开销巨大。
+            </li>
+            <li>
+              <strong style="color: #1e3a8a;">Ours:</strong> 贝叶斯网络结构具有极高的鲁棒性，未出现扰动现象。
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">11 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">案例分析</div>
+      <div class="page-number">12</div>
+    </div>
+    
+    <h2 class="slide-title">案例分析：峰值预警（Peak Warning）的因果推断</h2>
+    
+    <div class="content">
+      <div class="col-6-4" style="gap: 30px;">
+        <!-- 左侧：贝叶斯网络图 -->
+        <div>
+          <img src="images/9-贝叶斯网络推理案例峰值警告.png" alt="贝叶斯网络推理案例" style="max-width: 100%; height: auto; object-fit: contain;">
+        </div>
+        
+        <!-- 右侧：推理路径与分析 -->
+        <div>
+          <!-- 场景说明 -->
+          <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+            <p style="font-size: 13pt; margin: 0; font-weight: 600; color: #1f2937;">
+              场景：模型预测 t+1 时刻将出现 Peak Warning。
+            </p>
+          </div>
+          
+          <!-- 推理路径 -->
+          <div style="margin-bottom: 25px;">
+            <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px;">
+              推理路径（Inference Path）：
+            </h3>
+            <ol style="margin-left: 20px; font-size: 13pt; line-height: 2;">
+              <li><strong>DLP State:</strong> Early Attention (53%) 捕捉到特定时序模式。</li>
+              <li><strong>Appliance:</strong> Climate Control (空调) 处于 Very High 状态 (48%)。</li>
+              <li><strong>Result:</strong> 导致 Peak Warning 概率升至 100%。</li>
+            </ol>
+          </div>
+          
+          <!-- 敏感性分析 -->
+          <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 15px; border-radius: 4px;">
+            <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px;">
+              敏感性分析（Sensitivity）：
+            </h3>
+            <ul style="margin-left: 20px; font-size: 13pt; line-height: 1.9;">
+              <li>若将 Climate Control 降为 Low，Peak Warning 概率显著下降。</li>
+              <li><strong style="color: #059669;">Actionable Insight:</strong> 用户应调节空调设备以避免峰值电费。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">12 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">消融实验</div>
+      <div class="page-number">13</div>
+    </div>
+    
+    <h2 class="slide-title">消融实验：各模块有效性验证</h2>
+    
+    <div class="content">
+      <!-- 消融实验结果图 -->
+      <div style="text-align: center; margin-bottom: 25px;">
+        <img src="images/11-消融实验结果RMSE与解释相似度.png" alt="消融实验结果" style="max-width: 100%; height: auto; object-fit: contain;">
+      </div>
+      
+      <!-- 底部验证结论 -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+        <!-- 架构验证 -->
+        <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 18px 20px; border-radius: 4px;">
+          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px;">
+            1. 架构验证：
+          </h3>
+          <ul style="margin-left: 20px; font-size: 13pt; line-height: 1.9;">
+            <li>串行结构 (s-c-l-a) 性能显著下降 -> 并行结构是关键。</li>
+            <li>Attention 机制带来轻微提升。</li>
+          </ul>
+        </div>
+        
+        <!-- 解释验证 -->
+        <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 18px 20px; border-radius: 4px;">
+          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px;">
+            2. 解释验证：
+          </h3>
+          <ul style="margin-left: 20px; font-size: 13pt; line-height: 1.9;">
+            <li>去除 DLP (Deep Learning Parameters) 导致解释一致性下降。</li>
+            <li>证明了将 Attention/CAM 纳入贝叶斯网络的必要性。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">13 / ??</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

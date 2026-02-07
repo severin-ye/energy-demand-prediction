@@ -28,22 +28,9 @@
     <h2 class="slide-title">复现方法概览：预测与解释的双流架构</h2>
     
     <div class="content" style="display: flex; flex-direction: column; justify-content: center;">
-      <!-- 完整架构图占位符 -->
-      <div class="image-placeholder large" style="min-height: 480px; margin: 0;">
-        <div style="text-align: center; color: #6b7280;">
-          <p style="font-size: 16pt; font-weight: 600; margin-bottom: 15px;">【完整系统架构图】</p>
-          <p style="font-size: 13pt; line-height: 1.6;">
-            Input (Date, Day, Global_active_power, Sub-metering)<br/>
-            ↓<br/>
-            CNN Branch (1D Conv → MaxPool) ∥ LSTM Branch (Attention Mechanism)<br/>
-            ↓<br/>
-            Feature Fusion & MLP → Prediction (ŷ)<br/>
-            ↓<br/>
-            Explanation Module (CAM, Attention → Discretization → Association Rules → Bayesian Network)<br/>
-            ↓<br/>
-            Explanation (Causal Graph)
-          </p>
-        </div>
+      <!-- 完整架构图 -->
+      <div style="text-align: center; margin: 0; padding: 10px 0;">
+        <img src="images/2-完整模型架构与因果解释模块.png" alt="完整系统架构图" style="max-width: 100%; max-height: 500px; height: auto; object-fit: contain;">
       </div>
       
       <!-- 底部说明文字 -->

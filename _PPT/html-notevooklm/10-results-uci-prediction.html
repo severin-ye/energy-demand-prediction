@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实验结果：预测精度复现（UCI Dataset）</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第10页 - UCI数据集预测结果
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">实验结果</div>
+      <div class="page-number">10</div>
+    </div>
+    
+    <h2 class="slide-title">实验结果：预测精度复现（UCI Dataset）</h2>
+    
+    <div class="content">
+      <!-- 预测结果与MSE对比图 -->
+      <div style="text-align: center; margin-bottom: 25px;">
+        <img src="images/7-预测性能与MSE对比结果.png" alt="预测vs实际值及MSE对比" style="max-width: 100%; height: auto; object-fit: contain;">
+      </div>
+      
+      <!-- 底部关键发现 -->
+      <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 20px; border-radius: 4px;">
+        <ul style="margin: 0; font-size: 14pt; line-height: 2;">
+          <li><strong>误差 &lt; 1%:</strong> 复现结果高度符合原论文数据。</li>
+          <li><strong>性能提升:</strong> 并行结构（Parallel）相比串行结构 MSE 降低约 15%。</li>
+          <li><strong>尖峰捕捉:</strong> 模型在 Peak Demand 区间表现出优异的拟合能力。</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">10 / ??</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

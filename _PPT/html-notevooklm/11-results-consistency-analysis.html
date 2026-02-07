@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实验结果：解释一致性Consistency分析</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第11页 - 解释一致性分析
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">一致性评估</div>
+      <div class="page-number">11</div>
+    </div>
+    
+    <h2 class="slide-title">实验结果：解释一致性（Consistency）分析</h2>
+    
+    <div class="content">
+      <!-- 评估方法说明 -->
+      <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 15px 20px; border-radius: 4px; margin-bottom: 30px;">
+        <p style="font-size: 14pt; margin: 0; color: #1f2937;">
+          <strong>评估方法:</strong> 使用余弦相似度（Cosine Similarity）衡量不同样本下解释结构的一致性。
+        </p>
+      </div>
+      
+      <div class="two-col" style="gap: 35px;">
+        <!-- 左侧：一致性得分对比图 -->
+        <div>
+          <img src="images/8-一致性评分对比BN优于LIME与SHAP.png" alt="一致性评分对比" style="max-width: 100%; height: auto; object-fit: contain;">
+        </div>
+        
+        <!-- 右侧：Key Takeaways -->
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+          <h3 style="font-size: 22pt; font-weight: 700; color: #1e3a8a; margin-bottom: 25px; border-bottom: 3px solid #cbd5e1; padding-bottom: 12px;">
+            Key Takeaways
+          </h3>
+          
+          <ul style="margin-left: 0; font-size: 15pt; line-height: 2.2;">
+            <li style="margin-bottom: 20px;">
+              <strong style="color: #64748b;">LIME:</strong> 存在局部扰动，解释不稳定。
+            </li>
+            <li style="margin-bottom: 20px;">
+              <strong style="color: #475569;">SHAP:</strong> 表现良好，但计算开销巨大。
+            </li>
+            <li>
+              <strong style="color: #1e3a8a;">Ours:</strong> 贝叶斯网络结构具有极高的鲁棒性，未出现扰动现象。
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">11 / ??</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

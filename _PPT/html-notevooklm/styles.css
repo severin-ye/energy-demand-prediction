@@ -58,15 +58,30 @@
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     color-adjust: exact;
+    background: white;
   }
   
   .slide {
     page-break-inside: avoid;
+    page-break-after: always;
     overflow: visible !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    width: 13.333in !important;
+    height: 7.5in !important;
+  }
+  
+  .slide:last-child {
+    page-break-after: auto;
   }
   
   .content {
     overflow: visible !important;
+  }
+  
+  /* 隐藏页脚 */
+  .footer {
+    display: none !important;
   }
   
   /* 打印时缩小字体和间距 */
