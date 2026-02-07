@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>符号提取：连续变量的离散化策略</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第6页 - 特征离散化策略
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">特征提取</div>
+      <div class="page-number">6</div>
+    </div>
+    
+    <h2 class="slide-title">符号提取：连续变量的离散化策略</h2>
+    
+    <div class="content">
+      <div class="col-6-4">
+        <!-- 左侧：流程图 -->
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <div class="image-placeholder" style="min-height: 420px; width: 100%;">
+            <div style="text-align: center; color: #6b7280; padding: 20px;">
+              <p style="font-size: 14pt; font-weight: 600; margin-bottom: 15px;">【离散化流程图】</p>
+              <p style="font-size: 12pt; line-height: 2;">
+                Continuous Data (x<sub>i</sub>)<br/>
+                ↓<br/>
+                Sn Scale Estimator & Quantiles<br/>
+                ↓<br/>
+                <strong>Output 1:</strong> Energy Demand Patterns (EDP)<br/>
+                • Peak Warning<br/>
+                • No Significant Change<br/>
+                • Lower than Usual<br/>
+                <br/>
+                <strong>Output 2:</strong> Variable States<br/>
+                • Very High (&gt; Q3)<br/>
+                • High<br/>
+                • Medium<br/>
+                • Low (≤ Q1)
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 右侧：步骤说明 -->
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">Step 1: 异常检测 (Outlier Detection)</h3>
+          <ul style="font-size: 13pt; line-height: 1.6; margin-bottom: 25px;">
+            <li>使用 <strong>Sn scale estimator</strong> 定义三种能源需求模式 (EDP)。</li>
+            <li>相比传统 Z-score 对噪声更鲁棒。</li>
+          </ul>
+          
+          <h3 class="slide-section" style="margin-top: 25px;">Step 2: 分位数离散化 (Quantile-based Discretization)</h3>
+          <ul style="font-size: 13pt; line-height: 1.6;">
+            <li>将连续变量划分为四个等级：<br/>
+              <strong>Low, Medium, High, Very High</strong>。
+            </li>
+            <li>这种处理方式保留了数据的统计分布特性，同时简化了因果推理的复杂度。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">6 / ??</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>预测模型：Parallel CNN-LSTM with Attention</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第5页 - 预测模型架构详解
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">预测模型</div>
+      <div class="page-number">5</div>
+    </div>
+    
+    <h2 class="slide-title">预测模型：Parallel CNN-LSTM with Attention</h2>
+    
+    <div class="content">
+      <!-- 架构图占位符 -->
+      <div class="image-placeholder" style="min-height: 280px; margin-bottom: 20px; background: white; border: 2px solid #cbd5e1;">
+        <div style="padding: 20px; text-align: center; color: #6b7280;">
+          <p style="font-size: 14pt; font-weight: 600; margin-bottom: 12px;">【预测模型架构图】</p>
+          <p style="font-size: 12pt; line-height: 1.8; text-align: left; max-width: 900px; margin: 0 auto;">
+            <strong>Spatial Feature Extraction:</strong> Input (xω) → 1D Conv → Max Pooling → 1D Conv → Flattened<br/>
+            <strong>Temporal Feature Extraction:</strong> LSTM → LSTM → ... → LSTM → Attention Layer → Context Vector<br/>
+            <strong>Fusion:</strong> Concatenate → MLP → Prediction (ŷ)
+          </p>
+        </div>
+      </div>
+      
+      <!-- 底部两栏：实现细节和关键公式 -->
+      <div class="two-col" style="gap: 25px;">
+        <!-- 左侧：实现细节 -->
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">Implementation Details:</h3>
+          <ul style="font-size: 13pt; line-height: 1.6;">
+            <li><strong>CNN Branch:</strong> 1D Conv -> Max Pooling（提取短时波动与特征关系）。</li>
+            <li><strong>LSTM Branch:</strong> 处理序列长度 ω = 80。计算 Attention Weights (<em>a<sub>n</sub></em>) 和 Context Vector (<em>c<sub>n</sub></em>)。</li>
+            <li><strong>Feature Fusion:</strong> 将 CNN 输出与 LSTM Context Vector 拼接，而非串行级联。</li>
+          </ul>
+        </div>
+        
+        <!-- 右侧：关键公式 -->
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">Key Equations (Reproduction):</h3>
+          <div style="background: #f9fafb; padding: 18px; border-radius: 8px; border: 1px solid #e5e7eb;">
+            <!-- Attention权重公式 -->
+            <div style="margin-bottom: 15px; text-align: center;">
+              <p style="font-size: 15pt; font-family: 'Times New Roman', serif; margin: 0;">
+                <em>a<sub>n</sub></em> = <span style="font-size: 18pt;">exp(<em>f<sub>c</sub></em>(<em>o<sub>n</sub></em>, <em>h<sub>N</sub></em>))</span> / <span style="font-size: 18pt;">∑<sup style="font-size: 11pt;"><em>N</em></sup><sub style="font-size: 11pt;"><em>k</em>=1</sub></span> <em>f<sub>c</sub></em>(<em>o<sub>k</sub></em>, <em>h<sub>N</sub></em>)
+              </p>
+            </div>
+            
+            <!-- Context向量公式 -->
+            <div style="margin-bottom: 15px; text-align: center;">
+              <p style="font-size: 15pt; font-family: 'Times New Roman', serif; margin: 0;">
+                <em>c<sub>n</sub></em> = <span style="font-size: 18pt;">∑<sup style="font-size: 11pt;"><em>N</em></sup><sub style="font-size: 11pt;"><em>k</em>=1</sub></span> <em>a<sub>k</sub></em> · <em>h<sub>k</sub></em>
+              </p>
+            </div>
+            
+            <!-- 组合公式 -->
+            <div style="text-align: center;">
+              <p style="font-size: 14pt; font-family: 'Times New Roman', serif; margin: 0;">
+                <em>X<sub>combined</sub></em> = concat(flattened(<em>φ<sub>Conv</sub></em>), <em>c<sub>N</sub></em>)
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">5 / ??</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

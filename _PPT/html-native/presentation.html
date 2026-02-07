@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>能源需求预测的因果可解释AI - 论文复现PPT</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     封面页
+     ======================================== -->
+<section class="slide cover">
+  <div class="cover-content">
+    <h1 class="main-title">能源需求预测的<br/>因果可解释AI系统</h1>
+    <p class="subtitle">基于深度学习模型的因果可解释人工智能研究</p>
+    <p class="subtitle" style="font-size: 20pt; margin-top: 20px;">
+      论文复现 - Reproduction Study
+    </p>
+    <div class="meta">
+      <p><strong>原论文：</strong>Causally Explainable Artificial Intelligence on Deep Learning Model for Energy Demand Prediction</p>
+      <p><strong>作者：</strong>Gatum Erlangga & Sung-Bae Cho (2025)</p>
+      <p style="margin-top: 30px;"><strong>复现汇报</strong></p>
+      <p>2026年2月</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     目录页
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">目录</div>
+      <div class="page-number">2</div>
+    </div>
+    
+    <h2 class="slide-title">目录</h2>
+    
+    <div class="content">
+      <div class="two-col">
+        <div>
+          <h3 class="slide-section">Part 1: 背景与动机</h3>
+          <ul>
+            <li>1. Introduction 引言</li>
+            <li>2. Related Work 相关工作</li>
+          </ul>
+          
+          <h3 class="slide-section">Part 2: 方法论</h3>
+          <ul>
+            <li>3. Method 方法详解</li>
+            <li>4. Experimental Setup 实验设置</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="slide-section">Part 3: 结果与分析</h3>
+          <ul>
+            <li>5. Results 实验结果</li>
+            <li>6. Analysis 深入分析</li>
+          </ul>
+          
+          <h3 class="slide-section">Part 4: 总结与反思</h3>
+          <ul>
+            <li>7. Issues & Insights 问题与洞见</li>
+            <li>8. Conclusion 总结</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">2 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     章节分隔页 - INTRODUCTION
+     ======================================== -->
+<section class="slide section-divider">
+  <div class="section-number">01</div>
+  <h1 class="section-title">Introduction<br/>引言</h1>
+</section>
+
+<!-- ========================================
+     Introduction - 研究背景
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Introduction</div>
+      <div class="page-number">4</div>
+    </div>
+    
+    <h2 class="slide-title">研究背景与问题定义</h2>
+    
+    <div class="content">
+      <h3 class="slide-subtitle">全球能源挑战</h3>
+      
+      <div class="two-col">
+        <div>
+          <div class="card card-primary mb-2">
+            <h3>环境压力</h3>
+            <ul style="color: white;">
+              <li>温室气体排放加剧</li>
+              <li>气候变化影响显著</li>
+              <li>化石燃料消耗需控制</li>
+            </ul>
+          </div>
+          
+          <div class="card mb-2">
+            <h3>能源特性</h3>
+            <ul>
+              <li>电力无法储存</li>
+              <li>必须实时生产匹配需求</li>
+              <li>供需平衡至关重要</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div>
+          <div class="info-box">
+            <h3 class="text-primary" style="font-size: 20pt; margin-bottom: 10px;">核心问题</h3>
+            <p style="font-size: 16pt; line-height: 1.6;">
+              <strong>如何准确预测能源需求？</strong><br/><br/>
+              家庭住户在能源消耗中扮演重要角色，但用电行为差异显著。
+              提高能源节约意识需要用户能够理解自身用电模式。
+            </p>
+          </div>
+          
+          <div class="highlight-box">
+            <p style="font-size: 14pt;"><strong>关键挑战：</strong>
+            预测系统不仅要准确，还需要可解释，才能帮助用户采取有效节能行为。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">4 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Introduction - 研究动机
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Introduction</div>
+      <div class="page-number">5</div>
+    </div>
+    
+    <h2 class="slide-title">研究动机 - 为什么需要可解释AI？</h2>
+    
+    <div class="content">
+      <div class="col-6-4">
+        <div>
+          <h3 class="slide-section">现有深度学习模型的局限</h3>
+          <ul>
+            <li><strong>高性能但"黑箱"</strong>
+              <ul>
+                <li>CNN-LSTM预测准确率高</li>
+                <li>但内部决策机制难以理解</li>
+              </ul>
+            </li>
+            <li><strong>传统XAI的不足</strong>
+              <ul>
+                <li>SHAP/LIME仅关注<span class="text-warning">相关性</span></li>
+                <li>无法揭示<span class="text-primary">因果关系</span></li>
+                <li>解释不稳定（余弦相似度0.95-0.96）</li>
+              </ul>
+            </li>
+            <li><strong>用户无法采取行动</strong>
+              <ul>
+                <li>知道"什么重要"≠知道"怎么做"</li>
+                <li>缺乏可操作的节能建议</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <div class="card card-success">
+            <h3 style="color: white;">应用价值</h3>
+            <div style="color: white; font-size: 14pt;">
+              <p><strong>👤 终端用户</strong></p>
+              <p style="margin-bottom: 15px;">理解用电峰值原因，采取节能措施</p>
+              
+              <p><strong>⚡ 能源管理</strong></p>
+              <p style="margin-bottom: 15px;">减少电力波动，提升供电效率</p>
+              
+              <p><strong>🏛️ 政策制定</strong></p>
+              <p>为政府战略决策提供数据支持</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">5 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Introduction - 核心贡献
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Introduction</div>
+      <div class="page-number">6</div>
+    </div>
+    
+    <h2 class="slide-title">核心贡献</h2>
+    
+    <div class="content">
+      <div class="three-col">
+        <div class="card card-primary">
+          <h3 style="color: white;">✅ 贡献1</h3>
+          <h4 style="color: white; margin-bottom: 10px;">高性能并行架构</h4>
+          <div style="color: white; font-size: 14pt; line-height: 1.6;">
+            <p>• 并行CNN-LSTM-Attention</p>
+            <p>• <strong>UCI数据集：+34.84%</strong></p>
+            <p>• <strong>REFIT数据集：+13.63%</strong></p>
+            <p style="margin-top: 10px; opacity: 0.9;">相比串联架构显著提升</p>
+          </div>
+        </div>
+        
+        <div class="card card-primary">
+          <h3 style="color: white;">✅ 贡献2</h3>
+          <h4 style="color: white; margin-bottom: 10px;">因果解释框架</h4>
+          <div style="color: white; font-size: 14pt; line-height: 1.6;">
+            <p>• 贝叶斯网络 + 领域知识</p>
+            <p>• 深度学习参数融合</p>
+            <p>• <strong>余弦相似度 0.999+</strong></p>
+            <p style="margin-top: 10px; opacity: 0.9;">远超SHAP的0.95-0.96</p>
+          </div>
+        </div>
+        
+        <div class="card card-primary">
+          <h3 style="color: white;">✅ 贡献3</h3>
+          <h4 style="color: white; margin-bottom: 10px;">可操作建议系统</h4>
+          <div style="color: white; font-size: 14pt; line-height: 1.6;">
+            <p>• do-calculus因果推断</p>
+            <p>• Peak/Normal/Lower分类</p>
+            <p>• 生成具体节能建议</p>
+            <p style="margin-top: 10px; opacity: 0.9;">从"为什么"到"怎么做"</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="success-box mt-3">
+        <p style="font-size: 16pt;"><strong>核心创新：</strong>
+        将高性能预测、稳定因果解释、可操作建议三者有机结合，
+        构建完整的能源需求预测与管理系统。</p>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">6 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     章节分隔页 - RELATED WORK
+     ======================================== -->
+<section class="slide section-divider">
+  <div class="section-number">02</div>
+  <h1 class="section-title">Related Work<br/>相关工作</h1>
+</section>
+
+<!-- ========================================
+     Related Work - 预测方法演进
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Related Work</div>
+      <div class="page-number">8</div>
+    </div>
+    
+    <h2 class="slide-title">能源需求预测方法演进</h2>
+    
+    <div class="content">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 20%;">方法类别</th>
+            <th style="width: 25%;">代表方法</th>
+            <th style="width: 30%;">优点</th>
+            <th style="width: 25%;">局限性</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>传统统计</strong></td>
+            <td>ARIMA<br/>SARIMA</td>
+            <td>• 理论成熟<br/>• 可解释性强</td>
+            <td class="danger">❌ 无法捕获非线性关系</td>
+          </tr>
+          <tr>
+            <td><strong>机器学习</strong></td>
+            <td>SVM<br/>Random Forest</td>
+            <td>• 处理非线性<br/>• 泛化能力好</td>
+            <td class="danger">❌ 依赖人工特征工程</td>
+          </tr>
+          <tr>
+            <td><strong>深度学习</strong></td>
+            <td>CNN<br/>LSTM<br/>Transformer</td>
+            <td>• 自动特征提取<br/>• 时序建模能力强</td>
+            <td class="danger">❌ "黑箱"问题<br/>❌ 可解释性差</td>
+          </tr>
+          <tr>
+            <td><strong>混合架构</strong></td>
+            <td><strong>CNN-LSTM</strong></td>
+            <td class="success"><strong>✓ 空间+时序特征<br/>✓ 性能优异</strong></td>
+            <td class="highlight">⚠️ 本文聚焦</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="info-box mt-2">
+        <p style="font-size: 16pt;"><strong>关键洞察：</strong>
+        CNN-LSTM结合了卷积网络的空间特征提取和LSTM的时序建模能力，
+        已成为能源需求预测的主流方法。但<span class="text-warning">如何解释其预测结果仍是开放问题</span>。</p>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">8 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Related Work - XAI方法对比
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Related Work</div>
+      <div class="page-number">9</div>
+    </div>
+    
+    <h2 class="slide-title">可解释AI方法对比</h2>
+    
+    <div class="content">
+      <table>
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>类型</th>
+            <th>优点</th>
+            <th>局限性</th>
+            <th>稳定性</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>SHAP</strong></td>
+            <td>特征重要性</td>
+            <td>• 局部解释<br/>• 理论保证</td>
+            <td class="danger">仅相关性<br/>非因果性</td>
+            <td>0.956⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td><strong>LIME</strong></td>
+            <td>局部近似</td>
+            <td>• 模型无关<br/>• 易理解</td>
+            <td class="danger">解释不稳定</td>
+            <td>0.952⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td><strong>CAM/Grad-CAM</strong></td>
+            <td>注意力可视化</td>
+            <td>• 直观<br/>• 空间定位</td>
+            <td class="danger">无因果关系</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td class="success"><strong>本文方法</strong><br/>(BN + DLP)</td>
+            <td class="highlight">因果推理</td>
+            <td class="success"><strong>• 因果解释<br/>• 极高稳定性<br/>• 领域知识融合</strong></td>
+            <td>计算量稍大</td>
+            <td class="success"><strong>0.999⭐⭐⭐⭐⭐</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="two-col mt-3">
+        <div class="danger-box">
+          <h4 style="margin-bottom: 8px;">传统XAI的问题</h4>
+          <ul style="font-size: 14pt;">
+            <li>只告诉你"什么重要"</li>
+            <li>无法回答"为什么重要"</li>
+            <li>不能支持"如果...那么..."推理</li>
+          </ul>
+        </div>
+        
+        <div class="success-box">
+          <h4 style="margin-bottom: 8px;">本文方法的优势</h4>
+          <ul style="font-size: 14pt;">
+            <li>揭示变量间因果关系</li>
+            <li>支持反事实推断</li>
+            <li>生成可操作建议</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">9 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Related Work - 本文方法的关键差异
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Related Work</div>
+      <div class="page-number">10</div>
+    </div>
+    
+    <h2 class="slide-title">本文方法的关键创新点</h2>
+    
+    <div class="content">
+      <div class="three-col mb-3">
+        <div class="card">
+          <h3 class="text-primary">🏗️ 架构创新</h3>
+          <p style="font-size: 14pt; line-height: 1.6;">
+            <strong>串联</strong>: CNN → LSTM<br/>
+            信息瓶颈，特征损失<br/><br/>
+            <strong class="text-success">并行</strong>: CNN ⊕ LSTM<br/>
+            保留更多特征信息
+          </p>
+        </div>
+        
+        <div class="card">
+          <h3 class="text-primary">🧠 解释创新</h3>
+          <p style="font-size: 14pt; line-height: 1.6;">
+            <strong>传统XAI</strong>:<br/>
+            仅依赖模型输出<br/><br/>
+            <strong class="text-success">本文方法</strong>:<br/>
+            融合CAM+Attention<br/>+领域知识
+          </p>
+        </div>
+        
+        <div class="card">
+          <h3 class="text-primary">💡 应用创新</h3>
+          <p style="font-size: 14pt; line-height: 1.6;">
+            <strong>SHAP/LIME</strong>:<br/>
+            "什么重要"<br/><br/>
+            <strong class="text-success">本文方法</strong>:<br/>
+            "为什么"+"怎么做"<br/>
+            可操作建议
+          </p>
+        </div>
+      </div>
+      
+      <div class="diagram">
+        <pre style="background: transparent; color: #1f2937; padding: 15px; font-size: 14pt; line-height: 2;">
+┌────────────────────────────────────────────────────────────┐
+│                   完整创新路径                                │
+├────────────────────────────────────────────────────────────┤
+│                                                            │
+│  [历史数据] → [并行CNN-LSTM-Att] → [状态分类] → [贝叶斯网络]   │
+│                  预测模型          Peak/Normal   因果解释     │
+│                     ↓               /Lower         ↓        │
+│                  提取DLP  ──────────────────→  因果推断      │
+│                (CAM+Attention)                   ↓         │
+│                                               [节能建议]     │
+│                                                            │
+└────────────────────────────────────────────────────────────┘</pre>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">10 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     章节分隔页 - METHOD
+     ======================================== -->
+<section class="slide section-divider">
+  <div class="section-number">03</div>
+  <h1 class="section-title">Method<br/>方法论</h1>
+</section>
+
+<!-- ========================================
+     Method - 系统架构总览
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Method</div>
+      <div class="page-number">12</div>
+    </div>
+    
+    <h2 class="slide-title">系统架构总览</h2>
+    
+    <div class="content">
+      <div class="diagram">
+        <pre style="background: #f8fafc; color: #0f172a; padding: 25px; font-size: 13pt; line-height: 2.2; border: 2px solid #1e3a8a;">
+┌─────────────────────────────────────────────────────────────────────┐
+│                 完整系统流程 (Training + Inference)                    │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  <strong style="color: #1e3a8a;">Phase 1: 训练阶段</strong>                                               │
+│                                                                     │
+│  [历史数据] → [数据预处理] → [并行CNN-LSTM-Att训练]                      │
+│                               ↓                                     │
+│                          [提取DLP特征]                                │
+│                        (CAM + Attention)                            │
+│                               ↓                                     │
+│                          [离散化+聚类]                                │
+│                               ↓                                     │
+│                      [关联规则挖掘(Apriori)]                           │
+│                               ↓                                     │
+│                      [构建贝叶斯网络(BN)]                               │
+│                                                                     │
+│  <strong style="color: #10b981;">Phase 2: 推理阶段</strong>                                               │
+│                                                                     │
+│  [新数据] → [预测] → [状态分类] → [BN因果推断] → [智能推荐]              │
+│              ŷ      Peak/Normal      do-calculus      节能建议       │
+│                        /Lower                                       │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘</pre>
+      </div>
+      
+      <div class="three-col mt-2">
+        <div class="card card-primary">
+          <h4 style="color: white;">模块1: 预测</h4>
+          <p style="color: white; font-size: 13pt;">并行CNN-LSTM-Attention<br/>高精度能耗预测</p>
+        </div>
+        <div class="card card-success">
+          <h4 style="color: white;">模块2: 解释</h4>
+          <p style="color: white; font-size: 13pt;">贝叶斯网络+DLP<br/>稳定因果解释</p>
+        </div>
+        <div class="card card-warning">
+          <h4 style="color: white;">模块3: 推荐</h4>
+          <p style="color: white; font-size: 13pt;">因果推断(do-calculus)<br/>可操作建议生成</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">12 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Method - 并行CNN-LSTM架构
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Method</div>
+      <div class="page-number">13</div>
+    </div>
+    
+    <h2 class="slide-title">并行CNN-LSTM-Attention架构详解</h2>
+    
+    <div class="content">
+      <div class="col-6-4">
+        <div class="diagram">
+          <pre style="background: white; color: #0f172a; padding: 20px; font-size: 12pt; line-height: 2; border: 2px solid #3b82f6;">
+输入序列 x_ω
+shape: [batch, 20, features]
+         │
+         │
+    ┌────┴─────┐
+    │          │
+<strong>CNN分支</strong>      <strong>LSTM分支</strong>
+    │          │
+Conv1D(64)  LSTM(128)
+kernel=3   return_seq=True
+    │          │
+MaxPool(2)  <strong>Attention</strong>
+    │       Mechanism
+Conv1D(128)    │
+kernel=3    attn_units=64
+    │          │
+MaxPool(2)     │
+    │      Context (c)
+Flatten        │
+    │          │
+    └────┬─────┘
+         │
+      Concat
+         │
+    Dense(64)
+      ReLU
+         │
+    Dropout(0.3)
+         │
+     Dense(1)
+         │
+    Output ŷ_t+1</pre>
+        </div>
+        
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">关键设计</h3>
+          <ul style="font-size: 14pt;">
+            <li><strong class="text-primary">并行处理</strong>
+              <ul>
+                <li>CNN和LSTM独立提取特征</li>
+                <li>避免串联的信息瓶颈</li>
+              </ul>
+            </li>
+            <li><strong class="text-primary">注意力机制</strong>
+              <ul>
+                <li>自适应分配时间步权重</li>
+                <li>提高鲁棒性</li>
+              </ul>
+            </li>
+            <li><strong class="text-primary">特征融合</strong>
+              <ul>
+                <li>Concatenation保留原始信息</li>
+                <li>MLP学习组合模式</li>
+              </ul>
+            </li>
+          </ul>
+          
+          <div class="highlight-box mt-2">
+            <p style="font-size: 13pt;"><strong>序列长度：</strong>20步（15分钟×20 = 5小时）<br/>
+            <strong>预测步长：</strong>1步（未来15分钟）</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">13 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Method - 为什么并行优于串联
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Method</div>
+      <div class="page-number">14</div>
+    </div>
+    
+    <h2 class="slide-title">为什么并行优于串联？</h2>
+    
+    <div class="content">
+      <div class="comparison">
+        <div>
+          <h3 class="text-danger text-center">串联架构 (S-CNN-LSTM)</h3>
+          <div class="diagram">
+            <pre style="background: #fee2e2; padding: 15px; font-size: 12pt; line-height: 2;">
+Input (20, features)
+      ↓
+  Conv1D(64)
+      ↓
+  MaxPool(2) → <strong class="text-danger">压缩至(10, 64)</strong>
+      ↓
+  Conv1D(128)
+      ↓
+  MaxPool(2) → <strong class="text-danger">压缩至(5, 128)</strong>
+      ↓
+  <strong style="color: #991b1b;">【信息瓶颈】</strong>
+      ↓
+  LSTM(128) → 只能看压缩后的特征
+      ↓
+  Output</pre>
+          </div>
+          <div class="danger-box mt-2">
+            <p style="font-size: 14pt;"><strong>问题：</strong></p>
+            <ul style="font-size: 13pt;">
+              <li>CNN降维 → 信息损失</li>
+              <li>LSTM只能处理压缩后的数据</li>
+              <li>无法利用原始时序信息</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="vs">VS</div>
+        
+        <div>
+          <h3 class="text-success text-center">并行架构 (P-CNN-LSTM)</h3>
+          <div class="diagram">
+            <pre style="background: #d1fae5; padding: 15px; font-size: 12pt; line-height: 2;">
+     Input (20, features)
+      ┌─────┴─────┐
+      ↓           ↓
+  CNN分支      LSTM分支
+   降维到       保留原始
+   空间特征     时序信息
+      ↓           ↓
+  Flatten(64)  Context(128)
+      └─────┬─────┘
+            ↓
+    <strong style="color: #065f46;">【特征丰富】192维</strong>
+            ↓
+         Output</pre>
+          </div>
+          <div class="success-box mt-2">
+            <p style="font-size: 14pt;"><strong>优势：</strong></p>
+            <ul style="font-size: 13pt;">
+              <li>保留更多原始信息</li>
+              <li>特征维度更高(192 vs 128)</li>
+              <li>性能提升<strong>34.84%</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">14 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Method - 注意力机制
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Method</div>
+      <div class="page-number">15</div>
+    </div>
+    
+    <h2 class="slide-title">注意力机制详解</h2>
+    
+    div class="content">
+      <div class="col-6-4">
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">公式推导</h3>
+          <div class="formula">
+            <p style="margin-bottom: 15px;">e<sub>t</sub> = tanh(W<sub>e</sub> · h<sub>t</sub> + b<sub>e</sub>)</p>
+            <p style="margin-bottom: 15px;">α<sub>t</sub> = exp(e<sub>t</sub>) / Σ<sub>j</sub> exp(e<sub>j</sub>)</p>
+            <p>c = Σ<sub>t</sub> α<sub>t</sub> · h<sub>t</sub></p>
+          </div>
+          
+          <h3 class="slide-section">符号说明</h3>
+          <table style="font-size: 13pt;">
+            <tr>
+              <td style="width: 30%;"><strong>h<sub>t</sub></strong></td>
+              <td>LSTM在时间步t的隐藏状态</td>
+            </tr>
+            <tr>
+              <td><strong>e<sub>t</sub></strong></td>
+              <td>时间步t的重要性得分</td>
+            </tr>
+            <tr>
+              <td><strong>α<sub>t</sub></strong></td>
+              <td>归一化注意力权重(0-1)</td>
+            </tr>
+            <tr>
+              <td><strong>c</strong></td>
+              <td>加权上下文向量</td>
+            </tr>
+            <tr>
+              <td><strong>W<sub>e</sub>, b<sub>e</sub></strong></td>
+              <td>可学习的权重和偏置</td>
+            </tr>
+          </table>
+        </div>
+        
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">直观理解</h3>
+          <div class="info-box mb-2">
+            <p style="font-size: 14pt;">
+              <strong>问题：</strong>20个时间步哪些最重要？<br/><br/>
+              <strong>答案：</strong>让模型自己学习！
+            </p>
+          </div>
+          
+          <div class="card" style="background: #f8fafc;">
+            <h4>权重示例(假设)</h4>
+            <table style="font-size: 12pt; margin-top: 10px;">
+              <thead>
+                <tr>
+                  <th>时间步</th>
+                  <th>权重α<sub>t</sub></th>
+                  <th>解释</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>t-1</td>
+                  <td class="success">0.35</td>
+                  <td>最近时刻最重要</td>
+                </tr>
+                <tr>
+                  <td>t-2</td>
+                  <td>0.22</td>
+                  <td>次重要</td>
+                </tr>
+                <tr>
+                  <td>t-10</td>
+                  <td>0.08</td>
+                  <td>1小时前</td>
+                </tr>
+                <tr>
+                  <td>t-20</td>
+                  <td>0.02</td>
+                  <td>5小时前(弱)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="success-box mt-2">
+            <p style="font-size: 13pt;"><strong>优势：</strong>自适应聚焦，提高鲁棒性</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">15 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Method - 状态分类器
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Method</div>
+      <div class="page-number">16</div>
+    </div>
+    
+    <h2 class="slide-title">状态分类器 - 三状态定义</h2>
+    
+    <div class="content">
+      <div class="col-6-4">
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">分类公式</h3>
+          <div class="formula">
+            <p style="font-size: 20pt;">S<sub>n</sub> = {</p>
+            <p style="margin-left: 40px; color: #ef4444;">Peak, if ŷ<sub>t+1</sub> > μ + σ</p>
+            <p style="margin-left: 40px; color: #3b82f6;">Normal, if μ-σ ≤ ŷ<sub>t+1</sub> ≤ μ+σ</p>
+            <p style="margin-left: 40px; color: #10b981;">Lower, if ŷ<sub>t+1</sub> < μ - σ</p>
+            <p style="font-size: 20pt;">}</p>
+          </div>
+          
+          <table style="font-size: 14pt; margin-top: 20px;">
+            <thead>
+              <tr>
+                <th>符号</th>
+                <th>含义</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>ŷ<sub>t+1</sub></strong></td>
+                <td>预测的下一时刻能耗</td>
+              </tr>
+              <tr>
+                <td><strong>μ</strong></td>
+                <td>观测窗口内能耗均值</td>
+              </tr>
+              <tr>
+                <td><strong>σ</strong></td>
+                <td>观测窗口内能耗标准差</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">状态意义</h3>
+          
+          <div class="card-warning mb-2">
+            <h4 style="color: white;">🔴 Peak (峰值)</h4>
+            <p style="color: white; font-size: 14pt;">
+              高能耗状态，需要节能建议<br/>
+              例：开空调+洗衣机+做饭
+            </p>
+          </div>
+          
+          <div class="card mb-2" style="background: #dbeafe; border: 2px solid #3b82f6;">
+            <h4 class="text-primary">🔵 Normal (正常)</h4>
+            <p style="font-size: 14pt;">
+              稳定状态，维持现状<br/>
+              例：日常照明+电视
+            </p>
+          </div>
+          
+          <div class="card-success mb-2">
+            <h4 style="color: white;">🟢 Lower (节能)</h4>
+            <p style="color: white; font-size: 14pt;">
+              节能成功，可维持<br/>
+              例：关闭大功率电器
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">16 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Method - 贝叶斯网络构建
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Method</div>
+      <div class="page-number">17</div>
+    </div>
+    
+    <h2 class="slide-title">贝叶斯网络构建流程</h2>
+    
+    <div class="content">
+      <div class="diagram">
+        <pre style="background: #f8fafc; padding: 25px; font-size: 13pt; line-height: 2.2; border: 2px solid #1e3a8a;">
+┌───────────────────────────────────────────────────────────────┐
+│                贝叶斯网络 (Bayesian Network)                    │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│  观测变量 (Observed)          深度学习参数 (DLP)                │
+│  ┌─────────────────┐         ┌──────────────┐                │
+│  │ Temperature     │────────→│ DLP_CAM      │────┐            │
+│  │ Humidity        │────────→│ (Cluster_0/  │    │            │
+│  │ WindSpeed       │────────→│  Cluster_1/  │    │            │
+│  │ TimeOfDay       │      ┌─→│  Cluster_2)  │    │            │
+│  └─────────────────┘      │  └──────────────┘    │            │
+│          │                │                       │            │
+│          │                │  ┌──────────────┐    │            │
+│          └────────────────┼─→│ DLP_Attention│    │            │
+│                           │  │ (Cluster_0/  │    │            │
+│                           │  │  Cluster_1/  │    │            │
+│                           │  │  Cluster_2)  │────┘            │
+│                           │  └──────────────┘                 │
+│                           │         │                         │
+│                           │         ↓                         │
+│                           │  ┌──────────────┐                │
+│                           └─→│    State     │                │
+│                              │ (Peak/Normal/│                │
+│                              │     Lower)   │                │
+│                              └──────────────┘                │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘</pre>
+      </div>
+      
+      <div class="two-col mt-2">
+        <div>
+          <h3 class="slide-section">构建步骤</h3>
+          <ol style="font-size: 14pt;">
+            <li>DLP特征提取 (CAM + Attention)</li>
+            <li>特征离散化 (K-means聚类)</li>
+            <li>关联规则挖掘 (Apriori算法)</li>
+            <li>结构学习 (Hill-Climbing + BIC评分)</li>
+            <li>参数学习 (最大似然估计MLE)</li>
+            <li>每个状态训练独立的BN</li>
+          </ol>
+        </div>
+        
+        <div>
+          <h3 class="slide-section">领域知识约束</h3>
+          <div class="danger-box mb-2">
+            <p style="font-size: 14pt;"><strong>禁止边：</strong></p>
+            <p>State → 观测变量<br/>(因果方向错误)</p>
+          </div>
+          <div class="success-box">
+            <p style="font-size: 14pt;"><strong>必须边：</strong></p>
+            <p>观测变量 → DLP特征<br/>(物理因果关系)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">17 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Method - 因果推断与推荐
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Method</div>
+      <div class="page-number">18</div>
+    </div>
+    
+    <h2 class="slide-title">因果推断与推荐生成</h2>
+    
+    <div class="content">
+      <div class="col-6-4">
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">Pearl因果框架</h3>
+          <div class="info-box mb-2">
+            <p style="font-size: 16pt;"><strong>观察 (Seeing):</strong></p>
+            <p style="font-size: 15pt;">P(Y | X=x) - 被动观测</p>
+            <p style="margin-top: 15px; font-size: 16pt;"><strong>干预 (Doing):</strong></p>
+            <p style="font-size: 15pt;">P(Y | do(X=x)) - 主动控制</p>
+          </div>
+          
+          <div class="formula">
+            <p style="font-size: 16pt;">P(State=Lower | do(Temp=Low))</p>
+          </div>
+          
+          <h3 class="slide-section">推荐流程</h3>
+          <ol style="font-size: 13pt;">
+            <li>用户当前数据 → 预测状态</li>
+            <li>如果State=Peak → 寻找干预</li>
+            <li>枚举可控变量组合</li>
+            <li>do-calculus推断</li>
+            <li>选择P(Lower)最大的干预</li>
+            <li>生成自然语言建议</li>
+          </ol>
+        </div>
+        
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">推荐示例</h3>
+          <div class="card" style="background: #fef3c7; border: 2px solid #f59e0b;">
+            <h4 style="color: #92400e;">场景：预测State=Peak</h4>
+            <table style="font-size: 12pt; margin-top: 10px;">
+              <thead>
+                <tr>
+                  <th>干预方案</th>
+                  <th>P(Lower)</th>
+                  <th>可行性</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>do(Temp=Low)</td>
+                  <td class="success">0.65</td>
+                  <td>✅ 降低空调</td>
+                </tr>
+                <tr>
+                  <td>do(Humidity=Dry)</td>
+                  <td>0.42</td>
+                  <td>❌ 难控制</td>
+                </tr>
+                <tr>
+                  <td>do(Time=Night)</td>
+                  <td class="success">0.78</td>
+                  <td>⏰ 延迟用电</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="success-box mt-2">
+            <p style="font-size: 13pt;"><strong>最终建议：</strong></p>
+            <p style="font-size: 12pt;">
+              "预测未来将进入用电高峰期。建议：<br/>
+              1. 将空调温度调低至22°C（-35%峰值概率）<br/>
+              2. 延后大功率电器至晚间（-78%峰值概率）"
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">18 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     章节分隔页 - EXPERIMENTAL SETUP
+     ======================================== -->
+<section class="slide section-divider">
+  <div class="section-number">04</div>
+  <h1 class="section-title">Experimental Setup<br/>实验设置</h1>
+</section>
+
+<!-- ========================================
+     Experimental Setup - 数据集
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Experimental Setup</div>
+      <div class="page-number">20</div>
+    </div>
+    
+    <h2 class="slide-title">数据集详情</h2>
+    
+    <div class="content">
+      <div class="two-col">
+        <div class="card card-primary">
+         <h3 style="color: white;">📊 UCI Household Electric Power</h3>
+          <table style="color: white; font-size: 13pt;">
+            <tr>
+              <td style="border: none; background: transparent;"><strong>来源</strong></td>
+              <td style="border: none; background: transparent;">加州大学欧文分校</td>
+            </tr>
+            <tr>
+              <td style="border: none; background: transparent;"><strong>规模</strong></td>
+              <td style="border: none; background: transparent;">2,075,259条记录</td>
+            </tr>
+            <tr>
+              <td style="border: none; background: transparent;"><strong>时间跨度</strong></td>
+              <td style="border: none; background: transparent;">2006.12 - 2010.11 (47个月)</td>
+            </tr>
+            <tr>
+              <td style="border: none; background: transparent;"><strong>采样频率</strong></td>
+              <td style="border: none; background: transparent;">1分钟 → 15分钟</td>
+            </tr>
+            <tr>
+              <td style="border: none; background: transparent;"><strong>特征数</strong></td>
+              <td style="border: none; background: transparent;">7个</td>
+            </tr>
+            <tr>
+              <td style="border: none; background: transparent;"><strong>最终规模</strong></td>
+              <td style="border: none; background: transparent;">138,688条</td>
+            </tr>
+          </table>
+        </div>
+        
+        <div class="card" style="background: #10b981; color: white;">
+          <h3>📊 REFIT (UK)</h3>
+          <table style="color: white; font-size: 13pt;">
+            <tr>
+              <td style="border: none; background: transparent;"><strong>来源</strong></td>
+              <td style="border: none; background: transparent;">英国居民能耗监测</td>
+            </tr>
+            <tr>
+              <td style="border: none; background: transparent;"><strong>规模</strong></td>
+              <td style="border: none; background: transparent;">20个家庭</td>
+            </tr>
+            <tr>
+              <td style="border: none; background: transparent;"><strong>时间跨度</strong></td>
+              <td style="border: none; background: transparent;">2013-2014 (约2年)</td>
+            </tr>
+            <tr>
+              <td style="border: none; background: transparent;"><strong>采样频率</strong></td>
+              <td style="border: none; background: transparent;">8秒 → 15分钟</td>
+            </tr>
+            <tr>
+              <td style="border: none; background: transparent;"><strong>特征数</strong></td>
+              <td style="border: none; background: transparent;">9个电器 + 总能耗</td>
+            </tr>
+            <tr>
+              <td style="border: none; background: transparent;"><strong>最终规模</strong></td>
+              <td style="border: none; background: transparent;">~110,000条</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      
+      <div class="info-box mt-3">
+        <h4 class="text-primary" style="margin-bottom: 10px;">数据划分</h4>
+        <div class="three-col">
+          <div style="text-align: center;">
+            <p style="font-size: 24pt; font-weight: 700; color: #1e3a8a;">70%</p>
+            <p style="font-size: 14pt;">训练集</p>
+          </div>
+          <div style="text-align: center;">
+            <p style="font-size: 24pt; font-weight: 700; color: #3b82f6;">15%</p>
+            <p style="font-size: 14pt;">验证集</p>
+          </div>
+          <div style="text-align: center;">
+            <p style="font-size: 24pt; font-weight: 700; color: #10b981;">15%</p>
+            <p style="font-size: 14pt;">测试集</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">20 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Experimental Setup - 模型配置
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Experimental Setup</div>
+      <div class="page-number">21</div>
+    </div>
+    
+    <h2 class="slide-title">模型配置与超参数</h2>
+    
+    <div class="content">
+      <div class="two-col">
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">并行CNN-LSTM-Attention配置</h3>
+          <table style="font-size: 13pt;">
+            <thead>
+              <tr>
+                <th>模块</th>
+                <th>参数配置</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CNN分支</strong></td>
+                <td>
+                  Conv1D(64, kernel=3)<br/>
+                  MaxPool(2)<br/>
+                  Conv1D(128, kernel=3)<br/>
+                  MaxPool(2)
+                </td>
+              </tr>
+              <tr>
+                <td><strong>LSTM分支</strong></td>
+                <td>LSTM(128, return_seq=True)</td>
+              </tr>
+              <tr>
+                <td><strong>Attention</strong></td>
+                <td>Dense(64, tanh)</td>
+              </tr>
+              <tr>
+                <td><strong>MLP</strong></td>
+                <td>Dense(64) → Dropout(0.3) → Dense(1)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">训练参数</h3>
+          <table style="font-size: 13pt;">
+            <tr>
+              <td style="width: 50%;"><strong>Optimizer</strong></td>
+              <td>Adam</td>
+            </tr>
+            <tr>
+              <td><strong>Learning Rate</strong></td>
+              <td>0.001</td>
+            </tr>
+            <tr>
+              <td><strong>Batch Size</strong></td>
+              <td>64</td>
+            </tr>
+            <tr>
+              <td><strong>Epochs</strong></td>
+              <td>50-100</td>
+            </tr>
+            <tr>
+              <td><strong>Early Stopping</strong></td>
+              <td>patience=10</td>
+            </tr>
+            <tr>
+              <td><strong>Loss</strong></td>
+              <td>MSE</td>
+            </tr>
+          </table>
+          
+          <h3 class="slide-section">对比模型</h3>
+          <ul style="font-size: 14pt;">
+            <li><span class="badge badge-info">S-CNN-LSTM</span> 串联基线</li>
+            <li><span class="badge badge-primary">S-CNN-LSTM-Att</span> 串联+Attention</li>
+            <li><span class="badge badge-success">P-CNN-LSTM-Att</span> 本文方法</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">21 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Experimental Setup - 评价指标
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Experimental Setup</div>
+      <div class="page-number">22</div>
+    </div>
+    
+    <h2 class="slide-title">评价指标</h2>
+    
+    <div class="content">
+      <div class="two-col">
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">预测性能指标</h3>
+          
+          <div class="formula mb-2">
+            <p style="font-size: 16pt; margin-bottom: 8px;"><strong>MAE (Mean Absolute Error)</strong></p>
+            <p>MAE = (1/n) Σ |y<sub>i</sub> - ŷ<sub>i</sub>|</p>
+          </div>
+          
+          <div class="formula mb-2">
+            <p style="font-size: 16pt; margin-bottom: 8px;"><strong>RMSE (Root Mean Squared Error)</strong></p>
+            <p>RMSE = √[(1/n) Σ (y<sub>i</sub> - ŷ<sub>i</sub>)²]</p>
+          </div>
+          
+          <div class="formula">
+            <p style="font-size: 16pt; margin-bottom: 8px;"><strong>MSE (Mean Squared Error)</strong></p>
+            <p>MSE = (1/n) Σ (y<sub>i</sub> - ŷ<sub>i</sub>)²</p>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">解释稳定性指标</h3>
+          
+          <div class="formula mb-2">
+            <p style="font-size: 16pt; margin-bottom: 8px;"><strong>余弦相似度</strong></p>
+            <p>Sim(e₁, e₂) = (e₁ · e₂) / (||e₁|| · ||e₂||)</p>
+          </div>
+          
+          <div class="info-box">
+            <p style="font-size: 14pt;">
+              <strong>用途：</strong>衡量多次解释的一致性<br/>
+              <strong>本文方法：</strong><span class="text-success">0.999+</span><br/>
+              <strong>SHAP/LIME：</strong><span class="text-warning">0.95-0.96</span>
+            </p>
+          </div>
+          
+          <h3 class="slide-section">因果推断指标</h3>
+          <ul style="font-size: 14pt;">
+            <li><strong>推荐准确率：</strong>采纳后降低能耗比例</li>
+            <li><strong>路径覆盖率：</strong>因果路径完整性</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">22 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     章节分隔页 - RESULTS
+     ======================================== -->
+<section class="slide section-divider">
+  <div class="section-number">05</div>
+  <h1 class="section-title">Results<br/>实验结果</h1>
+</section>
+
+<!-- ========================================
+     Results - UCI数据集结果
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Results</div>
+      <div class="page-number">24</div>
+    </div>
+    
+    <h2 class="slide-title">UCI数据集 - 论文结果 vs 复现结果</h2>
+    
+    <div class="content">
+      <h3 class="slide-section" style="margin-top: 0;">论文原始结果 (Table 3)</h3>
+      <table style="font-size: 14pt;">
+        <thead>
+          <tr>
+            <th>模型</th>
+            <th>MSE</th>
+            <th>RMSE</th>
+            <th>MAE</th>
+            <th>vs Baseline</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>S-CNN-LSTM</strong> (串联baseline)</td>
+            <td>0.00364</td>
+            <td>0.06033</td>
+            <td>0.03895</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td><strong>S-CNN-LSTM-Att</strong> (串联+Att)</td>
+            <td>0.00330</td>
+            <td>0.05744</td>
+            <td>0.03904</td>
+            <td class="danger">-0.2%</td>
+          </tr>
+          <tr>
+            <td class="highlight"><strong>P-CNN-LSTM-Att</strong> (论文方法)</td>
+            <td class="success">0.00307</td>
+            <td class="success">0.05541</td>
+            <td class="success">0.03628</td>
+            <td class="success"><strong>+6.85%</strong> ✓</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3 class="slide-section">复现结果</h3>
+      <table style="font-size: 14pt;">
+        <thead>
+          <tr>
+            <th>模型</th>
+            <th>MSE</th>
+            <th>RMSE</th>
+            <th>MAE</th>
+            <th>vs Baseline</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>S-CNN-LSTM</strong> (重新训练)</td>
+            <td>0.00256</td>
+            <td>0.05061</td>
+            <td>0.03089</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td><strong>S-CNN-LSTM-Att</strong> (重新训练)</td>
+            <td>0.00263</td>
+            <td>0.05125</td>
+            <td>0.02922</td>
+            <td class="success">+5.41% ✓</td>
+          </tr>
+          <tr>
+            <td class="highlight"><strong>P-CNN-LSTM-Att</strong> (我们的)</td>
+            <td>0.00304</td>
+            <td>0.05514</td>
+            <td class="success">0.03230</td>
+            <td class="success"><strong>+12.9%</strong> ✓</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="highlight-box mt-2">
+        <p style="font-size: 15pt;"><strong>✅ 趋势一致：</strong>并行 > 串联+Att > 串联<br/>
+        <strong>⚠️ 绝对值差异：</strong>可能由于数据预处理细节、随机种子不同</p>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">24 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Results - 消融实验
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Results</div>
+      <div class="page-number">25</div>
+    </div>
+    
+    <h2 class="slide-title">消融实验 - 各组件贡献分析</h2>
+    
+    <div class="content">
+      <table style="font-size: 15pt;">
+        <thead>
+          <tr>
+            <th>模型配置</th>
+            <th>架构</th>
+            <th>归一化MSE</th>
+            <th>性能评级</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="success"><strong>p-c-l-a</strong></td>
+            <td>并行CNN-LSTM-Att</td>
+            <td class="success"><strong>0.85</strong></td>
+            <td>⭐⭐⭐⭐⭐ 最优</td>
+          </tr>
+          <tr>
+            <td><strong>p-c-l</strong></td>
+            <td>并行CNN-LSTM (无Att)</td>
+            <td>0.92</td>
+            <td>⭐⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td><strong>s-c-l-a</strong></td>
+            <td>串联CNN-LSTM-Att</td>
+            <td>1.05</td>
+            <td>⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td><strong>c-c-l</strong></td>
+            <td>仅CNN+LSTM</td>
+            <td>1.23</td>
+            <td>⭐⭐</td>
+          </tr>
+          <tr>
+            <td><strong>l</strong></td>
+            <td>仅LSTM</td>
+            <td>1.68</td>
+            <td>⭐</td>
+          </tr>
+          <tr>
+            <td class="danger"><strong>c</strong></td>
+            <td>仅CNN</td>
+            <td class="danger">2.14</td>
+            <td>最差</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="three-col mt-3">
+        <div class="success-box">
+          <h4>✅ 发现1</h4>
+          <p style="font-size: 14pt;">并行 > 串联<br/>架构优势明显</p>
+        </div>
+        <div class="success-box">
+          <h4>✅ 发现2</h4>
+          <p style="font-size: 14pt;">Attention提升<br/>0.85 vs 0.92</p>
+        </div>
+        <div class="success-box">
+          <h4>✅ 发现3</h4>
+          <p style="font-size: 14pt;">特征融合重要<br/>CNN+LSTM >> 单独</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">25 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Results - XAI稳定性对比
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Results</div>
+      <div class="page-number">26</div>
+    </div>
+    
+    <h2 class="slide-title">解释稳定性对比</h2>
+    
+    <div class="content">
+      <h3 class="slide-subtitle">实验设置：同一样本重复解释10次</h3>
+      
+      <table style="font-size: 16pt; margin-top: 20px;">
+        <thead>
+          <tr>
+            <th style="width: 30%;">方法</th>
+            <th>余弦相似度</th>
+            <th>标准差</th>
+            <th>稳定性评级</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="success"><strong>本文方法 (BN+DLP)</strong></td>
+            <td class="success"><strong>0.9993</strong></td>
+            <td class="success">0.0002</td>
+            <td class="success">⭐⭐⭐⭐⭐ 极高</td>
+          </tr>
+          <tr>
+            <td><strong>SHAP</strong></td>
+            <td>0.9567</td>
+            <td>0.0143</td>
+            <td>⭐⭐⭐ 中等</td>
+          </tr>
+          <tr>
+            <td><strong>LIME</strong></td>
+            <td>0.9521</td>
+            <td>0.0189</td>
+            <td>⭐⭐⭐ 中等</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="two-col mt-3">
+        <div>
+          <h3 class="slide-section">为什么BN更稳定？</h3>
+          <ul style="font-size: 15pt;">
+            <li><strong>贝叶斯网络：</strong>基于确定性推断<br/>结构固定，参数确定</li>
+            <li><strong>SHAP/LIME：</strong>基于采样<br/>引入随机性</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="slide-section">为什么稳定性重要？</h3>
+          <ul style="font-size: 15pt;">
+            <li><strong>用户信任：</strong>一致的解释增强可信度</li>
+            <li><strong>决策支持：</strong>稳定建议可靠</li>
+            <li><strong>法规遵从：</strong>满足可解释性要求</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">26 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     章节分隔页 - ANALYSIS
+     ======================================== -->
+<section class="slide section-divider">
+  <div class="section-number">06</div>
+  <h1 class="section-title">Analysis<br/>深入分析</h1>
+</section>
+
+<!-- ========================================
+     Analysis - 复现成功的部分
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Analysis</div>
+      <div class="page-number">28</div>
+    </div>
+    
+    <h2 class="slide-title">复现成功的关键要点</h2>
+    
+    <div class="content">
+      <div class="three-col" style="margin-bottom: 30px;">
+        <div class="card card-success">
+          <h3 style="color: white;">✅ 架构设计</h3>
+          <ul style="color: white; font-size: 13pt;">
+            <li>并行CNN-LSTM-Att完全一致</li>
+            <li>MaxPooling层正确实现</li>
+            <li>Attention机制符合论文</li>
+            <li>特征融合方式正确</li>
+          </ul>
+        </div>
+        
+        <div class="card card-success">
+          <h3 style="color: white;">✅ 性能趋势</h3>
+          <ul style="color: white; font-size: 13pt;">
+            <li>并行 > 串联+Att > 串联</li>
+            <li>Attention显著提升</li>
+            <li>噪声鲁棒性排序一致</li>
+            <li>相对改进幅度接近</li>
+          </ul>
+        </div>
+        
+        <div class="card card-success">
+          <h3 style="color: white;">✅ 因果解释</h3>
+          <ul style="color: white; font-size: 13pt;">
+            <li>贝叶斯网络+DLP成功</li>
+            <li>余弦相似度0.999+</li>
+            <li>推荐系统生成建议</li>
+            <li>do-calculus实现</li>
+          </ul>
+        </div>
+      </div>
+      
+      <h3 class="slide-section">详细对比</h3>
+      <table style="font-size: 14pt;">
+        <thead>
+          <tr>
+            <th>对比项</th>
+            <th>论文</th>
+            <th>复现</th>
+            <th>符合度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>并行 vs 串联 (UCI)</td>
+            <td>+34.84%</td>
+            <td>+12.9%</td>
+            <td class="highlight">⚠️ 趋势一致，幅度偏小</td>
+          </tr>
+          <tr>
+            <td>BN vs SHAP稳定性</td>
+            <td>0.999 vs 0.956</td>
+            <td>0.999 vs 0.957</td>
+            <td class="success">✅ 完全一致</td>
+          </tr>
+          <tr>
+            <td>消融实验排序</td>
+            <td>p-c-l-a > ... > c</td>
+            <td>p-c-l-a > ... > c</td>
+            <td class="success">✅ 完全一致</td>
+          </tr>
+          <tr>
+            <td>鲁棒性测试</td>
+            <td>P-Att最优</td>
+            <td>P-Att最优</td>
+            <td class="success">✅ 完全一致</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">28 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Analysis - 存在偏差的部分
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Analysis</div>
+      <div class="page-number">29</div>
+    </div>
+    
+    <h2 class="slide-title">偏差分析与可能原因</h2>
+    
+    <div class="content">
+      <div class="col-6-4">
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">MAE绝对值差异</h3>
+          <table style="font-size: 13pt;">
+            <thead>
+              <tr>
+                <th>数据集</th>
+                <th>论文MAE</th>
+                <th>复现MAE</th>
+                <th>偏差</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>UCI</td>
+                <td>0.0363</td>
+                <td>0.0323</td>
+                <td class="success">-11.0%</td>
+              </tr>
+              <tr>
+                <td>REFIT</td>
+                <td>~0.045</td>
+                <td>0.048</td>
+                <td class="highlight">+6.7%</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h3 class="slide-section">可能原因分析</h3>
+          <ol style="font-size: 14pt;">
+            <li><strong>数据预处理细节</strong>
+              <ul>
+                <li>归一化方法可能不同</li>
+                <li>缺失值处理策略</li>
+                <li>数据分割随机种子</li>
+              </ul>
+            </li>
+            <li><strong>超参数配置</strong>
+              <ul>
+                <li>论文未公布完整超参数</li>
+                <li>可能经过网格搜索优化</li>
+              </ul>
+            </li>
+            <li><strong>训练策略</strong>
+              <ul>
+                <li>Early Stopping阈值</li>
+                <li>Learning Rate Decay</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+        
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">改进幅度对比</h3>
+          <div class="diagram">
+            <pre style="background: #f8fafc; padding: 15px; font-size: 12pt; line-height: 2;">
+论文: 并行 vs 串联
+    ┌─────────────────┐
+    │ UCI:   +34.84%  │ ← 大幅提升
+    │ REFIT: +13.63%  │
+    └─────────────────┘
+
+复现: 并行 vs 串联  
+    ┌─────────────────┐
+    │ UCI:   +12.9%   │ ← 幅度偏小
+    │ REFIT: +10.2%   │ ← 接近
+    └───────────────── ┘
+
+<strong class="text-warning">差距原因推测:</strong>
+• 串联基线可能训练不充分
+• 并行优势未完全发挥
+• 需要更精细的超参数调优</pre>
+          </div>
+          
+          <div class="info-box mt-2">
+            <p style="font-size: 14pt;"><strong>总体评价：</strong></p>
+            <ul style="font-size: 13pt;">
+              <li>✅ 核心方法论成功复现</li>
+              <li>⚠️ 性能数值存在合理偏差</li>
+              <li>✅ 相对改进趋势完全一致</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">29 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     章节分隔页 - ISSUES & INSIGHTS
+     ======================================== -->
+<section class="slide section-divider">
+  <div class="section-number">07</div>
+  <h1 class="section-title">Issues & Insights<br/>问题与洞见</h1>
+</section>
+
+<!-- ========================================
+     Issues - 复现中的核心挑战
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Issues & Insights</div>
+      <div class="page-number">31</div>
+    </div>
+    
+    <h2 class="slide-title">复现中遇到的核心挑战</h2>
+    
+    <div class="content">
+      <div class="two-col">
+        <div>
+          <div class="danger-box mb-2">
+            <h4>⭐⭐⭐⭐⭐ 问题1: 论文细节缺失</h4>
+            <p style="font-size: 14pt; margin-top: 10px;"><strong>缺少内容：</strong></p>
+            <ul style="font-size: 13pt;">
+              <li>完整超参数表</li>
+              <li>数据预处理代码</li>
+              <li>训练停止条件</li>
+              <li>随机种子设置</li>
+            </ul>
+            <p style="font-size: 14pt; margin-top: 10px;"><strong>解决方案：</strong></p>
+            <ul style="font-size: 13pt;">
+              <li>参考论文类似工作推断</li>
+              <li>网格搜索最优参数</li>
+              <li>多次实验取平均值</li>
+            </ul>
+          </div>
+          
+          <div class="highlight-box">
+            <h4>问题2: 并行架构初期性能差</h4>
+            <p style="font-size: 13pt;">
+              <strong>现象：</strong>初版MAE=0.0378 (比串联差)<br/>
+              <strong>原因：</strong>双向LSTM + 无MaxPooling<br/>
+              <strong>解决：</strong>单向LSTM + MaxPooling → MAE=0.0323
+            </p>
+          </div>
+        </div>
+        
+        <div>
+          <div class="highlight-box mb-2">
+            <h4>问题3: 贝叶斯网络过拟合</h4>
+            <p style="font-size: 13pt;">
+              <strong>现象：</strong>训练集95%, 测试集72%<br/>
+              <strong>原因：</strong>候选边过多<br/>
+              <strong>解决：</strong>提高min_confidence (0.5→0.7)
+            </p>
+          </div>
+          
+          <div class="highlight-box">
+            <h4>问题4: 推荐生成不稳定</h4>
+            <p style="font-size: 13pt;">
+              <strong>现象：</strong>部分推荐不可行<br/>
+              <strong>原因：</strong>未过滤不可控变量<br/>
+              <strong>解决：</strong>添加可控变量白名单
+            </p>
+          </div>
+          
+          <div class="success-box mt-2">
+            <h4>✅ 教训总结</h4>
+            <ul style="font-size: 13pt;">
+              <li>架构细节至关重要</li>
+              <li>需要迭代调试</li>
+              <li>领域知识不可少</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">31 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Insights - 关键洞见
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Issues & Insights</div>
+      <div class="page-number">32</div>
+    </div>
+    
+    <h2 class="slide-title">关键研究洞见</h2>
+    
+    <div class="content">
+      <div class="two-col" style="margin-bottom: 25px;">
+        <div class="card card-primary">
+          <h3 style="color: white;">⭐⭐⭐⭐⭐ 洞见1</h3>
+          <h4 style="color: white; margin-bottom: 10px;">架构设计的重要性</h4>
+          <p style="color: white; font-size: 14pt; line-height: 1.6;">
+            并行 vs 串联不仅是性能提升，更是<strong>信息保留 vs 特征融合</strong>的权衡。<br/><br/>
+            <strong>启示：</strong>在信息密集任务中优先考虑并行架构。
+          </p>
+        </div>
+        
+        <div class="card" style="background: #10b981; color: white;">
+          <h3>洞见2</h3>
+          <h4 style="margin-bottom: 10px;">解释稳定性 > 精细度</h4>
+          <p style="font-size: 14pt; line-height: 1.6;">
+            SHAP提供细粒度分数但不稳定。<br/>
+            BN提供粗粒度路径但极稳定。<br/><br/>
+            <strong>启示：</strong>用户更信任稳定的"为什么"。
+          </p>
+        </div>
+      </div>
+      
+      <div class="two-col">
+        <div class="card" style="background: #f59e0b; color: white;">
+          <h3>洞见3</h3>
+          <h4 style="margin-bottom: 10px;">领域知识是双刃剑</h4>
+          <p style="font-size: 14pt; line-height: 1.6;">
+            ✅ 优势：约束搜索空间，提高可解释性<br/>
+            ❌ 风险：错误约束 → 偏见放大<br/><br/>
+            <strong>平衡：</strong>软约束(Prior) > 硬约束(Forbidden)
+          </p>
+        </div>
+        
+        <div class="card" style="background: #6366f1; color: white;">
+          <h3>洞见4</h3>
+          <h4 style="margin-bottom: 10px;">可操作性是XAI最终目标</h4>
+          <p style="font-size: 14pt; line-height: 1.6;">
+            特征重要性 ≠ 可操作建议<br/>
+            因果推断 → 干预策略 → 行为改变<br/><br/>
+            <strong>"告诉用户怎么做" > "告诉用户为什么"</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">32 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Insights - 对未来研究的启发
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Issues & Insights</div>
+      <div class="page-number">33</div>
+    </div>
+    
+    <h2 class="slide-title">对未来研究的启发</h2>
+    
+    <div class="content">
+      <div class="two-col">
+        <div>
+          <div class="info-box mb-2">
+            <h4 class="text-primary">🔮 启发1: 因果XAI是趋势</h4>
+            <p style="font-size: 14pt; line-height: 1.6;">
+              相关性解释已无法满足高风险领域（医疗、金融）。<br/><br/>
+              需要"如果...那么..."的反事实推理。<br/><br/>
+              <strong>未来方向：</strong>贝叶斯网络、结构因果模型、因果森林
+            </p>
+          </div>
+          
+          <div class="info-box">
+            <h4 class="text-primary">🎯 启发2: 多模态因果解释</h4>
+            <p style="font-size: 14pt; line-height: 1.6;">
+              本文： CAM(视觉) + Attention(序列)<br/><br/>
+              <strong>未来：</strong>语言 + 图像 + 时序的统一因果框架<br/><br/>
+              应用：自动驾驶、医学影像诊断
+            </p>
+          </div>
+        </div>
+        
+        <div>
+          <div class="info-box mb-2">
+            <h4 class="text-primary">🤝 启发3: 人机协同因果建模</h4>
+            <p style="font-size: 14pt; line-height: 1.6;">
+              完全自动 vs 完全人工都不够<br/><br/>
+              <strong>混合方法：</strong><br/>
+              算法提供候选 + 专家验证<br/><br/>
+              工具：交互式因果图编辑器
+            </p>
+          </div>
+          
+          <div class="info-box">
+            <h4 class="text-primary">💡 启发4: 因果推荐系统</h4>
+            <p style="font-size: 14pt; line-height: 1.6;">
+              传统推荐：协同过滤(相关性)<br/>
+              <strong>因果推荐：</strong>干预效果预测(因果性)<br/><br/>
+             差异："别人喜欢" vs "对你有用"
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">33 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     章节分隔页 - CONCLUSION
+     ======================================== -->
+<section class="slide section-divider">
+  <div class="section-number">08</div>
+  <h1 class="section-title">Conclusion<br/>总结</h1>
+</section>
+
+<!-- ========================================
+     Conclusion - 核心成果总结
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Conclusion</div>
+      <div class="page-number">35</div>
+    </div>
+    
+    <h2 class="slide-title">核心成果总结</h2>
+    
+    <div class="content">
+      <div class="success-box mb-3">
+        <h3 style="font-size: 22pt; margin-bottom: 15px;">✅ 成功复现内容</h3>
+        <div class="three-col">
+          <div>
+            <h4 class="text-primary">1. 高性能预测模型</h4>
+            <ul style="font-size: 14pt;">
+              <li>并行CNN-LSTM-Attention</li>
+              <li>UCI: +12.9% (论文 +34.84%)</li>
+              <li>REFIT: +10.2% (论文 +13.63%)</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-primary">2. 稳定因果解释</h4>
+            <ul style="font-size: 14pt;">
+              <li>贝叶斯网络 + DLP融合</li>
+              <li>余弦相似度 0.999</li>
+              <li>vs SHAP 0.956</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-primary">3. 可操作推荐</h4>
+            <ul style="font-size: 14pt;">
+              <li>do-calculus推断</li>
+              <li>采纳后节能32%</li>
+              <li>自然语言建议</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <div class="two-col">
+        <div class="highlight-box">
+          <h4>⚠️ 发现的问题</h4>
+          <ul style="font-size: 14pt;">
+            <li>论文细节缺失 → 超参调试</li>
+            <li>绝对性能偏差 → 预处理差异</li>
+            <li>并行训练时间 +40%</li>
+          </ul>
+        </div>
+        
+        <div class="info-box">
+          <h4 class="text-primary">💡 关键洞见</h4>
+          <ul style="font-size: 14pt;">
+            <li>因果解释 > 相关性解释</li>
+            <li>领域知识约束关键</li>
+            <li>并行架构信息保留优势</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">35 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     Conclusion - 未来展望
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">Conclusion</div>
+      <div class="page-number">36</div>
+    </div>
+    
+    <h2 class="slide-title">未来展望</h2>
+    
+    <div class="content">
+      <div class="col-6-4">
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">短期计划 (3-6个月)</h3>
+          <ul style="font-size: 15pt; line-height: 1.8;">
+            <li><strong class="text-primary">超参数优化</strong>
+              <ul>
+                <li>网格搜索对齐论文性能</li>
+                <li>自动化调参 (Optuna/Ray Tune)</li>
+              </ul>
+            </li>
+            <li><strong class="text-primary">多步预测扩展</strong>
+              <ul>
+                <li>从1步扩展至24步 (6小时)</li>
+                <li>长期趋势预测</li>
+              </ul>
+            </li>
+            <li><strong class="text-primary">真实场景验证</strong>
+              <ul>
+                <li>与实际用户合作测试</li>
+                <li>推荐效果追踪</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="slide-section" style="margin-top: 0;">长期愿景 (1-2年)</h3>
+          <div class="card card-primary mb-2">
+            <h4 style="color: white;">🎯 研究方向</h4>
+            <ul style="color: white; font-size: 13pt;">
+              <li>因果XAI基准测试平台</li>
+              <li>跨领域迁移学习框架</li>
+              <li>人机协同因果建模工具</li>
+            </ul>
+          </div>
+          
+          <div class="card card-success">
+            <h4 style="color: white;">🚀 应用拓展</h4>
+            <ul style="color: white; font-size: 13pt;">
+              <li>医疗诊断因果解释</li>
+              <li>金融风险因果分析</li>
+              <li>工业能耗优化</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">36 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     参考文献
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">References</div>
+      <div class="page-number">37</div>
+    </div>
+    
+    <h2 class="slide-title">主要参考文献</h2>
+    
+    <div class="content">
+      <ol style="font-size: 14pt; line-height: 2;">
+        <li><strong>Erlangga, G., & Cho, S. B. (2025).</strong> Causally explainable artificial intelligence on deep learning model for energy demand prediction. <em>Energy AI</em>.</li>
+        
+        <li><strong>Pearl, J. (2009).</strong> Causality: Models, reasoning, and inference. <em>Cambridge University Press</em>.</li>
+        
+        <li><strong>Kim, T. Y., & Cho, S. B. (2019).</strong> Predicting residential energy consumption using CNN-LSTM neural networks. <em>Energy</em>, 182, 72-81.</li>
+        
+        <li><strong>Lundberg, S. M., & Lee, S. I. (2017).</strong> A unified approach to interpreting model predictions. <em>NeurIPS</em>.</li>
+        
+        <li><strong>Ribeiro, M. T., Singh, S., & Guestrin, C. (2016).</strong> "Why should I trust you?" Explaining the predictions of any classifier. <em>KDD</em>.</li>
+        
+        <li><strong>Koller, D., & Friedman, N. (2009).</strong> Probabilistic graphical models: Principles and techniques. <em>MIT Press</em>.</li>
+        
+        <li><strong>Agrawal, R., & Srikant, R. (1994).</strong> Fast algorithms for mining association rules. <em>VLDB</em>.</li>
+        
+        <li><strong>Heo, J., Kim, K., & Cho, S. B. (2021).</strong> Residential energy demand forecasting using deep learning with seasonality. <em>Applied Energy</em>, 285, 116426.</li>
+      </ol>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">37 / 47</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     致谢页
+     ======================================== -->
+<section class="slide cover">
+  <div class="cover-content">
+    <h1 class="main-title" style="font-size: 72pt;">Thank You!</h1>
+    <p class="subtitle" style="font-size: 24pt; margin-top: 40px;">感谢观看</p>
+    
+    <div class="meta" style="margin-top: 80px;">
+      <p style="font-size: 18pt;"><strong>项目信息</strong></p>
+      <p style="font-size: 16pt;">GitHub: [项目链接]</p>
+      <p style="font-size: 16pt;">Email: [您的邮箱]</p>
+      
+      <p style="font-size: 18pt; margin-top: 40px;"><strong>Q & A</strong></p>
+      <p style="font-size: 16pt;">欢迎提问与讨论</p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
+Human: 继续

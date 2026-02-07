@@ -1,0 +1,947 @@
+﻿Engineering Applications of Arti cial Intelligence 162 (2025) 112620 
+
+Contents lists available at ScienceDirect
+
+Engineering Applications of Artificial Intelligence
+journal homepage: www.elsevier.com/locate/engappai
+
+Causally explainable artificial intelligence on deep learning model for 
+energy demand prediction
+Gatum Erlangga , Sung-Bae Cho *
+
+Dept. of Computer Science, Yonsei University, 50 Yonsei-ro, Sudaemoon-gu, Seoul, 03722, South Korea
+
+A R T I C L E  I N F O A B S T R A C T
+
+Keywords: Accurate power demand prediction is essential for energy management in the energy sector, but it is difficult due 
+Explainable artificial intelligence to the factors such as greenhouse gas emissions and climate change. CNN-LSTM (Convolutional neural network- 
+Causal explanation long short-term memory) neural network has demonstrated impressive performance but faces limitations in 
+Convolutional neural network-long short-term explaining its prediction results. Although XAI (explainable artificial intelligence) techniques enhance under
+memory
+Neural network standing through feature importance, they primarily focus on correlation rather than causality among variables 
+Bayesian network in the deep learning models. To address this issue, we propose a causal XAI method for CNN-LSTM neural 
+Power demand prediction network with attention mechanism to predict power demand. Bayesian network is employed to provide the 
+
+causal explanation with domain knowledge and relationships among observed variables and deep learning pa
+rameters (e.g., class activation maps and attention weights). Experiments on two real datasets such as UCI 
+(University of California, Irvine) individual household electricity dataset and REFIT (Regulatory Fitness and 
+Performance programme of the European Commission) dataset show improvements of average 34.84 % and 
+13.63 %, respectively. It also confirms that the proposed method not only significantly outperforms state-of-the- 
+art models in terms of prediction accuracy but also provides a causal explanation of the prediction outcome in 
+terms of peak power usage, savings, and stability based on the observation windows, which provides actionable 
+insight for end users to achieve power efficiency.
+
+1. Introduction unused lights and appliances. However, these behavioral adjustments 
+vary across different households, and their impact on overall energy 
+
+Precise prediction of power demand is essential for efficient energy efficiency depends on multiple factors. For example, houses located in 
+management in the power sector (Zhuang et al., 2023; Pinto et al., the tropical area might have a different pattern than the four-season 
+2021). This is particularly crucial because electricity, unlike water or area.
+food, cannot be easily stored and must be generated in real-time to Understanding the key factors that drive energy demand peaks is 
+match demand (Khan and Osińska, 2023). Additionally, the need for crucial for addressing energy challenges more effectively. Additionally, 
+accurate demand forecasting has intensified due to growing concerns effective energy usage prediction is essential to reducing power fluctu
+over greenhouse gas emission and climate change, which drive the push ations (Hasan et al., 2023), demonstrating the capability of AI-driven 
+for sustainable energy management (Rajapaksha and Bergmeir, 2022; system ability to meet regulatory compliance. At large scale, the gov
+Wenlong et al., 2023). By aligning production with consumption needs, ernment can integrate such predictive system into a holistic approach 
+effective demand prediction helps prevent both energy shortages and for strategic decision-making, using the prediction result and the cor
+unnecessary overproduction. responding explanation as the consideration of future decision (Bertoldi, 
+
+End users, particularly household occupants, play a significant role 2022).
+in fossil fuel consumption and carbon emissions (Stern et al., 2016). One Many researchers have worked on this problem by applying deep 
+effective strategy to encourage energy savings is by increasing their learning models to predict power demand patterns in households and 
+awareness. When individuals become more conscious of their electricity receiving competitive performance metrics. Convolutional neural 
+usage, they are more likely to adopt energy-efficient behaviors (Song network-long short-term memory (CNN-LSTM) neural network is one of 
+and Leng, 2020), such as adjusting indoor temperatures and turning off the powerful models to predict power consumption demand (Kim and 
+
+* Corresponding author.
+E-mail address: sbcho@yonsei.ac.kr (S.-B. Cho). 
+
+https://doi.org/10.1016/j.engappai.2025.112620
+Received 9 February 2025; Received in revised form 20 June 2025; Accepted 2 October 2025  
+Available online 10 October 2025 
+0952-1976/© 2025 Published by Elsevier Ltd. 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+Cho, 2019) that offers multivariate time series processing (Chung and Section 6 summarizes our key findings and concludes the research.
+Jang, 2022) and spatial-temporal feature extraction (Heo et al., 2021; 
+Ijaz et al., 2022) from the observed data. Due to its complexity, however, 2. Related works
+it is hard to understand the underlying mechanism inside the model (Bu 
+and Cho, 2023; Ribeiro et al., 2016a), which sacrifices its explainability Understanding the key factors in model prediction is crucial (Tjoa 
+over the accuracy (Nagahisarchoghaei et al., 2023). et al., 2023) and has various applications in power demand. It includes 
+
+Addressing this issue, we aim to enhance both explainability and feature selection and understanding the main point in energy usage. 
+interpretability in predicting household energy demand using CNN- Table 1 summarizes the relevant studies on explainable artificial intel
+LSTM models. According to Mavrepis, although the terms of explain ligence (XAI) for energy prediction, which include various prediction 
+ability and interpretability are often used interchangeably, some re models and XAI methods. In machine learning, some models have a 
+searchers make a distinction between them (Mavrepis et al., 2024). built-in ability to provide explanations based on the learned features. 
+Explainability in AI refers to the extent to which a model’s predictions For example, tree-structured model like decision tree and random forest 
+can be understood, considering the insights provided, the target users, provides insight based on constructed rules to help decision making in 
+and the necessity of these insights. It is derived from various methods architectural energy efficiency (Yao et al., 2024) and helps determine 
+including textual descriptions and the significance of features. In the key activities in energy load profiles (Satre-Meloy et al., 2020). 
+contrast, interpretability focuses on ensuring that the explanation aligns Furthermore, a new explainable model is also being proposed. For 
+with the user’s pre-knowledge, with the goal of making the explanation 
+understandable and coherent. In this paper, we define the explainability 
+as the ability to uncover the underlying causal mechanism that in Table 1 
+fluences the model’s predictions. This includes uncovering relevant Related works of model explanation for energy prediction.
+patterns in the model’s internal decision process and its corresponding Explanation Model Objective Dataset
+input that affects the final output, providing global understanding. Technique
+
+We divide the prediction outcome after the observation window Decision tree Decision tree (Yao Developing a China solar 
+shown in (t+1) time step into three states, which is useful to give rules et al., 2024) decision tree model decathlon 
+awareness on what would happen in the future when they use certain to optimize zero competition in 
+
+energy house 2022
+equipment. They are: 1) peak (Alduailij et al., 2021) indicating a high designs in cold 
+use of energy consumption, which enables occupants to decide whether regions
+to use energy efficiently or keep on the high patterns depending on the SHapley Ensemble model ( Predicting wind Collected from 
+external factor, for instance, season and time of use, 2) no significant Additive Cakiroglu et al., power and General 
+
+change (Park et al., 2018) reflecting stable energy demand during the exPlanations 2024) revealing feature Directorate of 
+(SHAP) importance that Meteorology at 
+
+observation time, which explain the stable use of energy, and 3) sig affects the power station 17,112 for 
+nificant decrease (Shi and Jiao, 2023) signaling a substantial reduction production Çanakkale 
+in energy use, enabling occupants to enhance their energy savings, province in 
+especially after periods of peak usage. These categories are chosen to Turkey
+
+provide more actionable insight, reduce cognitive load, enhance clarity Latent variables Autoencoder (Kim Predicting UCI household 
+and Cho, 2023) household power dataset
+
+and usability compared to finer states, which may increase complexity demand with 
+and decrease interpretability. autoencoder 
+
+To provide causal explanation, we employ Bayesian network (BN) as architecture and 
+
+a tool. Contrary to other explanation methods such as SHapley Additive explaining with 
+latent variables
+
+exPlanations (SHAP) (Lundberg and Lee, 2017) and Local Interpretable Association CNN-LSTM with Explaining power UCI household 
+Model-Agnostic Explanations (LIME) (Ribeiro et al., 2016b), BN could rule-based attention (Bu and demand prediction dataset
+give insight into cause-and-effect relationships and understanding why modular Cho, 2023) by modular 
+certain phenomena occur, which is important in various domains Bayesian Bayesian network 
+
+(Zhang, 2023) including power demand prediction (Buys et al., 2015; network constructed by 
+association rule 
+
+Khan, 2021). It is constructed using association rules (Bu and Cho, 2023) mining
+and structure learning for three power prediction categories. Further SHapley XGBoost, SVR, Input selection Gas heat pump 
+more, we analyze deep learning parameters (DLPs) to enhance inter Additive CART, LightGBM, using XAI method (GHP) installed in 
+pretability. While our method is applicable to any deep learning model, exPlanations LSTM (Sim et al., a university 
+
+(SHAP) 2022) building in Seoul, 
+in this study, we employ CNN-LSTM, one of the most widely used models and self-collected 
+for energy prediction. Based on the model’s structure, we leverage class time and season 
+activation maps (CAMs) and attention weights (ATTs) to explain the data
+factors influencing prediction results. For instance, a part of the acti SHapley Artificial neural Predicting heat Weather and heat 
+
+vation map would be activated because of the increasing pattern in Additive network (ANN) ( (climate control demand record 
+exPlanations Białek et al., 2022) device) demand from 2015 to 
+
+climate control devices and active power. By applying both prediction (SHAP) and providing 2019
+and explainability to the power consumption domain, effective con validation through 
+sumer behavior management can be achieved (Mosannenzadeh et al., SHAP
+2017). LIME (Local Elastic net Explaining the Opensource 
+
+Interpretable regularization, effect of household Household Travel 
+The rest of this paper is organized as follows. Section 2 provides the Model- Decision trees, travels, Survey (HTS) 
+
+related works in deep learning and explainability for power demand agnostic Random forest, demographics, and dataset
+prediction, and Section 3 proposes a method to predict power demand Explanations) ANN (Amiri et al., neighbor data on 
+with CNN-LSTM-attention network and explain the prediction results 2021) transportation 
+
+with Bayesian network with domain knowledge to improve its trust energy 
+consumption
+
+worthiness (Tang et al., 2022). Section 4 presents the experimental re Random forest Random forest ( Predicting load Self-collected 
+sults, including model performance, deep learning parameters analysis, feature Satre-Meloy et al., profiles and load profiles and 
+and qualitative evaluation of the explanation model. Finally, Section 5 importance 2020) identifying its key activities data
+discusses experimental results and future research directions, and activities
+
+2 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+example, Kim and Cho explained power conditions using latent variables Bayesian network structure learning process to improve the trustwor
+captured by an encoder-decoder architecture (Kim and Cho, 2023). thiness of the structure (Tang et al., 2022).
+
+For a non-self-explanation model, an explanation part is added after 
+the result of prediction is given, which is called post-hoc approach 3. The proposed method
+(Theissler et al., 2022). SHAP and LIME are popular post-hoc explanation 
+models which can be used to explain various machine learning models. We aim to endow the prediction model with explainability based on 
+SHAP provides the ability to understand features contribution of various causal relationships among variables, for which we utilize Bayesian 
+prediction models in individual observation (local) and global feature network to model causality. Causality could provide insight into the 
+contributions meanwhile LIME only supports local explanation. Global underlying mechanisms of power consumption patterns. This approach 
+feature contribution is useful to understand the significant factor of not only highlights the changes in certain aspects of energy use can 
+electricity demand, while local explanations provide explanations on affect another but also helps in distinguishing genuine causal relation
+how certain state of energy demand contribute to the current energy ships from spurious correlations (Richman and Roberts, 2023).
+demand pattern (EDP) (Rajapaksha and Bergmeir, 2022). Causality, understood as the cause-and-effect relationship from 
+
+Recent studies have significantly diversified the application of pre parent nodes to child nodes, is modeled within Bayesian network 
+dictive models in energy demand scenarios, showing the adaptability of through a directed acyclic graph (DAG). This relationship is inferred 
+XAI methods across various contexts. For instance, Cakiroglu et al. through causal discovery, which assumes relationships among variables 
+developed an ensemble model aimed at predicting wind power and and quantifies them using observational data (Lu et al., 2023; Nogueira 
+revealing key features that impact power production, using SHAP to et al., 2022). In this paper, we focus on three power consumption pat
+highlight these important attributes (Cakiroglu et al., 2024). In addition, terns: peak, no significant change, and lower than usual. With these 
+Bialek et al. employed an artificial neural network (ANN) to forecast the three representative states, we can explain the basic conditions to 
+demand for climate control devices, applying SHAP to validate the household occupants at each time step when they activate certain power 
+model’s prediction (Białek et al., 2022). Moreover, Sim et al. explored a states.
+combination of models, including XGBoost, SVR, CART, LightGBM, and 
+LSTM, for input selection in energy consumption, leveraging SHAP to 
+enhance the explainability of their methods (Sim et al., 2022). These 3.1. Overview
+examples demonstrate SHAP’s ability to provide vital explanation across 
+a variety of models and settings, highlighting its effectiveness in The method starts with CNN-LSTM neural network to predict energy 
+extracting meaningful insights from complex predictive models. How demand from time series data, as shown in Fig. 1. The architecture is 
+ever, despite its robustness in explaining various models, SHAP does not organized into two components, parallel CNN and LSTM modules to 
+address dependency or elucidate the causal relationships between extract spatial and temporal features (Section 3.2), and causal expla
+features. nation module that analyzes deep learning parameters and input fea
+
+However, due to complex interactions among variables in nature, Bu tures using Bayesian network (Section 3.3). The prediction result is 
+and Cho developed a Bayesian network based on association rule to categorized into one of three states, such as ‘peak warning’ (Alduailij 
+model the causal relationships (Bu and Cho, 2023). They combined et al., 2021), ‘no significant change’ (Park et al., 2018), and ‘lower than 
+observed variables and deep learning parameters such as activation usual’ (Shi and Jiao, 2023). Here, a statistical approach is used to detect 
+maps and attention weights to explain the current state of energy de an outlier based on the observed window in the prediction model. By 
+mand in a certain time window. Further analysis of the activation map looking at the state per window, energy demand patterns can be 
+and attention weights is conducted to improve the interpretation of the extracted based on some context, particularly observation windows that 
+XAI model. Furthermore, domain knowledge is employed in the we are interested in.
+
+The prediction triggers a Bayesian network with the causal 
+
+Fig. 1. Overall structure of the proposed method.
+
+3 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+relationship among features. The BN is constructed by structure learning 2024), including the electricity domain. Sn scale estimator is presented 
+with association rules (Alduailij et al., 2021) and domain knowledge by: 
+found in the literature. All variables in the observation data are dis
+cretized to provide not only simplicity but also interpretability and Sn = c*medianm{mediann{|xm − xn|}} (5) 
+computational efficiency (Chen et al., 2017). Lastly, further analysis of where m ∈ {0,1, ..,N − 1}, n ∈ {0,1, ..N − 1}, c = 1.1926, and n ∕= m. 
+deep learning parameters provides to improve the interpretability of the Since n denotes the last observation time, n is N − 1. Given data obser
+prediction result. vation at time xi, median at the observation window MED(X), and 
+
+correction parameter α = 1.4285, the calculation of Z-score value using 
+3.2. Energy prediction with CNN-LSTM with attention Sn (where n= i) can be obtained by equation (6). The result is then 
+
+filtered using a threshold to obtain three different EDPs as shown in 
+We develop parallel CNN-LSTM neural network with attention to equation (7). 
+
+capture spatial and temporal information separately. Temporal features 
+such as fluctuations and usage patterns are effectively captured by the |x − MED(X)|
+
+Z i
+Sn (xi)=
+
+through recognition over short-time windows and relationship α (6) 
+CNN × Sn
+
+between different input features. Temporal dependencies such as long- ⎧
+term trends and seasonal effects are better captured by the LSTM ⎨ ʹ́peak warningʹ́ , ZSn (xi) > threshold and ZSn (xi) > mx
+
+hrough its ability to learn sequence history. As a result, this method fEDP(ZSn (xi))= ʹ́lower than usuaĺ ʹt ,ZSn (xi) > threshold and ZSn (xi) < mx
+⎩
+
+minimizes the abstraction after putting LSTM in front of CNN (Zhang ʹ́no significant changeʹ́ , otherwise
+et al., 2021). Before feeding the data into the model, we adjust the (7) 
+number of input sequences into observations window ω and target label Next, we discretize the data into four different states of energy use, 
+l. For instance, we set ω into 80 timestamps, and l into one step ahead. 
+
+{ } which represent the typical use of energy from low to high (Bu and Cho, 
+The ith-power consumption data are denoted as xi = xi,1, …, xi,n , 2023). Quantile-based discretization is applied (equations (8) and (9)) to 
+where n is the observation window ω. After that, the pre-processed and the dataset, which has already been used to quantize energy consump
+normalized data are put into both CNN and LSTM respectively. tion data (Martinez Lagunas et al., 2021). 
+
+In convolution step, we use function ∅l
+Conv to map feature x into set of r
+
+feature representations learned by the convolution at layer l. This Qr =(N+1) , r ϵ 1, 2,3 (8) 
+4
+
+function can be stacked and produce a deep convolution layer by ⎧
+inserting the previous output of layer l into the function. In temporal ⎪ ʹ́Lowʹ́ , i ≤ Q1
+
+⎨
+feature extraction step, we extract two components after calculating f ʹ́Mediumʹ́ ,Q1 < i ≤ Q2
+
+Usage(xi)=
+∅o ʹ́Highʹ́ Q (9) 
+
+,Q
+LSTM as the LSTM operation. For N inputs, this function produces H = ⎪
+
+⎩ 2 < i ≤ 3
+
+{h1, ..,hN}, S = {s1, .., sN} and O = {o1, ..,oN}, as hidden state, cell state ʹ́Very Highʹ́ , i > Q3
+
+and output of LSTM, respectively. These three components are then used In addition, we perform data engineering to extract seasonal data 
+to calculate attention, a proven method to help the model pay more that influence other variables, such as season, day, weekend, and month.
+attention to the specific data point, such as time series data. To obtain Since deep learning model contributes directly to the prediction 
+the attention value of time n, first, we calculate the attention weights result (Cunningham et al., 2023), we extract attention weights an from 
+through the function fc(on,hN), which measures the relationship between equation (1) and activation map which shows the activation of certain 
+on and hN. prediction result (Zhou et al., 2016). The activation is obtained using 
+
+exp (f o quation (10), where 0 denotes a zero vector with a length of N, 
+a c( n, hN))
+
+e
+n = ∑N , for t=1,…,T (1) ed convolution output. Lastly, given the 
+
+k=1fc(ok, h
+obtaining only the last activat
+
+N) activation map and attention vector, K-means algorithm is used to get k 
+∑N groups of similar patterns (Satre-Meloy et al., 2020), selected using 
+
+cn = ak⋅h ) 
+k k (2
+=1 elbow method (Afzalan et al., 2021; Cen et al., 2022). 
+
+Using equations (1) and (2), we can obtain soft attention weights and ( ( { ( ) }))
+Activation Map=∅MLP Layer1 concat flattened ∅l
+
+context vectors for each time of LSTM output. To combine both Conv ;0N ,0N ∈ RN
+
+extracted representations from the parallel model, we simply concate (10) 
+
+nate both outputs of last layer from ∅l Association Rule Mining. Next, association rule mining is con
+Conv and learned context cN from the 
+
+LSTM attention layer, as shown in equation (3): ducted to extract useful relationships between symbols that are used to 
+{
+
+( { ( ) }) construct a Bayesian network. Given rule R and symbols S = SGAP Low,
+Xcombined }
+
+=concat flattened ∅l
+Conv ; cN (3) SIntensity Low,… , the relationship on the given symbols is shown as an if- 
+
+After the spatial-temporal features have been obtained, the last step then rule by the left-hand side (LHS) to the right-hand side (RHS), or 
+is to perform regression. Here, we use a multi-layer perceptron (MLP) to LHS→RHS (denoted by REDP = {r1,…,ri}). Utilizing Apriori algorithm, it 
+capture knowledge from the learned representation. We map this employs confidence and lift to assess the strength of the relationship 
+operation with function ∅MLP, which transforms x into prediction label ̂y beyond frequency. 
+as shown in equation (4). Support(LHS ∪ RHS)
+
+Confidence(LHS → RHS)= (11) 
+ŷ =∅MLP(Xcombined) (4) Support(LHS)
+
+3.3. Causal explanation with Bayesian network Support(LHS ∪ RHS)
+Lift(LHS → RHS)= (12) 
+
+Support(LHS)Support(RHS)
+Symbol Extraction. To design the Bayesian network, we extract As suggested by Bu and Cho (2023), the Bayesian network is con
+
+symbols from the observation data by discretizing the continuous value structed to present causal relationships between symbols based on as
+to improve the interpretability using two methods. First, we identify the sociation rules. In addition, this model is useful for avoiding collisions 
+prediction result out of three states, peak, no significant change, and between rules on a power demand condition. We improve it by incor
+decrease using statistical technique. Sn scale estimator is used for outlier porating domain knowledge when constructing the network for a better 
+detection, which is more robust to a noisy environment (Yaro et al., 
+
+4 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+interpretation. In this paper, we find causal relationships that occur in Table 2 
+energy demand from literature. Grouped causal themes with the corresponding observed variables.
+
+Structure Learning. Bayesian network is defined by equation (13), Theme Observed Variables
+where N, e, and Pa represent nodes, evidence, and parents, respectively. 
+
+Physical environment Date, time, season, day of week
+The posterior probability N given evidence e is calculated by P(N|e). Energy demand Peak warning, no significant change, lower than usual
+Using Bayesian network, we present a causal effect of variables A to B pattern
+using directed arc as A→B. Electricity Global reactive power, voltage, global intensity, global 
+
+∏ ∏ ∏ consumption active power
+P(N|e)= P(N|Pa(N)) × e = P(N|Pa(N)) ei (13) Appliance usage Sub-metering 1 (kitchen), sub-metering 2 (laundry), sub- 
+
+ei∈e (appliance) metering 3 (climate control), sub-metering 4 (other)
+
+Determining the structure of Bayesian network is inherently chal
+lenging due to the complex interdependencies between variables. Fig. 3 shows the Bayesian network designed with the extracted 
+Different structural configurations can lead to significantly different symbols as mentioned previously. The network consists of three main 
+interpretations and insights, making the choice of structure crucial for structures, representing three different power conditions in the t step 
+accurate model outcomes (Bu and Cho, 2023). To address this issue, we ahead after the observation window, five variable themes, twelve 
+actively incorporate domain knowledge into the learning process. This observed variables, and four deep learning parameters. The Bayesian 
+integration not only guides the structural design but also significantly network constructed using the rule from domain knowledge helps it 
+improves the interpretability of our model, ensuring that the results are learn interpretable structures. For example, no notable change is 
+both meaningful and actionable in practical scenarios. Fig. 2 depicts the affected by physical environment and electricity consumption. While 
+full pipeline of structure learning. the current structure reflects the characteristics of the dataset used, 
+
+Buys et al. developed a structural model to identify critical factors of deploying the model in different building types and regions may require 
+peak demand from complex, interacting factors and grouped variables adjusting the network to account for regional differences in climate, 
+by themes such as house type, physical environment, and appliances to infrastructure, and consumption behavior. The Bayesian network should 
+explain the model’s behavior patterns (Buys et al., 2015). In contrast, be retrained or adapted with localized data and domain knowledge to 
+Khan created a model that provides causal relationships between factors maintain the interpretability and reliability of causal explanation.
+influencing energy peak demand in two different views—daily and Deep Learning Parameter Interpretation. Since our method uses 
+seasonal—highlighting that peak demand occurs in seasonal patterns DLP to explain EDP, it is required for user to be able to interpret SCAM 
+(Khan, 2021). Using that knowledge, four themes are extracted from our and SATT. To interpret the DLPs, clustering analysis (Satre-Meloy et al., 
+observed variables (Table 2) from UCI household dataset. The variables 2020) with cosine similarity threshold are utilized to extract patterns 
+are connected from physical environment → appliance usage →  elec based on the corresponding DLP cluster. Furthermore, in the clustering 
+tricity consumption → peak demand. Since the DLPs contribute directly phase of SATT , instead of using raw data, the cumulative of each feature 
+to the prediction result based on the observation window, we assume is used to capture temporal variations in the dataset.
+that every DLP has an independent connection to the peak demand. The SCAM obtained after the clustering process contains useful in
+
+To construct the Bayesian network using association rules and formation about specific power state conditions. For example, cluster A 
+domain knowledge, we employ a structure learning algorithm using displays an increasing pattern in the climate control device, while 
+software Genie Academic v4.1. Our method (Fig. 2) differs in that we cluster B shows the opposite. Although this information is naturally 
+apply domain knowledge to avoid unusual relationships by implementing grouped according to similar patterns, we recognize that only several 
+a domain knowledge (DK) restriction based on the theme. One of the re features may exhibit consistent patterns. To identify these useful fea
+strictions is that the node cannot have a causal relationship direction tures, we utilize cosine similarity (Manzo-et al., 2013) for each feature 
+from child to parent based on the known DK. For instance, rather than within its cluster and then apply a threshold to filter them. These filtered 
+forming a relationship from peak warning to global active power, our features are then analyzed and used to enhance the interpretability of 
+method intends to establish a relationship from global active power to our model. Given observation data Xc,f of feature f at cluster c, the 
+peak demand. This is achieved by prohibiting reverse connections be average cosine similarity is given by: 
+tween themed variables and by only evaluating the strength of the ( ( ))
+connections in the appropriate manner. Furthermore, since DLPs AverageCosineSimilarity=Mean cosine xcfi , xcfj (14) 
+directly impact the prediction results, it is assumed that there is a direct 
+connection between DLPs and the prediction outcomes in EDPs. where i = {0,1, ..,N − 1}, j = {0,1, ..,N − 1}, i ∕= j.
+
+Fig. 2. Structure learning with domain knowledge.
+
+5 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+Fig. 3. Bayesian network for three representative energy prediction patterns in step ahead.
+
+Lastly, to get interpretable SATT, we perform cumulative clustering method, starting with training the prediction model, symbol extraction, 
+proposed by Satre-Meloy et al. which is useful to extract temporal Bayesian network initialization and finally returning the Bayesian 
+variation of the attention vector (Satre-Meloy et al., 2020). To conduct network as causal explanation framework.
+this process, at first, the attention vectors are normalized by subtracting 
+the minimum demand from each hourly value (referred to as 4. Experimental results
+’de-minning’). Then, each hour’s consumption is divided by the total 
+’de-minned’ consumption. Given attention vector Ac at cluster c, the 4.1. Dataset
+cumulative data is given by the following equation (15). 
+
+We evaluate the proposed method with two real datasets such as the 
+∑N
+
+C(Ac)= ai (15) UCI individual household electricity dataset and the REFIT dataset. The 
+i=1 former contains 2,075,259 measurements gathered in 1-min time reso
+
+This is applied to all features of the cluster members. Finally, the lution with eight attributes, such as collection time, active power, 
+preprocessed attention vector is clustered using K-means algorithm and reactive power, voltage, intensity, and four sub-meterings for kitchen, 
+visualized for better interpretability. laundry, climate control, and other appliances. The latter consists of 
+
+To conclude, Fig. 4 summarizes the algorithm of the proposed 5,733,526 measurements, sampled with 8-s intervals. This dataset has 
+
+Fig. 4. The algorithm of the proposed method.
+
+6 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+11 attributes, such as sample time, aggregate power or total load, and Table 4 
+nine different household appliances. In addition, feature extraction is Comparison of the proposed method with the other CNN-LSTM models (MSE).
+performed by extracting day, month, season, and weekend to improve Time Resolution S-CNNLSTM S-CNNLSTMAtt P-CNNLSTMAtt (ours)
+the prediction result with better interpretability.
+
+UCI Household Dataset
+15M 0.00364 0.00330 0.00307
+
+4.2. Prediction accuracy 30M 0.00649 0.00636 0.00431
+1H 0.00797 0.00704 0.00386
+
+First, we compare the performance of the proposed model with other 1D 0.00624 0.00693 0.00312
+REFIT Household Dataset
+
+methods. We use mean squared error (MSE), root mean square error 15M 0.01485 0.01455 0.01433
+(RMSE), and mean absolute error (MAE) to compare the gap between 30M 0.00326 0.00415 0.00303
+the prediction result and the real value in the time series. The lower the 1H 0.01151 0.01143 0.00886
+value, the better the model’s performance. 1D 0.01823 0.01852 0.01787
+
+1 ∑N
+MSE 2
+
+= (y − ) 1 )
+n i ŷi ( 6  explanation result from Partial Dependence (PD) Variance (Greenwell 
+
+i=1 et al., 2018), LIME, SHAP and our method, as outlined in the previous 
+√̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅ study (Bu and Cho, 2023). A higher similarity indicates a consistent 
+√
+√1 ∑N model under different data conditions, suggesting consistent feature 
+
+RMSE √ (yi − ŷ 2
+= i) (17) 
+
+N attribution (Lundberg and Lee, 2017). As shown in Table 5, our model 
+i=1
+
+consistently achieves higher similarity scores across all energy demand 
+conditions compared to PD Variance, LIME and SHAP. These results 
+
+∑N
+|yi − ŷi | further demonstrate that the proposed method is robust against 
+
+MAE i=1
+= (18) 
+
+n overfitting.
+Interpretable Deep Learning Parameters. We employ the clus
+
+We compare standalone CNN and LSTM models with other time se tering method on the preprocessed cumulative data and select the best 
+ries prediction methods and hybrid models, including the proposed cluster with the elbow method based on the within-cluster sum squares 
+method. The experiments are conducted at a 15-min time resolution and (WCSS). A threshold is applied after measuring the similarity to identify 
+evaluated using multiple metrics. As shown in Table 3, the proposed features that have consistent patterns. Fig. 6 shows the clustering and 
+method not only outperforms the standalone models but also the other similarity measurement with threshold 0.5, with left cluster 1, and right 
+model categories. This suggests that combining spatial features from cluster 2 from activation map. From this result, we can conclude that the 
+CNN and temporal features from LSTM significantly enhances energy CAM type 1 is activated because there are increasing patterns in the 
+prediction accuracy. laundry, climate control and other unspecified devices. Meanwhile, 
+
+Building on these findings, we compare the proposed CNN-LSTM- CAM type 2 is activated because of the decreasing patterns in laundry, 
+attention model with state-of-the-art methods. As shown in Table 4, kitchen, and climate control usages. This result is very intuitive when 
+our model consistently achieves superior performance across four used to interpret Bayesian network structure. For example, ‘lower than 
+different time resolutions while maintaining statistical significance in usual’ and ‘no significant change’ are caused by CAM type 2. It indicates 
+the t-test, outperforming previous models (Kim and Cho, 2019; Bu and that a lower consumption of power would be achieved if the household 
+Cho, 2020), especially serial configuration with average 34.84 % and occupants decreased their appliance usage, such as laundry, kitchen, 
+13.63 % improvement in UCI and REFIT household datasets, respec and climate control.
+tively. Additionally, as shown in Fig. 5(a), the model effectively detects The second valuable information from deep learning parameters is 
+sharp peaks, which is particularly useful for addressing peak demand the attention vector. This vector highlights important parts of the spe
+issues. The improved results (Fig. 5(b) and Table 4) stem from the richer cific time that carries more information (Heidari and Khovalyg, 2020). 
+and more detailed spatial-temporal features extracted in parallel rather For example, the attention vector assigns higher weights to the times 
+than in a serial configuration. displaying an increasing pattern, rather than to those with a decreasing 
+
+pattern. Utilizing the method described in the previous section, three 
+4.3. Explainability of prediction results clusters of attention vectors have been identified and visualized in Fig. 7. 
+
+Late attention highlights an increasing pattern of power usage, while 
+Consistency is an important aspect in explanation model (Pillai and early attention indicates a decreasing trend. Meanwhile, the ’other’ 
+
+Pirsiavash, 2021) which accurately reflects the underlying reasoning of category captures undefined patterns, potentially reflecting fluctuations 
+the AI systems to build trust and ensure reliability. To assess this, we or stability in power demand.
+evaluate the structure of the constructed model (Fig. 3) using cosine According to the learned Bayesian network, the ’no significant 
+similarity on both the training and test sets. This evaluation compares 
+
+Table 3 
+Comparison with other models across three different performance metrics.
+
+Category Method UCI Household Dataset Refit Dataset
+
+MSE RMSE MAE MSE RMSE MAE
+
+Ensemble model XGBoost (Sim et al., 2022) 0.01440 0.12000 0.08078 0.01739 0.12937 0.07820
+Statistical model ARIMA 0.01307 0.11306 0.09022 0.01582 0.12349 0.06858
+Nonlinear dynamic model SINDy (Brunton et al., 2016) 0.00596 0.07701 0.04701 0.03107 0.17627 0.09226
+Machine learning model SVR (Sim et al., 2022) 0.01839 0.13559 0.12223 0.02531 0.14981 0.10156
+
+ANN (Białek et al., 2022) 0.00434 0.06588 0.04437 0.02010 0.14177 0.09599
+CNN 0.01982 0.14077 0.11784 0.04469 0.21141 0.16713
+LSTM (Sim et al., 2022) 0.00373 0.06102 0.03961 0.01447 0.12017 0.06464
+
+Hybrid model S-CNN-LSTM (Kim and Cho, 2019) 0.00364 0,06033 0.03895 0.01485 0.12185 0.06409
+S-CNNLSTMAtt (Bu and Cho, 2020) 0.00330 0.05744 0.03904 0.01455 0.12062 0.06407
+P-CNNLSTMAtt (Ours) 0.00307 0.05541 0.03628 0.01433 0.11971 0.06369
+
+7 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+Fig. 5. (a) Prediction performance of parallel CNN-LSTMs with attention and (b) comparison with other CNN-LSTM methods.
+
+change’ and ’peak warning’ EDP classifications are influenced by the 
+Table 5 ’other’ and ’early’ attention types, respectively. The first EDP state oc
+Consistency comparison of our method and Shapley value to provide global curs when power levels are stable. Interestingly, our deep learning 
+explanation using similarity measurements.
+
+model captures a decreasing pattern before a peak warning occurs. This 
+Energy Demand Pattern PD Variance LIME SHAP Ours indicates that the state of peak warning is likely to happen when overall 
+Lower than usual 0.80629 0.69221 0.95310 0.99974 demand is lower, followed by a sudden jump in energy usage that in
+No significant change 0.92643 0.75056 0.96091 0.99983 creases the demand. To conclude, these results show that attention 
+Peak warning 0.96062 0.70791 0.95840 0.99940 vector is important to understand common patterns that affect some 
+
+power state based on historical information (see Table 6 for a summary 
+
+Fig. 6. Filtered patterns of two clusters of activation maps (left: type 1, right: type 2) using average cosine similarity.
+
+Fig. 7. Three different patterns of attention vectors captured by cumulative clustering technique.
+
+8 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+of DLPs interpretations). 4.4. Computation overhead
+Causal Explanations for Three EDPs. We evaluate the compre
+
+hensiveness of our method (Rajapaksha and Bergmeir, 2022) for causal In this section we provide an additional experiment to compare the 
+explanation by presenting a summary of the Bayesian network and potential computation overhead produced by our explainable method 
+conducting a sensitivity analysis using tornado chart. We can provide compared to SHAP and LIME. To compare the performance, we use 10 
+relevant explanations and implications for household occupants, offer different sample sizes from 10 to 100. For the proposed method utilizing 
+ing actionable insight to avoid peak load events, due to the global the Bayesian Network, we calculate the time required from structure 
+explanation capabilities of the Bayesian network. This explanation sce learning to inference, while for LIME and SHAP, we compute the time 
+nario is based on the energy domain, thus reflecting a real-world required to assign feature contributions for each sample size. Table 7
+approach to energy saving. The results expect to improve the domain presents the execution time results, and Fig. 10 shows the comparison.
+of consumer behavior management, enhancing both information The results indicate that SHAP has the highest computational cost, 
+awareness and demand management (Mosannenzadeh et al., 2017). with execution time increasing exponentially as the sample size grows, 
+
+Peak warning. In Fig. 8, early attention is expected to hit 53 %, reaching 28,035 s (~7 h) for 100 samples. This is due to SHAP’s need to 
+meaning that the global decreasing pattern would trigger a peak. generate multiple feature subsets and rerun the prediction model for 
+Furthermore, a very high state of global active power and climate con each, significantly increasing complexity (Lundberg et al., 2020). LIME, 
+trol is observed, with probabilities of 48 % and 50 % respectively. It is while more efficient than SHAP, still requires more time than BN, as it 
+also shown that there is only a 33 % chance that weekends contribute to perturbs samples and fits a surrogate model for each prediction. In 
+the peak. The sensitivity analysis in Fig. 9 reveals that very high usage of contrast, BN remains computationally efficient, making it a scalable 
+climate control has the greatest influence on peak. In contrast, the low alternative for explainability.
+state of climate control reduces the probability of peak warning to 34 %. Table 8 shows the execution time of structure learning and inference 
+
+Actionable insight: Given the high sensitivity of the peak warning state time of the Bayesian network. Structure learning is performed once on 
+to the usage of climate control devices, household occupants are advised the dataset and takes considerably more time (~433.61 s) compared to 
+to carefully avoid setting these devices to very high levels, as this could inference, which averages 1.3 s per data instance. Moreover, the struc
+result in excessive power consumption. ture learning is expected to increase due to the number of data and 
+
+Lower than usual. In contrast to peak times, lower state occurs due to variables (Huang and Suzuki, 2024). However, since structure learning 
+an 85 % decrease in activity involving kitchen, laundry, and climate is conducted only once during model initialization, the low inference 
+control devices, as indicated by CAM type 2. Our model suggests that time makes the approach efficient and well suited for repeated real-time 
+reducing the use of these devices can significantly decrease power queries.
+consumption and lead to energy savings. This reduction is characterized In addition, we also evaluate running time on three different con
+by a low intensity (42 %) and a decrease in global active power con figurations of CNN-LSTM variants, presented in section 4.2. For this 
+sumption (39 %). Additionally, based on sensitivity analysis, our model evaluation, each model is required to predict (t+1) condition after 
+captures weekday and very high usage of ‘other’ appliances as the observing 80 data points from previous observation, with 1 h time res
+opposite cause of lower EDP. olution. As shown in Table 9, more complex models tend to have a 
+
+Actionable insight: Household occupants should avoid the very high longer running time. Combining these results with those from Table 4, 
+usage of ‘other’ appliances and instead use them at medium intensity to an accurate model comes with the tradeoff of a higher inference time. 
+save energy. Additionally, by reducing the usage of kitchen, laundry, However, when considering inference for the next hour, the inference 
+and climate control devices, significant energy savings can be achieved. time is still negligible, where it only takes approximately ¼ seconds.
+
+No significant change. Based on the Bayesian network, a stable state 
+of energy consumption is achieved when the global active power and 4.5. Ablation study
+intensity are maintained at steady levels, as evidenced by the even 
+distribution of low, medium and high states. Additionally, undefined We conduct an ablation study to evaluate the contribution of each 
+fluctuations or stable conditions are also captured by the ’other’ atten architectural component (Fig. 11) in our CNN-LSTM with attention 
+tion category. Furthermore, a decreasing pattern of laundry, kitchen, model. Table 10 shows the model components. The full model (p-c-l-a) 
+and climate control contributes to maintaining stable energy consump have achieved the best performance across all metrics, demonstrating 
+tion, as shown by CAM 2. the effectiveness of combining CNN, LSTM, and attention in parallel 
+
+Actionable insight: Using households’ appliances without a sudden configuration. Removing attention mechanism (p-c-l) leads to a slight 
+jump in energy consumption will lead to stability. Similar to the lower drop in performance, which indicates its marginal contribution. Serial
+EDP scenario, avoiding increased usage of kitchen, laundry, and climate izing the CNN and LSTM (s-c-l-a) reduces the model’s performance, 
+control devices also help preserve this stability. implying that parallel model captures better patterns and reduces the 
+
+abstraction in the serial model.
+We conduct additional ablation studies on the explanation module 
+
+by removing deep learning parameters (DLPs) from the Bayesian 
+network. As presented in Fig. 12, model with DLP achieves higher 
+
+Table 6 similarity score, indicating more stable and consistent explanations. It 
+Summary of deep learning parameters with their interpretation. demonstrates the positive impact of incorporating DLP into the 
+
+Deep Learning Meaning/Interpretation explanation.
+Parameter Furthermore, we investigate the performance of the Bayesian 
+CAM 1 Increasing pattern of laundry, climate control, and other network under different discrete states after quantization (q) using 
+
+equipment in time observation normalized accuracy. As shown in Fig. 13, the performance of the 
+CAM 2 Decreasing pattern of laundry, kitchen, and climate Bayesian network improves slightly as the number of discrete states 
+
+control equipment in time observation increases. However, increasing the number of states may harm inter
+Late Attention Increasing pattern for overall energy demand in time 
+
+observation pretability, and explanations become harder to interpret. Therefore, 
+Early Attention Decreasing pattern for overall energy demand in time keeping the number of discrete states moderately can provide a proper 
+
+observation balance between accuracy and interpretability.
+Other Attention Stable or fluctuation pattern for overall energy demand in 
+
+time observation
+
+9 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+Fig. 8. Bayesian network with activated state for each EDP.
+
+Fig. 9. Sensitivity analysis for the top three variables across three different power states, with the activated state set to True. Green bars represent the probability of 
+the power demand state after adjusting the specified variables (shown at the left side of the chart).
+
+Table 7 
+Detailed execution time of ours and SHAP in seconds.
+
+Number of samples Peak warning Lower than usual No significant change
+
+Ours LIME SHAP Ours LIME SHAP Ours LIME SHAP
+
+10 1.33 423.18 276.10 34.84 391.60 280.24 7.96 380.81 279.86
+20 1.03 825.68 1111.88 75.89 784.09 1139.26 84.19 747.14 1112.59
+30 1.12 1278.01 2469.99 83.19 1194.38 2518.18 87.32 1163.26 2504.12
+40 4.17 1689.97 4405.23 74.59 1586.76 4579.30 77.63 1536.23 4483.85
+50 35.41 2043.63 6865.26 92.41 1905.70 7123.45 78.34 1903.77 6993.48
+60 34.92 2499.03 9921.59 92.32 2287.22 10129.52 80.32 2266.80 9860.84
+70 38.08 2934.85 13423.01 76.07 2662.96 13774.26 81.12 2583.06 13475.34
+80 38.54 3346.10 17380.71 77.21 3111.94 17788.01 75.45 2955.13 17584.21
+90 41.38 3703.97 22027.83 73.57 3493.91 22465.37 77.12 3294.90 22101.64
+100 35.50 4033.92 27310.59 79.78 3868.97 28035.31 77.97 3783.67 27456.40
+
+4.6. Model limitation in the input values and measure the relative increase of prediction error. 
+Higher error indicates the model is prone to noise. As shown in the 
+
+In this section, we explore the limitations of the proposed model. figure, serial models (s-cnn-lstm-att and s-cnn-lstm) are more robust to 
+Fig. 14 shows its performance compared to other CNN-LSTM configu the noise. Furthermore, adding attention can improve the model per
+rations with feature perturbations. We introduce noise at various levels formance (p-cnn-lstm-att and s-cnn-lstm-att), implying that this 
+
+10 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+Fig. 10. Execution time comparison of SHAP (left), LIME (right), and our method across different sample sizes.
+
+usage as suggested by CAM type 2 could increase the probability of 
+Table 8 lower energy consumption. These results highlight the effectiveness of 
+Runtime comparison of structure learning and infer
+ence (seconds). combining architectural innovations with a causal explanation frame
+
+work to improve both performance and interpretability.
+Step Time Despite those findings, we acknowledge that this work has not been 
+Structure learning 433.61 explored for (t+n) prediction setting, which indeed could introduce 
+Inference 1.30 both modeling and interpretability challenges. From a prediction 
+
+standpoint, longer-term forecasts require the model to effectively cap
+ture seasonal patterns, longer dependencies, and effective temporal 
+
+Table 9 structure. Moreover, as the horizon extends, the feature space becomes 
+Execution time comparison on different CNN-LSTM model configurations in less certain and not directly observable, which increases the complexity 
+milliseconds (ms) with average and standard deviation. of the task. Meanwhile, in terms of causal explanation, the reliability of 
+
+Metrics S-CNNLSTM S-CNNLSTMAtt P-CNNLSTMAtt (ours)
+
+Average (ms) 186.065 236.639 260.857 Table 10 
+Stdev (ms) 2.773 14.878 9.831 Description of model components.
+
+Component Description
+component plays a key role in mitigating the effect of noisy input. p Parallel configuration of CNN and LSTM
+
+s Serial configuration of CNN and LSTM
+5. Discussion c CNN module
+
+l LSTM module
+
+This study was motivated by the need for accurate and interpretable a Attention module
+
+energy demand forecasting models that can support or influence energy- 
+saving behavior among household occupants. Deep learning models 
+such as CNN-LSTM have proven effective in capturing temporal and 
+spatial features but lack interpretability especially in high stake do
+mains. To solve it, we have proposed a method that integrates a parallel 
+CNN-LSTM-attention with causal explanation which captures relation
+ship among input features, deep learning parameters and prediction 
+result. As a result, the proposed method not only provides accurate 
+prediction, but also demonstrates the ability to generate interpretable 
+causal explanation that can support both user understanding and 
+informed decision-making.
+
+The evaluation has shown that the proposed model consistently 
+outperformed other time series prediction models, including baseline 
+CNN-LSTM-attention in serial configuration, with up to 34 % improve
+ment in prediction accuracy on the household dataset. Moreover, abla
+tion study uncovers the parallel structure with attention contributes to a 
+better performance than the baseline. Furthermore, the integration of 
+CAM and ATT enables the model to provide interpretable patterns 
+aligned with domain expectation. For example, reduction of appliance Fig. 12. Ablation study results on DLP integration in Bayesian network.
+
+Fig. 11. Ablation study results on different model configurations.
+
+11 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+presents an innovative approach that bridges accurate forecasting and 
+interpretability challenge and provides actionable insight in energy 
+system, which is an important goal in AI for sustainability.
+
+In the future, we plan to explore additional capabilities of the 
+Bayesian network, such as automated structure learning, dynamic 
+structure to handle new data, and extended causal explanation features. 
+In addition, we will improve our method so that it is not limited to a 
+specific domain but can have a broader impact and generalization. 
+Especially, in the biomedical domain, it can enhance decision-making by 
+providing transparent insights into patient conditions, and in industrial 
+domain, it can monitor and explain parameter changes in complex 
+system, such as gas pipelines (Zapukhliak et al., 2019).
+
+CRediT authorship contribution statement
+Fig. 13. Normalized model performance under different discrete states.
+
+Gatum Erlangga: Writing – original draft, Visualization, Method
+ology, Formal analysis, Data curation. Sung-Bae Cho: Writing – review 
+& editing, Validation, Supervision, Resources, Methodology, Investiga
+tion, Funding acquisition, Formal analysis, Conceptualization.
+
+Declaration of competing interest
+
+The authors declare the following financial interests/personal re
+lationships which may be considered as potential competing interests: 
+Sung-Bae Cho reports financial support was provided by Institute of 
+Information & Communications Technology Planning & Evaluation and 
+Air Force Office of Scientific Research. If there are other authors, they 
+declare that they have no known competing financial interests or per
+sonal relationships that could have appeared to influence the work re
+ported in this paper.
+
+Fig. 14. Experiment results of model robustness to noise.
+Acknowledgments
+
+explanations depends on how well the model captures meaningful and 
+stable features over a longer temporal context. For example, under This work was supported by the Yonsei Fellow Program funded by 
+standing the usage of an entire upcoming month may require seasonal Lee Youn Jae, IITP grant funded by the Korea government (MSIT) (No. 
+knowledge. Therefore, the model must identify features that are robust RS-2022-II220113, Developing a Sustainable Collaborative Multi-modal 
+across time, not just locally relevant at t. Lifelong Learning Framework), and Air Force Defense Research Sciences 
+
+Future work can focus on these directions: First, extending the pro Program funded by Air Force Office of Scientific Research.
+posed method beyond one step ahead (t+1) forecasting to support 
+multi-step (t + n), which requires improved handling of long-term de Data availability
+pendencies and stable generation of explanation over time. Second, it is 
+worth exploring the capabilities of the proposed method in the different Data will be made available on request.
+domains beyond household energy consumption. Lastly, the explanation 
+module could be used in other deep learning architecture, for example References
+Transformer model. Afzalan, M., Jazizadeh, F., Eldardiry, H., 2021. Two-stage clustering of household 
+
+electricity load shapes for improved temporal pattern representation. IEEE Access 9, 
+6. Concluding remarks 151667–151680.
+
+Alduailij, M.A., Petri, I., Rana, O., Alduailij, M.A., Aldawood, A.S., 2021. Forecasting 
+peak energy demand for smart buildings. J. Supercomput. 77, 6356–6380.
+
+In this paper, we have proposed parallel CNN-LSTM with attention to Amiri, S.S., Mottahedi, S., Lee, E.R., Hoque, S., 2021. Peeking inside the black-box: 
+give a prediction in (t+1) step ahead, which outperforms the statistical, explainable machine learning applied to household transportation energy 
+
+machine learning, ensemble, and hybrid CNN-LSTM methods. Further consumption, Computers. Environment and Urban Systems 88, 101647.
+Bertoldi, P., 2022. Policies for energy conservation and sufficiency: review of existing 
+
+more, a method to explain three energy demand prediction states using policies and recommendations for new and effective policies in OECD countries. 
+Bayesian network is provided. We improve the interpretation of the Energy Build. 264, 112075.
+Bayesian network so it can be easier to understand for household oc Białek, J., Bujalski, W., Wojdan, K., Guzek, M., Kurek, T., 2022. Dataset level explanation 
+
+of heat demand forecasting ANN with SHAP. Energy 261, 125075.
+cupants by incorporating domain knowledge and deep learning Brunton, S.L., Proctor, J.L., Kutz, J.N., 2016. Discovering Governing Equations from Data 
+parameter analysis, aligned with interpretability criteria (Mavrepis by Sparse Identification of Nonlinear Dynamical Systems, 113. Proceedings of the 
+et al., 2024). It is found that deep learning can capture spatial and national academy of sciences, pp. 3932–3937.
+
+Bu, S.-J., Cho, S.-B., 2020. Time series forecasting with multi-headed attention-based 
+temporal data through parallel configuration of CNN-LSTM with atten deep learning for residential energy consumption. Energies 13, 4722.
+tion. This separation not only increases the prediction model’s perfor Bu, S.-J., Cho, S.-B., 2023. A causally explainable deep learning model with modular 
+mance but also improves its interpretability through further analysis. Bayesian network for predicting electric energy demand. In: 18th Int. Conf. on 
+
+Hybrid Artificial Intelligence Systems, pp. 519–532.
+Furthermore, we have demonstrated that our method is able to Buys, L., Vine, D., Ledwich, G., Bell, J., Mengersen, K., Morris, P., Lewis, J., 2015. 
+
+provide explanations in the energy domain, especially in consumer A framework for understanding and generating integrated solutions for residential 
+behavior management (Mosannenzadeh et al., 2017). This is achievable peak energy demand. PLoS One 10, e0121195.
+
+Cakiroglu, C., Demir, S., Ozdemir, M.H., Aylak, B.L., Sariisik, G., Abualigah, L., 2024. 
+because Bayesian networks offer various analytical tools in addition to Data-driven interpretable ensemble learning methods for the prediction of wind 
+their structure to provide causal explanations. The proposed method turbine power incorporating SHAP analysis. Expert Syst. Appl. 237, 121464.
+
+12 
+
+
+
+G. Erlangga and S.-B. Cho                                                                                                                                             E  n  g  in  e  e r  in  g   A  p  p l i c  a t i o  n  s  o  f   A  r  t i   c i a  l  I n t  e l l i g e  n  c e  1 62 (2025) 112620 
+
+Cen, S., Yoo, J.H., Lim, C.G., 2022. Electricity pattern analysis by clustering domestic Park, E., Kim, B., Park, S., Kim, D., 2018. Analysis of the effects of the home energy 
+load profiles using discrete wavelet transform. Energies 15, 1350. management system from an open innovation perspective. J Open Innov. Technol. 
+
+Chen, Y.-C., Wheeler, T.A., Kochenderfer, M.J., 2017. Learning discrete Bayesian Mark. Complex. 4, 31.
+networks from continuous data. J. Artif. Intell. Res. 59, 103–132. Pillai, V., Pirsiavash, H., 2021. Explainable models with consistent interpretations. In: 
+
+Chung, J., Jang, B., 2022. Accurate prediction of electricity consumption using a hybrid 35th AAAI Conf. on Artificial Intelligence, pp. 2431–2439.
+CNN-LSTM model based on multivariable data. PLoS One 17, e0278071. Pinto, T., Praça, I., Vale, Z., Silva, J., 2021. Ensemble learning for electricity 
+
+Cunningham, H., Ewart, A., Riggs, L., Huben, R., Sharkey, L., 2023. Sparse autoencoders consumption forecasting in office buildings. Neurocomputing 423, 747–755.
+find highly interpretable features in language models. arXiv preprint arXiv: Rajapaksha, D., Bergmeir, C., 2022. Limref: local interpretable model agnostic rule-based 
+2309.08600. explanations for forecasting, with an application to electricity smart meter data. In: 
+
+Greenwell, B.M., Boehmke, B.C., McCarthy, A.J., 2018. A simple and effective model- 36th AAAI Conf. on Artificial Intelligence, pp. 12098–12107.
+based variable importance measure. iv Preprint arXiv:1805.04755. Ribeiro, M.T., Singh, S., Guestrin, C., 2016a. Model-agnostic interpretability of machine 
+
+Hasan, M., Mifta, Z., Salsabil, N.A., Papiya, S.J., Hossain, M., Roy, P., Farrok, O., 2023. learning. arXiv preprint arXiv:1606.05386.
+A critical review on control mechanisms, supporting measures, and monitoring Ribeiro, M.T., Singh, S., Guestrin, C., 2016b. Why should i trust you?" explaining the 
+systems of microgrids considering large scale integration of renewable energy predictions of any classifier. In: Proceedings of the 22nd ACM SIGKDD International 
+sources. Energy Rep. 10, 4582–4603. Conference on Knowledge Discovery and Data Mining, pp. 1135–1144.
+
+Heidari, A., Khovalyg, D., 2020. Short-term energy use prediction of solar-assisted water Richman, J.T., Roberts, R.J., 2023. Assessing spurious correlations in big search data. 
+heating system: application case of combined attention-based LSTM and time-series Forecasting 5, 285–296.
+decomposition. Sol. Energy 207, 626–639. Satre-Meloy, A., Diakonova, M., Grünewald, P., 2020. Cluster analysis and prediction of 
+
+Heo, J., Song, K., Han, S., Lee, D.-E., 2021. Multi-channel convolutional neural network residential peak demand profiles using occupant activity data. Appl. Energy 260, 
+for integration of meteorological and geographical features in solar power 114246.
+forecasting. Appl. Energy 295, 117083. Shi, R., Jiao, Z., 2023. Individual household demand response potential evaluation and 
+
+Huang, H., Suzuki, J., 2024. An efficient procedure for computing bayesian network identification based on machine learning algorithms. Energy 266, 126505.
+structure learning. arXiv preprint arXiv:2407.17072. Sim, T., Choi, S., Kim, Y., Youn, S.H., Jang, D.-J., Lee, S., Chun, C.-J., 2022. Explainable 
+
+Ijaz, K., Hussain, Z., Ahmad, J., Ali, S.F., Adnan, M., Khosa, I., 2022. A novel temporal AI (XAI)-based input variable selection methodology for forecasting energy 
+feature selection based LSTM model for electrical short-term load forecasting. IEEE consumption. Electronics 11, 2947.
+Access 10, 82596–82613. Song, S.-Y., Leng, H., 2020. Modeling the household electricity usage behavior and 
+
+Khan, I., 2021. Household factors and electrical peak demand: a review for further energy-saving management in severely cold regions. Energies 13, 5581.
+assessment. Adv. Build. Energy Res. 15, 409–441. Stern, P.C., Janda, K.B., Brown, M.A., Steg, L., Vine, E.L., Lutzenhiser, L., 2016. 
+
+Khan, A.M., Osińska, M., 2023. Comparing forecasting accuracy of selected grey and time Opportunities and insights for reducing fossil fuel consumption by households and 
+series models based on energy consumption in Brazil and India. Expert Syst. Appl. organizations. Nat. Energy 1, 16043.
+212, 118840. Tang, X., Chen, A., He, J., 2022. A modelling approach based on Bayesian networks for 
+
+Kim, T.-Y., Cho, S.-B., 2019. Predicting residential energy consumption using CNN-LSTM dam risk analysis: integration of machine learning algorithm and domain 
+neural networks. Energy 182, 72–81. knowledge. Int. J. Disaster Risk Reduct. 71, 102818.
+
+Kim, J.-Y., Cho, S.-B., 2023. Predicting residential energy consumption by explainable Theissler, A., Spinnato, F., Schlegel, U., Guidotti, R., 2022. Explainable AI for time series 
+deep learning with long-term and short-term latent variables. Cybern. Syst. 54, classification: a review, taxonomy and research directions. IEEE Access 10, 
+270–285. 100700–100724.
+
+Lu, Y., Zheng, Q., Quinn, D., 2023. Introducing causal inference using Bayesian networks Tjoa, E., Khok, H.J., Chouhan, T., Guan, C., 2023. Enhancing the confidence of deep 
+and do-Calculus. Journal of Statistics and Data Science Education 31, 3–17. learning classifiers via interpretable saliency maps. Neurocomputing 562, 126825.
+
+Lundberg, S.M., Lee, S.-I., 2017. A unified approach to interpreting model predictions. Wenlong, Z., Tien, N.H., Sibghatullah, A., Asih, D., Soelton, M., Ramli, Y., 2023. Impact 
+Adv. Neural Inf. Process. Syst. 30. of energy efficiency, technology innovation, institutional quality, and trade openness 
+
+Lundberg, S.M., Erion, G., Chen, H., Degrave, A., Prutkin, J.M., Nair, B., Katz, R., on greenhouse gas emissions in ten Asian economies. Environ. Sci. Pollut. Control 
+Himmelfarb, J., Bansal, N., Lee, S.-I., 2020. From local explanations to global Ser. 30, 43024–43039.
+understanding with explainable AI for trees. Nat. Mach. Intell. 2, 56–67. Yao, G., Chen, Y., Han, C., Duan, Z., 2024. Research on the decision-making method for 
+
+Manzo-Martínez, A., Camarena-Ibarrola, J.A., 2013. A new and efficient alignment the passive design parameters of zero energy houses in severe cold regions based on 
+technique by cosine distance. Int. Journal of Combinatorial Optimization Problems decision trees. Energies 17, 506.
+and Informatics 4, 12–24. Yaro, A.S., Maly, F., Prazak, P., Maly, K., 2024. Outlier detection performance of a 
+
+Martinez Lagunas, A.J., Askarihosni, M., Alimohammadi, N., Dezyanian, A., Nik- modified z-score method in time-series RSS observation with hybrid scale estimators. 
+Bakht, M., 2021. Discovery of energy performance patterns for residential buildings IEEE Access 12, 12785–12796.
+through machine learning. In: Canadian Society of Civil Engineering Annual Zapukhliak, V., Poberezhny, L., Maruschak, P., Grudz Jr., V., Stasiuk, R., Brezinová, J., 
+Conference, pp. 1–15. Guzanová, A., 2019. Mathematical modeling of unsteady gas transmission system 
+
+Mavrepis, P., Makridis, G., Fatouros, G., Koukos, V., Separdani, M.M., Kyriazis, D., 2024. operating conditions under insufficient loading. Energies 12, 1325.
+XAI for all: can large language models simplify explainable AI? arXiv preprint arXiv: Zhang, C., 2023. Causal Analysis for Generalized Interference Problems. University of 
+2401.13110. California, Los Angeles. 
+
+Mosannenzadeh, F., Bisello, A., Vaccaro, R., D’Alonzo, V., Hunter, G.W., Vettorato, D., Zhang, Y., Tiňo, P., Leonardis, A., Tang, K., 2021. A survey on neural network 
+2017. Smart energy city development: a story told by urban planners. Cities 64, interpretability. IEEE Trans. on Emerging Topics in Computational Intelligence 5, 
+54–65. 726–742.
+
+Nagahisarchoghaei, M., Nur, N., Cummins, L., Nur, N., Karimi, M.M., Nandanwar, S., Zhou, B., Khosla, A., Lapedriza, A., Oliva, A., Torralba, A., 2016. Learning deep features 
+Bhattacharyya, S., Rahimi, S., 2023. An empirical survey on explainable ai for discriminative localization. In: IEEE Conf. on Computer Vision and Pattern 
+technologies: recent trends, use-cases, and categories from technical and application Recognition, pp. 2921–2929.
+perspectives. Electronics 12, 1092. Zhuang, D., Gan, V.J., Tekler, Z.D., Chong, A., Tian, S., Shi, X., 2023. Data-driven 
+
+Nogueira, A.R., Pugnana, A., Ruggieri, S., Pedreschi, D., Gama, J., 2022. Methods and predictive control for smart HVAC system in IoT-integrated buildings with time- 
+tools for causal discovery and causal inference. Wiley interdisciplinary reviews: Data series forecasting and reinforcement learning. Appl. Energy 338, 120936.
+Min. Knowl. Discov. 12, e1449.
+
+13

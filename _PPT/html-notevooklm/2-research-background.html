@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>研究背景：高精度预测与黑盒模型的矛盾</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第2页 - 研究背景
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">研究背景</div>
+      <div class="page-number">2</div>
+    </div>
+    
+    <h2 class="slide-title">研究背景：高精度预测与"黑盒"模型的矛盾</h2>
+    
+    <div class="content">
+      <div class="col-6-4">
+        <!-- 左侧文字内容 -->
+        <div>
+          <h3 class="slide-section">Context</h3>
+          <ul>
+            <li>能源需求预测（Energy Demand Prediction）对减少温室气体排放和电力管理至关重要。</li>
+          </ul>
+          
+          <h3 class="slide-section" style="margin-top: 25px;">Problem Definition</h3>
+          <ul>
+            <li><strong>深度学习困境：</strong>CNN-LSTM 等模型精度高，但缺乏可解释性（Black-box nature）。</li>
+            <li><strong>现有 XAI 局限：</strong>SHAP 和 LIME 等主流方法主要关注特征的相关性（Correlation）而非因果性（Causality）。</li>
+            <li><strong>用户需求：</strong>终端用户需要可执行的洞察（Actionable Insights），例如"为何会出现<span style="color: #f59e0b; font-weight: 600;">峰值预警</span>？"。</li>
+          </ul>
+          
+          <h3 class="slide-section" style="margin-top: 25px;">Research Motivation</h3>
+          <ul>
+            <li>提出一种混合框架，旨在保持深度学习高精度的同时，通过贝叶斯网络揭示变量间及模型参数的因果机制。</li>
+          </ul>
+        </div>
+        
+        <!-- 右侧对比图 -->
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px;">
+          <div class="image-placeholder" style="min-height: 140px; width: 100%;">
+            [Deep Learning 黑盒 → ? 图示]
+          </div>
+          
+          <div style="text-align: center; font-size: 28pt; font-weight: 800; color: #9ca3af; margin: 10px 0;">
+            vs.
+          </div>
+          
+          <div class="image-placeholder" style="min-height: 180px; width: 100%;">
+            [Proposed Framework → Causal Insight 图示]
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">2 / ??</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>论文核心贡献与复现目标</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第3页 - 核心贡献与复现目标
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">核心贡献</div>
+      <div class="page-number">3</div>
+    </div>
+    
+    <h2 class="slide-title">论文核心贡献与复现目标</h2>
+    
+    <div class="content">
+      <div class="three-col" style="gap: 25px; margin-bottom: 35px;">
+        <!-- 第1个贡献：模型架构创新 -->
+        <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
+          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 18px;">
+            <div class="image-placeholder small" style="width: 60px; height: 60px; min-height: 60px; flex-shrink: 0;">
+              [图标]
+            </div>
+            <div>
+              <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
+                1. 模型架构创新
+              </h3>
+              <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
+                (Prediction)
+              </p>
+            </div>
+          </div>
+          
+          <ul style="margin-left: 0;">
+            <li style="font-size: 13pt; line-height: 1.6; margin-bottom: 10px;">
+              提出并行（Parallel）CNN-LSTM-Attention 架构。
+            </li>
+            <li style="font-size: 13pt; line-height: 1.6;">
+              验证了并行提取空间（Spatial）和时间（Temporal）特征优于传统的串行（Serial）结构。
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 第2个贡献：因果解释框架 -->
+        <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
+          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 18px;">
+            <div class="image-placeholder small" style="width: 60px; height: 60px; min-height: 60px; flex-shrink: 0;">
+              [网络图标]
+            </div>
+            <div>
+              <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
+                2. 因果解释框架
+              </h3>
+              <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
+                (Explanation)
+              </p>
+            </div>
+          </div>
+          
+          <ul style="margin-left: 0;">
+            <li style="font-size: 13pt; line-height: 1.6; margin-bottom: 10px;">
+              构建基于贝叶斯网络（Bayesian Network）的解释模块。
+            </li>
+            <li style="font-size: 13pt; line-height: 1.6;">
+              创新性地将深度学习参数（DLP）（如 CAM 和 Attention Weights）纳入因果图。
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 第3个贡献：领域知识融合 -->
+        <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
+          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 18px;">
+            <div class="image-placeholder small" style="width: 60px; height: 60px; min-height: 60px; flex-shrink: 0;">
+              [书本图标]
+            </div>
+            <div>
+              <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
+                3. 领域知识融合
+              </h3>
+              <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
+                (Domain Knowledge)
+              </p>
+            </div>
+          </div>
+          
+          <ul style="margin-left: 0;">
+            <li style="font-size: 13pt; line-height: 1.6;">
+              引入物理约束（Physical Constraints）限制贝叶斯网络的结构学习，避免虚假因果。
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 复现目标 -->
+      <div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 20px; margin-top: 30px;">
+        <p style="font-size: 16pt; color: #1f2937; margin: 0; line-height: 1.5;">
+          <strong style="color: #1e3a8a; font-size: 17pt;">Reproduction Goal:</strong> 
+          验证上述架构在标准数据集上的有效性及解释的一致性。
+        </p>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">3 / ??</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

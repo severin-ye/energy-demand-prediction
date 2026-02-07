@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>复现方法概览：预测与解释的双流架构</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第4页 - 方法概览架构图
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">方法概览</div>
+      <div class="page-number">4</div>
+    </div>
+    
+    <h2 class="slide-title">复现方法概览：预测与解释的双流架构</h2>
+    
+    <div class="content" style="display: flex; flex-direction: column; justify-content: center;">
+      <!-- 完整架构图占位符 -->
+      <div class="image-placeholder large" style="min-height: 480px; margin: 0;">
+        <div style="text-align: center; color: #6b7280;">
+          <p style="font-size: 16pt; font-weight: 600; margin-bottom: 15px;">【完整系统架构图】</p>
+          <p style="font-size: 13pt; line-height: 1.6;">
+            Input (Date, Day, Global_active_power, Sub-metering)<br/>
+            ↓<br/>
+            CNN Branch (1D Conv → MaxPool) ∥ LSTM Branch (Attention Mechanism)<br/>
+            ↓<br/>
+            Feature Fusion & MLP → Prediction (ŷ)<br/>
+            ↓<br/>
+            Explanation Module (CAM, Attention → Discretization → Association Rules → Bayesian Network)<br/>
+            ↓<br/>
+            Explanation (Causal Graph)
+          </p>
+        </div>
+      </div>
+      
+      <!-- 底部说明文字 -->
+      <div style="text-align: center; margin-top: 15px; padding: 10px;">
+        <p style="font-size: 11pt; color: #9ca3af; font-style: italic;">
+          Modern Academic Journal meets Swiss International Style
+        </p>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="page-info">4 / ??</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
