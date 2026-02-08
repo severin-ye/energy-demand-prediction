@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>能源需求预测的因果可解释AI - 论文复现PPT</title>
+  <title>에너지 수요 예측을 위한 인과적 설명 가능한 AI - 논문 재현 PPT</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     @page {
@@ -44,20 +44,20 @@
 <body>
 <section class="slide" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
   <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; height: 100%; align-items: center; padding: 60px 80px;">
-    <!-- 左侧内容区 -->
+    <!-- 왼쪽 콘텐츠 영역 -->
     <div style="padding-right: 40px;">
       <h1 style="font-size: 42pt; font-weight: 800; color: #1e3a8a; line-height: 1.3; margin-bottom: 35px;">
-        论文复现汇报：基于深度学<br/>习与因果解释的能源求预测
+        논문 재현 보고: 딥러닝 및<br/>인과관계 설명을 기반으로 한 에너지 수요 예측
       </h1>
       
       <p style="font-size: 16pt; color: #4b5563; line-height: 1.6; margin-bottom: 50px; font-weight: 400;">
-        针对 "Causally explainable artificial intelligence<br/>
+        "Causally explainable artificial intelligence<br/>
         on deep learning model for energy demand<br/>
-        prediction" 的方法论验证与实验复现
+        prediction" 방법론 검증 및 실험 재현
       </p>
     </div>
     
-    <!-- 右侧装饰图区 -->
+    <!-- 오른쪽 장식 이미지 영역 -->
     <div style="display: flex; align-items: center; justify-content: center;">
     </div>
   </div>
@@ -66,43 +66,43 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">研究背景</div>
+      <div class="section-indicator">연구 배경</div>
       <div class="page-number">2</div>
     </div>
     
-    <h2 class="slide-title">研究背景：高精度预测与"黑盒"模型的矛盾</h2>
+    <h2 class="slide-title">연구 배경: 고정밀 예측과 "블랙박스" 모델의 모순</h2>
     
     <div class="content">
       <div class="col-6-4">
-        <!-- 左侧文字内容 -->
+        <!-- 왼쪽 텍스트 콘텐츠 -->
         <div>
           <h3 class="slide-section" style="font-size: 15pt;">Context</h3>
           <ul style="font-size: 11pt; line-height: 1.5; margin: 8px 0;">
-            <li>能源需求预测（Energy Demand Prediction）对减少温室气体排放和电力管理至关重要。</li>
+            <li>에너지 수요 예측(Energy Demand Prediction)은 온실가스 배출 감소와 전력 관리에 매우 중요합니다.</li>
           </ul>
           
           <h3 class="slide-section" style="margin-top: 15px; font-size: 15pt;">Problem Definition</h3>
           <ul style="font-size: 11pt; line-height: 1.5; margin: 8px 0;">
-            <li><strong>深度学习困境：</strong>CNN-LSTM 等模型精度高，但缺乏可解释性（Black-box nature）。</li>
-            <li><strong>现有 XAI 局限：</strong>SHAP 和 LIME 等主流方法主要关注特征的相关性（Correlation）而非因果性（Causality）。</li>
-            <li><strong>用户需求：</strong>终端用户需要可执行的洞察（Actionable Insights），例如"为何会出现<span style="color: #f59e0b; font-weight: 600;">峰值预警</span>？"。</li>
+            <li><strong>딥러닝의 딜레마:</strong> CNN-LSTM 등의 모델은 정확도가 높지만 설명 가능성(Black-box nature)이 부족합니다.</li>
+            <li><strong>기존 XAI의 한계:</strong> SHAP 및 LIME 등 주요 방법은 인과성(Causality)보다는 특성의 상관관계(Correlation)에 주로 초점을 맞춥니다.</li>
+            <li><strong>사용자 요구:</strong> 최종 사용자에게는 "왜 <span style="color: #f59e0b; font-weight: 600;">피크 경고</span>가 발생했는가?"와 같은 실행 가능한 통찰력(Actionable Insights)이 필요합니다.</li>
           </ul>
           
           <h3 class="slide-section" style="margin-top: 15px; font-size: 15pt;">Research Motivation</h3>
           <ul style="font-size: 11pt; line-height: 1.5; margin: 8px 0;">
-            <li>提出一种混合框架，旨在保持深度学习高精度的同时，通过贝叶斯网络揭示变量间及模型参数的因果机制。</li>
+            <li>딥러닝의 높은 정확도를 유지하면서 베이지안 네트워크를 통해 변수 간 및 모델 파라미터의 인과 메커니즘을 규명하는 하이브리드 프레임워크를 제안합니다.</li>
           </ul>
         </div>
         
-        <!-- 右侧对比图 -->
+        <!-- 오른쪽 비교 이미지 -->
         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-          <img src="images/1-传统深度学习黑盒与因果可解释框架对比.png" alt="黑盒模型 vs 因果解释框架对比" style="width: 100%; max-width: 100%; height: auto; border-radius: 8px;">
+          <img src="images/1-传统深度学习黑盒与因果可解释框架对比.png" alt="블랙박스 모델 vs 인과 설명 프레임워크 비교" style="width: 100%; max-width: 100%; height: auto; border-radius: 8px;">
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">2 / ??</div>
     </div>
   </div>
@@ -111,19 +111,19 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">核心贡献</div>
+      <div class="section-indicator">핵심 기여</div>
       <div class="page-number">3</div>
     </div>
     
-    <h2 class="slide-title">论文核心贡献与复现目标</h2>
+    <h2 class="slide-title">논문 핵심 기여 및 재현 목표</h2>
     
     <div class="content">
       <div class="three-col" style="gap: 25px; margin-bottom: 35px;">
-        <!-- 第1个贡献：模型架构创新 -->
+        <!-- 첫 번째 기여: 모델 아키텍처 혁신 -->
         <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
           <div style="margin-bottom: 18px;">
             <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
-              1. 模型架构创新
+              1. 모델 아키텍처 혁신
             </h3>
             <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
               (Prediction)
@@ -132,19 +132,19 @@
           
           <ul style="margin-left: 0;">
             <li style="font-size: 13pt; line-height: 1.6; margin-bottom: 10px;">
-              提出并行（Parallel）CNN-LSTM-Attention 架构。
+              병렬(Parallel) CNN-LSTM-Attention 아키텍처 제안.
             </li>
             <li style="font-size: 13pt; line-height: 1.6;">
-              验证了并行提取空间（Spatial）和时间（Temporal）特征优于传统的串行（Serial）结构。
+              공간적(Spatial) 및 시간적(Temporal) 특징을 병렬 추출하는 것이 기존 직렬(Serial) 구조보다 우수함을 검증.
             </li>
           </ul>
         </div>
         
-        <!-- 第2个贡献：因果解释框架 -->
+        <!-- 두 번째 기여: 인과 설명 프레임워크 -->
         <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
           <div style="margin-bottom: 18px;">
             <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
-              2. 因果解释框架
+              2. 인과 설명 프레임워크
             </h3>
             <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
               (Explanation)
@@ -153,19 +153,19 @@
           
           <ul style="margin-left: 0;">
             <li style="font-size: 13pt; line-height: 1.6; margin-bottom: 10px;">
-              构建基于贝叶斯网络（Bayesian Network）的解释模块。
+              베이지안 네트워크(Bayesian Network) 기반 설명 모듈 구축.
             </li>
             <li style="font-size: 13pt; line-height: 1.6;">
-              创新性地将深度学习参数（DLP）（如 CAM 和 Attention Weights）纳入因果图。
+              CAM 및 Attention Weights 같은 딥러닝 파라미터(DLP)를 인과 관계 그래프에 혁신적으로 통합.
             </li>
           </ul>
         </div>
         
-        <!-- 第3个贡献：领域知识融合 -->
+        <!-- 세 번째 기여: 도메인 지식 융합 -->
         <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
           <div style="margin-bottom: 18px;">
             <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
-              3. 领域知识融合
+              3. 도메인 지식 융합
             </h3>
             <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
               (Domain Knowledge)
@@ -174,23 +174,23 @@
           
           <ul style="margin-left: 0;">
             <li style="font-size: 13pt; line-height: 1.6;">
-              引入物理约束（Physical Constraints）限制贝叶斯网络的结构学习，避免虚假因果。
+              물리적 제약(Physical Constraints)을 도입하여 베이지안 네트워크 구조 학습을 제한하고 허위 인과관계를 방지.
             </li>
           </ul>
         </div>
       </div>
       
-      <!-- 复现目标 -->
+      <!-- 재현 목표 -->
       <div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 20px; margin-top: 30px;">
         <p style="font-size: 16pt; color: #1f2937; margin: 0; line-height: 1.5;">
-          <strong style="color: #1e3a8a; font-size: 17pt;">Reproduction Goal:</strong> 
-          验证上述架构在标准数据集上的有效性及解释的一致性。
+          <strong style="color: #1e3a8a; font-size: 17pt;">Reproduction Goal:</strong>
+          표준 데이터셋에서 상기 아키텍처의 유효성 및 설명 일관성을 검증.
         </p>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">3 / ??</div>
     </div>
   </div>
@@ -199,19 +199,19 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">方法概览</div>
+      <div class="section-indicator">방법 개요</div>
       <div class="page-number">4</div>
     </div>
     
-    <h2 class="slide-title">复现方法概览：预测与解释的双流架构</h2>
+    <h2 class="slide-title">재현 방법 개요: 예측 및 설명의 이중 스트림 아키텍처</h2>
     
     <div class="content" style="display: flex; flex-direction: column; justify-content: center;">
-      <!-- 完整架构图 -->
+      <!-- 전체 아키텍처 다이어그램 -->
       <div style="text-align: center; margin: 0; padding: 10px 0;">
-        <img src="images/2-完整模型架构与因果解释模块.png" alt="完整系统架构图" style="max-width: 100%; max-height: 500px; height: auto; object-fit: contain;">
+        <img src="images/2-完整模型架构与因果解释模块.png" alt="전체 시스템 아키텍처 다이어그램" style="max-width: 100%; max-height: 500px; height: auto; object-fit: contain;">
       </div>
       
-      <!-- 底部说明文字 -->
+      <!-- 하단 설명 텍스트 -->
       <div style="text-align: center; margin-top: 15px; padding: 10px;">
         <p style="font-size: 11pt; color: #9ca3af; font-style: italic;">
           Modern Academic Journal meets Swiss International Style
@@ -220,7 +220,7 @@
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">4 / ??</div>
     </div>
   </div>
@@ -229,41 +229,41 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">预测模型</div>
+      <div class="section-indicator">예측 모델</div>
       <div class="page-number">5</div>
     </div>
     
-    <h2 class="slide-title">预测模型：Parallel CNN-LSTM with Attention</h2>
+    <h2 class="slide-title">예측 모델: Parallel CNN-LSTM with Attention</h2>
     
     <div class="content">
-      <!-- 预测模型架构图 -->
+      <!-- 예측 모델 아키텍처 다이어그램 -->
       <div style="text-align: center; margin-bottom: 12px;">
-        <img src="images/3-并行CNN-LSTM预测模型结构.png" alt="预测模型架构图" style="max-width: 90%; max-height: 220px; height: auto; object-fit: contain;">
+        <img src="images/3-并行CNN-LSTM预测模型结构.png" alt="예측 모델 아키텍처 다이어그램" style="max-width: 90%; max-height: 220px; height: auto; object-fit: contain;">
       </div>
       
-      <!-- 底部两栏：实现细节和关键公式 -->
+      <!-- 하단 두 컬럼: 구현 세부 사항 및 주요 공식 -->
       <div class="two-col" style="gap: 18px;">
-        <!-- 左侧：实现细节 -->
+        <!-- 왼쪽: 구현 세부 사항 -->
         <div>
           <h3 class="slide-section" style="margin-top: 0; font-size: 15pt;">Implementation Details:</h3>
           <ul style="font-size: 11.5pt; line-height: 1.45;">
-            <li><strong>CNN Branch:</strong> 1D Conv -> Max Pooling（提取短时波动与特征关系）。</li>
-            <li><strong>LSTM Branch:</strong> 处理序列长度 ω = 80。计算 Attention Weights (<em>a<sub>n</sub></em>) 和 Context Vector (<em>c<sub>n</sub></em>)。</li>
-            <li><strong>Feature Fusion:</strong> 将 CNN 输出与 LSTM Context Vector 拼接，而非串行级联。</li>
+            <li><strong>CNN Branch:</strong> 1D Conv -> Max Pooling (단기 변동 및 특성 관계 추출).</li>
+            <li><strong>LSTM Branch:</strong> 시퀀스 길이 ω = 80 처리. Attention Weights (<em>a<sub>n</sub></em>) 및 Context Vector (<em>c<sub>n</sub></em>) 계산.</li>
+            <li><strong>Feature Fusion:</strong> 직렬 연결(cascading)이 아닌 CNN 출력과 LSTM Context Vector 병합(concatenation).</li>
           </ul>
         </div>
         
-        <!-- 右侧：关键公式 -->
+        <!-- 오른쪽: 주요 공식 -->
         <div>
           <div style="text-align: center;">
-            <img src="images/4-关键公式注意力与特征融合.png" alt="关键公式" style="max-width: 85%; height: auto; object-fit: contain;">
+            <img src="images/4-关键公式注意力与特征融合.png" alt="주요 공식" style="max-width: 85%; height: auto; object-fit: contain;">
           </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">5 / ??</div>
     </div>
   </div>
@@ -272,40 +272,40 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">特征提取</div>
+      <div class="section-indicator">특징 추출</div>
       <div class="page-number">6</div>
     </div>
     
-    <h2 class="slide-title">符号提取：连续变量的离散化策略</h2>
+    <h2 class="slide-title">심볼 추출: 연속 변수의 이산화 전략</h2>
     
     <div class="content">
       <div class="col-6-4">
-        <!-- 左侧：流程图 -->
+        <!-- 왼쪽: 흐름도 -->
         <div style="display: flex; align-items: center; justify-content: center;">
-          <img src="images/5-特征离散化流程EDP与变量状态.png" alt="离散化流程图" style="max-width: 85%; height: auto; object-fit: contain;">
+          <img src="images/5-特征离散化流程EDP与变量状态.png" alt="이산화 흐름도" style="max-width: 85%; height: auto; object-fit: contain;">
         </div>
         
-        <!-- 右侧：步骤说明 -->
+        <!-- 오른쪽: 단계 설명 -->
         <div>
-          <h3 class="slide-section" style="margin-top: 0;">Step 1: 异常检测 (Outlier Detection)</h3>
+          <h3 class="slide-section" style="margin-top: 0;">Step 1: 이상치 탐지 (Outlier Detection)</h3>
           <ul style="font-size: 13pt; line-height: 1.6; margin-bottom: 25px;">
-            <li>使用 <strong>Sn scale estimator</strong> 定义三种能源需求模式 (EDP)。</li>
-            <li>相比传统 Z-score 对噪声更鲁棒。</li>
+            <li><strong>Sn scale estimator</strong>를 사용하여 세 가지 에너지 수요 패턴(EDP) 정의.</li>
+            <li>기존 Z-score 대비 노이즈에 더 강건함(Robust).</li>
           </ul>
           
-          <h3 class="slide-section" style="margin-top: 25px;">Step 2: 分位数离散化 (Quantile-based Discretization)</h3>
+          <h3 class="slide-section" style="margin-top: 25px;">Step 2: 분위수 기반 이산화 (Quantile-based Discretization)</h3>
           <ul style="font-size: 13pt; line-height: 1.6;">
-            <li>将连续变量划分为四个等级：<br/>
-              <strong>Low, Medium, High, Very High</strong>。
+            <li>연속 변수를 네 가지 등급으로 구분:<br/>
+              <strong>Low, Medium, High, Very High</strong>.
             </li>
-            <li>这种处理方式保留了数据的统计分布特性，同时简化了因果推理的复杂度。</li>
+            <li>이 방식은 데이터의 통계적 분포 특성을 유지하면서 인과 추론의 복잡성을 줄여줌.</li>
           </ul>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">6 / ??</div>
     </div>
   </div>
@@ -314,21 +314,21 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">因果模型</div>
+      <div class="section-indicator">인과 모델</div>
       <div class="page-number">7</div>
     </div>
     
-    <h2 class="slide-title">结构学习：关联规则与领域知识约束</h2>
+    <h2 class="slide-title">구조 학습: 연관 규칙 및 도메인 지식 제약</h2>
     
     <div class="content">
-      <!-- 贝叶斯网络结构学习流程图 -->
+      <!-- 베이지안 네트워크 구조 학습 흐름도 -->
       <div style="text-align: center;">
-        <img src="images/10-贝叶斯网络结构学习流程四步骤.png" alt="贝叶斯网络结构学习流程" style="max-width: 100%; height: auto; object-fit: contain;">
+        <img src="images/10-贝叶斯网络结构学习流程四步骤.png" alt="베이지안 네트워크 구조 학습 흐름" style="max-width: 100%; height: auto; object-fit: contain;">
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">7 / ??</div>
     </div>
   </div>
@@ -337,30 +337,30 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">参数解释</div>
+      <div class="section-indicator">파라미터 해석</div>
       <div class="page-number">8</div>
     </div>
     
-    <h2 class="slide-title">深度学习参数（DLP）的语义化解释</h2>
+    <h2 class="slide-title">딥러닝 파라미터(DLP)의 의미론적 해석</h2>
     
     <div class="content">
-      <!-- CAM与Attention聚类模式图 -->
+      <!-- CAM 및 Attention 클러스터링 패턴 그림 -->
       <div style="text-align: center; margin-bottom: 6px;">
-        <img src="images/6-CAM与Attention聚类模式.png" alt="CAM与Attention聚类模式" style="max-width: 70%; height: auto; object-fit: contain;">
+        <img src="images/6-CAM与Attention聚类模式.png" alt="CAM 및 Attention 클러스터링 패턴" style="max-width: 70%; height: auto; object-fit: contain;">
       </div>
       
-      <!-- 底部说明 -->
+      <!-- 하단 설명 -->
       <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 8px 10px; border-radius: 4px;">
         <ul style="margin: 0; font-size: 10pt; line-height: 1.35;">
-          <li><strong>Class Activation Map (CAM):</strong> 使用 K-means 聚类识别激活模式，映射设备使用的增减。</li>
-          <li><strong>Attention Weights:</strong> 基于累积聚类（Cumulative Clustering）识别时序关注点。</li>
-          <li><strong>意义:</strong> 将神经网络的"黑盒"参数转化为贝叶斯网络中的可解释节点。</li>
+          <li><strong>Class Activation Map (CAM):</strong> K-means 클러스터링을 사용하여 활성화 패턴을 식별하고 기기 사용의 증감을 매핑.</li>
+          <li><strong>Attention Weights:</strong> 누적 클러스터링(Cumulative Clustering)을 기반으로 시계열 관심 지점 식별.</li>
+          <li><strong>의의:</strong> 신경망의 "블랙박스" 파라미터를 베이지안 네트워크의 설명 가능한 노드로 변환.</li>
         </ul>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">8 / ??</div>
     </div>
   </div>
@@ -369,20 +369,20 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">实验设置</div>
+      <div class="section-indicator">실험 설정</div>
       <div class="page-number">9</div>
     </div>
     
-    <h2 class="slide-title">实验设置与环境</h2>
+    <h2 class="slide-title">실험 설정 및 환경</h2>
     
     <div class="content">
-      <!-- 四宫格布局 -->
+      <!-- 4분할 격자 레이아웃 -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         
-        <!-- 左上：Datasets -->
+        <!-- 왼쪽 위: Datasets -->
         <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
           <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
-            Datasets（数据）
+            Datasets (데이터)
           </h3>
           
           <div style="margin-bottom: 8px;">
@@ -390,8 +390,8 @@
               1. UCI Household Electricity
             </p>
             <ul style="margin-left: 16px; font-size: 9.5pt; line-height: 1.3;">
-              <li>207万条数据，1分钟分辨率</li>
-              <li>包含 Kitchen, Laundry, HVAC 子计量</li>
+              <li>207만 개 데이터, 1분 해상도</li>
+              <li>Kitchen, Laundry, HVAC 서브 미터링 포함</li>
             </ul>
           </div>
           
@@ -400,29 +400,29 @@
               2. REFIT Dataset
             </p>
             <ul style="margin-left: 16px; font-size: 9.5pt; line-height: 1.3;">
-              <li>573万条数据，8秒分辨率</li>
-              <li>重采样至 15min / 30min / 1h / 1d</li>
+              <li>573만 개 데이터, 8초 해상도</li>
+              <li>실험 해상도: 15min (표 3), 4가지 해상도 (표 4)</li>
             </ul>
           </div>
         </div>
         
-        <!-- 右上：Training Specs -->
+        <!-- 오른쪽 위: Training Specs -->
         <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
           <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
-            Training Specs（训练参数）
+            Training Specs (학습 파라미터)
           </h3>
           
           <ul style="margin-left: 16px; font-size: 10pt; line-height: 1.35;">
-            <li><strong>Input Window (ω):</strong> 80 timestamps</li>
+            <li><strong>Input Window (ω):</strong> 80 타임스탬프</li>
             <li><strong>Prediction Horizon:</strong> <em>t</em>+1 (One-step ahead)</li>
-            <li><strong>Validation:</strong> Train/Test split consistent with source</li>
+            <li><strong>Validation:</strong> 원본과 동일한 Train/Test 분할</li>
           </ul>
         </div>
         
-        <!-- 左下：Metrics -->
+        <!-- 왼쪽 아래: Metrics -->
         <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
           <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
-            Metrics（评价指标）
+            Metrics (평가 지표)
           </h3>
           
           <ul style="margin-left: 16px; font-size: 10pt; line-height: 1.35;">
@@ -432,10 +432,10 @@
           </ul>
         </div>
         
-        <!-- 右下：Baselines -->
+        <!-- 오른쪽 아래: Baselines -->
         <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
           <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
-            Baselines（对比基线）
+            Baselines (비교 베이스라인)
           </h3>
           
           <ul style="margin-left: 16px; font-size: 10pt; line-height: 1.35;">
@@ -450,7 +450,7 @@
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">9 / ??</div>
     </div>
   </div>
@@ -459,30 +459,30 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">实验结果</div>
+      <div class="section-indicator">실험 결과</div>
       <div class="page-number">10</div>
     </div>
     
-    <h2 class="slide-title">实验结果：预测精度复现（UCI Dataset）</h2>
+    <h2 class="slide-title">실험 결과: 예측 정확도 재현 (UCI Dataset)</h2>
     
     <div class="content">
-      <!-- 预测结果与MSE对比图 -->
+      <!-- 예측 결과 및 MSE 비교 차트 -->
       <div style="text-align: center; margin-bottom: 10px;">
-        <img src="images/7-预测性能与MSE对比结果.png" alt="预测vs实际值及MSE对比" style="max-width: 100%; height: auto; object-fit: contain;">
+        <img src="images/7-预测性能与MSE对比结果.png" alt="예측 vs 실제 값 및 MSE 비교" style="max-width: 100%; height: auto; object-fit: contain;">
       </div>
       
-      <!-- 底部关键发现 -->
+      <!-- 하단 주요 발견 -->
       <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 12px 14px; border-radius: 4px;">
         <ul style="margin: 0; font-size: 11.5pt; line-height: 1.5;">
-          <li><strong>误差 &lt; 1%:</strong> 复现结果高度符合原论文数据。</li>
-          <li><strong>性能提升:</strong> 并行结构（Parallel）相比串行结构 MSE 降低约 15%。</li>
-          <li><strong>尖峰捕捉:</strong> 模型在 Peak Demand 区间表现出优异的拟合能力。</li>
+          <li><strong>오차 &lt; 1%:</strong> 재현 결과가 원본 논문 데이터와 매우 일치함.</li>
+          <li><strong>성능 향상:</strong> 이전 모델(Kim&amp;Cho 2019, Bu&amp;Cho 2020) 대비 UCI 데이터셋 평균 34.84% 향상, REFIT 13.63% 향상.</li>
+          <li><strong>피크 포착:</strong> 모델이 Peak Demand 구간에서 뛰어난 피팅 능력을 보임.</li>
         </ul>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">10 / ??</div>
     </div>
   </div>
@@ -491,27 +491,27 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">一致性评估</div>
+      <div class="section-indicator">일관성 평가</div>
       <div class="page-number">11</div>
     </div>
     
-    <h2 class="slide-title">实验结果：解释一致性（Consistency）分析</h2>
+    <h2 class="slide-title">실험 결과: 설명 일관성(Consistency) 분석</h2>
     
     <div class="content">
-      <!-- 评估方法说明 -->
+      <!-- 평가 방법 설명 -->
       <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 4px; margin-bottom: 18px;">
         <p style="font-size: 12.5pt; margin: 0; color: #1f2937;">
-          <strong>评估方法:</strong> 使用余弦相似度（Cosine Similarity）衡量不同样本下解释结构的一致性。
+          <strong>평가 방법:</strong> 코사인 유사도(Cosine Similarity)를 사용하여 다양한 샘플에서 설명 구조의 일관성을 측정.
         </p>
       </div>
       
       <div class="two-col" style="gap: 20px;">
-        <!-- 左侧：一致性得分对比图 -->
+        <!-- 왼쪽: 일관성 점수 비교 차트 -->
         <div>
-          <img src="images/8-一致性评分对比BN优于LIME与SHAP.png" alt="一致性评分对比" style="max-width: 100%; height: auto; object-fit: contain;">
+          <img src="images/8-一致性评分对比BN优于LIME与SHAP.png" alt="일관성 점수 비교" style="max-width: 100%; height: auto; object-fit: contain;">
         </div>
         
-        <!-- 右侧：Key Takeaways -->
+        <!-- 오른쪽: Key Takeaways -->
         <div style="display: flex; flex-direction: column; justify-content: center;">
           <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin-bottom: 14px; border-bottom: 2px solid #cbd5e1; padding-bottom: 8px;">
             Key Takeaways
@@ -519,13 +519,13 @@
           
           <ul style="margin-left: 0; font-size: 12.5pt; line-height: 1.6;">
             <li style="margin-bottom: 10px;">
-              <strong style="color: #64748b;">LIME:</strong> 存在局部扰动，解释不稳定。
+              <strong style="color: #64748b;">LIME:</strong> 국소적 교란(perturbation)이 존재하여 설명이 불안정함.
             </li>
             <li style="margin-bottom: 10px;">
-              <strong style="color: #475569;">SHAP:</strong> 表现良好，但计算开销巨大。
+              <strong style="color: #475569;">SHAP:</strong> 성능은 양호하나 계산 비용이 매우 큼.
             </li>
             <li>
-              <strong style="color: #1e3a8a;">Ours:</strong> 贝叶斯网络结构具有极高的鲁棒性，未出现扰动现象。
+              <strong style="color: #1e3a8a;">Ours:</strong> 베이지안 네트워크 구조는 매우 높은 강건성(Robustness)을 가지며 교란 현상이 나타나지 않음.
             </li>
           </ul>
         </div>
@@ -533,7 +533,7 @@
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">11 / ??</div>
     </div>
   </div>
@@ -542,48 +542,48 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">案例分析</div>
+      <div class="section-indicator">사례 연구</div>
       <div class="page-number">12</div>
     </div>
     
-    <h2 class="slide-title">案例分析：峰值预警（Peak Warning）的因果推断</h2>
+    <h2 class="slide-title">사례 연구: 피크 경고(Peak Warning)의 인과 추론</h2>
     
     <div class="content">
       <div class="col-6-4" style="gap: 18px;">
-        <!-- 左侧：贝叶斯网络图 -->
+        <!-- 왼쪽: 베이지안 네트워크 그림 -->
         <div>
-          <img src="images/9-贝叶斯网络推理案例峰值警告.png" alt="贝叶斯网络推理案例" style="max-width: 100%; height: auto; object-fit: contain;">
+          <img src="images/9-贝叶斯网络推理案例峰值警告.png" alt="베이지안 네트워크 추론 사례" style="max-width: 100%; height: auto; object-fit: contain;">
         </div>
         
-        <!-- 右侧：推理路径与分析 -->
+        <!-- 오른쪽: 추론 경로 및 분석 -->
         <div>
-          <!-- 场景说明 -->
+          <!-- 시나리오 설명 -->
           <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 10px; border-radius: 4px; margin-bottom: 12px;">
             <p style="font-size: 11.5pt; margin: 0; font-weight: 600; color: #1f2937;">
-              场景：模型预测 t+1 时刻将出现 Peak Warning。
+              시나리오: 모델이 t+1 시점에 피크 경고(Peak Warning)가 발생할 것으로 예측.
             </p>
           </div>
           
-          <!-- 推理路径 -->
+          <!-- 추론 경로 -->
           <div style="margin-bottom: 14px;">
             <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
-              推理路径（Inference Path）：
+              추론 경로 (Inference Path):
             </h3>
             <ol style="margin-left: 18px; font-size: 11.5pt; line-height: 1.5;">
-              <li><strong>DLP State:</strong> Early Attention (53%) 捕捉到特定时序模式。</li>
-              <li><strong>Appliance:</strong> Climate Control (空调) 处于 Very High 状态 (48%)。</li>
-              <li><strong>Result:</strong> 导致 Peak Warning 概率升至 100%。</li>
+              <li><strong>DLP State:</strong> Early Attention (53%)이 특정 시계열 패턴을 포착.</li>
+              <li><strong>Appliance:</strong> Climate Control (에어컨)이 Very High 상태 (48%).</li>
+              <li><strong>Result:</strong> 그 결과 Peak Warning 확률이 100%로 상승.</li>
             </ol>
           </div>
           
-          <!-- 敏感性分析 -->
+          <!-- 민감도 분석 -->
           <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 10px; border-radius: 4px;">
             <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
-              敏感性分析（Sensitivity）：
+              민감도 분석 (Sensitivity):
             </h3>
             <ul style="margin-left: 18px; font-size: 11.5pt; line-height: 1.5;">
-              <li>若将 Climate Control 降为 Low，Peak Warning 概率显著下降。</li>
-              <li><strong style="color: #059669;">Actionable Insight:</strong> 用户应调节空调设备以避免峰值电费。</li>
+              <li>Climate Control을 Low로 낮추면 Peak Warning 확률이 현저히 감소.</li>
+              <li><strong style="color: #059669;">Actionable Insight:</strong> 사용자는 피크 전기 요금을 피하기 위해 에어컨을 조절해야 함.</li>
             </ul>
           </div>
         </div>
@@ -591,7 +591,7 @@
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">12 / ??</div>
     </div>
   </div>
@@ -600,46 +600,46 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">消融实验</div>
+      <div class="section-indicator">소거 실험</div>
       <div class="page-number">13</div>
     </div>
     
-    <h2 class="slide-title">消融实验：各模块有效性验证</h2>
+    <h2 class="slide-title">소거 실험(Ablation Study): 각 모듈의 유효성 검증</h2>
     
     <div class="content">
-      <!-- 消融实验结果图 -->
+      <!-- 소거 실험 결과 차트 -->
       <div style="text-align: center; margin-bottom: 8px;">
-        <img src="images/11-消融实验结果RMSE与解释相似度.png" alt="消融实验结果" style="max-width: 100%; height: auto; object-fit: contain;">
+        <img src="images/11-消融实验结果RMSE与解释相似度.png" alt="소거 실험 결과" style="max-width: 100%; height: auto; object-fit: contain;">
       </div>
       
-      <!-- 底部验证结论 -->
+      <!-- 하단 검증 결론 -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-        <!-- 架构验证 -->
+        <!-- 아키텍처 검증 -->
         <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 10px 12px; border-radius: 4px;">
           <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">
-            1. 架构验证：
+            1. 아키텍처 검증:
           </h3>
           <ul style="margin-left: 16px; font-size: 10.5pt; line-height: 1.4;">
-            <li>串行结构 (s-c-l-a) 性能显著下降 -> 并行结构是关键。</li>
-            <li>Attention 机制带来轻微提升。</li>
+            <li>직렬 구조(s-c-l-a)의 성능이 현저히 하락 -> 병렬 구조가 핵심.</li>
+            <li>Attention 메커니즘은 약간의 성능 향상을 가져옴.</li>
           </ul>
         </div>
         
-        <!-- 解释验证 -->
+        <!-- 설명 검증 -->
         <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 10px 12px; border-radius: 4px;">
           <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">
-            2. 解释验证：
+            2. 설명 검증:
           </h3>
           <ul style="margin-left: 16px; font-size: 10.5pt; line-height: 1.4;">
-            <li>去除 DLP (Deep Learning Parameters) 导致解释一致性下降。</li>
-            <li>证明了将 Attention/CAM 纳入贝叶斯网络的必要性。</li>
+            <li>DLP(Deep Learning Parameters) 제거 시 설명 일관성 하락.</li>
+            <li>Attention/CAM을 베이지안 네트워크에 통합하는 것의 필요성 입증.</li>
           </ul>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">13 / ??</div>
     </div>
   </div>
@@ -648,64 +648,64 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">复现问题总结</div>
+      <div class="section-indicator">재현 문제 요약</div>
       <div class="page-number">14</div>
     </div>
     
-    <h2 class="slide-title">论文复现：执行摘要</h2>
+    <h2 class="slide-title">논문 재현: 실행 요약</h2>
     
     <div class="content">
-      <!-- 复现目标 -->
+      <!-- 재현 목표 -->
       <div style="background: linear-gradient(to right, #dbeafe 0%, #f0f9ff 100%); border-left: 5px solid #3b82f6; padding: 14px 18px; border-radius: 6px; margin-bottom: 15px;">
         <h3 style="font-size: 15pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
-          📋 复现目标
+          📋 재현 목표
         </h3>
         <p style="font-size: 12pt; line-height: 1.5; color: #374151; margin: 0;">
-          复现论文提出的因果可解释AI系统：<strong>并行CNN-LSTM-Attention</strong>架构 + <strong>贝叶斯网络</strong>因果解释，验证在UCI数据集上相比串联基线提升 <strong style="color: #ef4444;">34.84%</strong> 的性能。
+          논문에서 제안한 인과 설명 가능한 AI 시스템 재현: <strong>병렬 CNN-LSTM-Attention</strong> 아키텍처 + <strong>베이지안 네트워크</strong> 인과 설명, UCI 데이터셋에서 직렬 베이스라인 대비 <strong style="color: #ef4444;">34.84%</strong> 성능 향상 검증.
         </p>
       </div>
       
-      <!-- 核心问题 -->
+      <!-- 핵심 문제 -->
       <div style="background: linear-gradient(to right, #fee2e2 0%, #fef2f2 100%); border-left: 5px solid #ef4444; padding: 14px 18px; border-radius: 6px; margin-bottom: 15px;">
         <h3 style="font-size: 15pt; font-weight: 700; color: #991b1b; margin-bottom: 12px;">
-          ⚠️ 核心问题
+          ⚠️ 핵심 문제
         </h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
           <div>
-            <p style="font-size: 11pt; color: #6b7280; margin-bottom: 5px;">论文声称：</p>
+            <p style="font-size: 11pt; color: #6b7280; margin-bottom: 5px;">논문 주장:</p>
             <p style="font-size: 20pt; font-weight: 800; color: #10b981; margin: 0;">+34.84%</p>
-            <p style="font-size: 11pt; color: #6b7280; margin-top: 5px;">并行架构 vs 串联基线</p>
+            <p style="font-size: 11pt; color: #6b7280; margin-top: 5px;">병렬 아키텍처 vs 직렬 베이스라인</p>
           </div>
           <div>
-            <p style="font-size: 11pt; color: #6b7280; margin-bottom: 5px;">实际结果：</p>
+            <p style="font-size: 11pt; color: #6b7280; margin-bottom: 5px;">실제 결과:</p>
             <p style="font-size: 20pt; font-weight: 800; color: #ef4444; margin: 0;">-6.8%</p>
-            <p style="font-size: 11pt; color: #6b7280; margin-top: 5px;">并行反而比串联差</p>
+            <p style="font-size: 11pt; color: #6b7280; margin-top: 5px;">병렬이 직렬보다 오히려 저조</p>
           </div>
         </div>
       </div>
       
-      <!-- 主要挑战 -->
+      <!-- 주요 과제 -->
       <div style="background: #f9fafb; border: 2px solid #e5e7eb; padding: 14px 18px; border-radius: 6px;">
         <h3 style="font-size: 14pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">
-          🔍 主要挑战（共20个问题）
+          🔍 주요 과제 (총 20개 문제)
         </h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11.5pt; line-height: 1.6;">
           <div>
-            <span style="color: #10b981; font-weight: 700;">✅</span> 架构已对齐，但性能未达预期<br/>
-            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 论文缺少大量实现细节<br/>
-            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 串联+注意力表现最好（与论文相反）
+            <span style="color: #10b981; font-weight: 700;">✅</span> 아키텍처 정렬 완료, 그러나 성능 미달<br/>
+            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 논문에 구현 세부 사항이 대거 누락됨<br/>
+            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 직렬+Attention이 가장 우수한 성능을 보임 (논문과 반대)
           </div>
           <div>
-            <span style="color: #ef4444; font-weight: 700;">❌</span> 未找到论文对比的真实基线<br/>
-            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 归一化方法经历多次修正<br/>
-            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 超参数配置主要基于猜测
+            <span style="color: #ef4444; font-weight: 700;">❌</span> 논문이 비교한 실제 베이스라인을 찾을 수 없음<br/>
+            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 정규화 방식 수차례 수정<br/>
+            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 초매개변수 구성이 추측에 의존
           </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI - 재현 문제 분석</div>
       <div class="page-info">14 / 18</div>
     </div>
   </div>
@@ -714,26 +714,26 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">核心问题1</div>
+      <div class="section-indicator">핵심 문제 1</div>
       <div class="page-number">15</div>
     </div>
     
-    <h2 class="slide-title">为什么并行模型性能低于串联？</h2>
+    <h2 class="slide-title">왜 병렬 모델 성능이 직렬보다 낮은가?</h2>
     
     <div class="content">
-      <!-- 实验结果对比表 -->
+      <!-- 실험 결과 비교표 -->
       <div style="margin-bottom: 16px;">
         <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">
-          📊 公平对比实验结果（相同训练条件）
+          📊 공정한 비교 실험 결과 (동일 훈련 조건)
         </h3>
         <table style="width: 100%; border-collapse: collapse; font-size: 11pt;">
           <thead>
             <tr style="background: linear-gradient(to right, #1e3a8a, #3b82f6); color: white;">
-              <th style="padding: 8px; text-align: left; border: 1px solid #e5e7eb;">模型</th>
-              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">验证MAE</th>
-              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">测试MAE</th>
+              <th style="padding: 8px; text-align: left; border: 1px solid #e5e7eb;">모델</th>
+              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">검증 MAE</th>
+              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">테스트 MAE</th>
               <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">vs Baseline</th>
-              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">论文预期</th>
+              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">논문 예상치</th>
             </tr>
           </thead>
           <tbody>
@@ -752,7 +752,7 @@
               <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;">-</td>
             </tr>
             <tr style="background: #fee2e2;">
-              <td style="padding: 7px; border: 1px solid #e5e7eb;"><strong>P-CNN-LSTM-Att (论文)</strong></td>
+              <td style="padding: 7px; border: 1px solid #e5e7eb;"><strong>P-CNN-LSTM-Att (논문)</strong></td>
               <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;">0.035662</td>
               <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;">0.035467</td>
               <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb; color: #ef4444; font-weight: 700;">❌ -15.70%</td>
@@ -762,37 +762,37 @@
         </table>
       </div>
       
-      <!-- 可能原因分析 -->
+      <!-- 가능한 원인 분석 -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-        <!-- 最可能原因 -->
+        <!-- 가장 유력한 원인 -->
         <div style="background: linear-gradient(to bottom, #fef3c7, #fef9e7); border-left: 4px solid #f59e0b; padding: 12px; border-radius: 5px;">
           <h3 style="font-size: 12pt; font-weight: 700; color: #92400e; margin-bottom: 8px;">
-            ⭐⭐⭐⭐⭐ 最可能原因（90%）
+            ⭐⭐⭐⭐⭐ 가장 유력한 원인 (90%)
           </h3>
           <p style="font-size: 10.5pt; line-height: 1.5; color: #374151; margin: 0;">
-            <strong style="color: #dc2626;">对比基线不同</strong><br/>
-            论文对比的是Kim & Cho (2019)的2019年旧方法，而我们实现的串联CNN-LSTM已经是优化过的<strong>强基线</strong>。<br/><br/>
-            如果论文基线是简单LSTM，34.84%提升是合理的。
+            <strong style="color: #dc2626;">비교 베이스라인이 다름</strong><br/>
+            논문은 Kim & Cho (2019)의 구형 방법과 비교했으나, 우리가 구현한 직렬 CNN-LSTM은 이미 최적화된 <strong>강력한 베이스라인</strong>임.<br/><br/>
+            만약 논문의 베이스라인이 단순 LSTM이었다면 34.84% 향상은 합리적임.
           </p>
         </div>
         
-        <!-- 其他原因 -->
+        <!-- 기타 원인 -->
         <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 12px; border-radius: 5px;">
           <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
-            其他可能原因
+            기타 가능한 원인
           </h3>
           <ul style="margin: 0; padding-left: 18px; font-size: 10pt; line-height: 1.6;">
-            <li><strong>超参数未对齐</strong> (60%概率) - CNN filters、LSTM units等配置</li>
-            <li><strong>数据预处理差异</strong> (40%概率) - 时间特征工程、归一化细节</li>
-            <li><strong>架构细节差异</strong> (30%概率) - 权重初始化、激活函数</li>
-            <li><strong>训练策略差异</strong> (30%概率) - 学习率调度、数据增强</li>
+            <li><strong>초매개변수 불일치</strong> (60% 확률) - CNN 필터, LSTM 유닛 등 설정</li>
+            <li><strong>데이터 전처리 차이</strong> (40% 확률) - 시간 특징 공학, 정규화 세부 사항</li>
+            <li><strong>아키텍처 세부 사항 차이</strong> (30% 확률) - 가중치 초기화, 활성화 함수</li>
+            <li><strong>훈련 전략 차이</strong> (30% 확률) - 학습률 스케줄링, 데이터 증강</li>
           </ul>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI - 재현 문제 분석</div>
       <div class="page-info">15 / 18</div>
     </div>
   </div>
@@ -801,96 +801,80 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">核心问题2</div>
+      <div class="section-indicator">핵심 문제 2</div>
       <div class="page-number">16</div>
     </div>
     
-    <h2 class="slide-title">论文缺少关键实现细节</h2>
+    <h2 class="slide-title">논문의 핵심 구현 세부 사항 누락</h2>
     
     <div class="content">
-      <!-- 缺失细节清单 -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-        <!-- 模型架构细节 -->
-        <div style="background: linear-gradient(to bottom, #fee2e2, #fef2f2); border-left: 4px solid #ef4444; padding: 6px; border-radius: 5px;">
-          <h3 style="font-size: 10pt; font-weight: 700; color: #991b1b; margin-bottom: 4px;">
-            ❌ 模型架构细节
+      <!-- 누락된 세부 사항 목록 -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">                                                                        <!-- 모델 아키텍처 세부 사항 -->
+        <div style="background: linear-gradient(to bottom, #fee2e2, #fef2f2); border-left: 4px solid #ef4444; padding: 6px; border-radius: 5px;">                         <h3 style="font-size: 10pt; font-weight: 700; color: #991b1b; margin-bottom: 4px;">                                                                               ❌ 모델 아키텍처 세부 사항
           </h3>
-          <ul style="margin: 0; padding-left: 12px; font-size: 8.5pt; line-height: 1.25; color: #374151;">
-            <li>CNN卷积核大小、数量</li>
-            <li>具体的池化窗口大小</li>
-            <li>LSTM层数、单元数</li>
-            <li>Attention单元配置</li>
-            <li>Dense层结构</li>
-            <li>激活函数类型</li>
-            <li>权重初始化方法</li>
+          <ul style="margin: 0; padding-left: 12px; font-size: 8.5pt; line-height: 1.25; color: #374151;">                                                                  <li>CNN 커널 크기, 개수</li>
+            <li>구체적인 풀링 윈도우 크기</li>
+            <li>LSTM 레이어 수, 유닛 수</li>
+            <li>Attention 유닛 구성</li>
+            <li>Dense 레이어 구조</li>
+            <li>활성화 함수 유형</li>
+            <li>가중치 초기화 방법</li>
           </ul>
         </div>
         
-        <!-- 训练参数 -->
-        <div style="background: linear-gradient(to bottom, #fef3c7, #fef9e7); border-left: 4px solid #f59e0b; padding: 6px; border-radius: 5px;">
-          <h3 style="font-size: 10pt; font-weight: 700; color: #92400e; margin-bottom: 4px;">
-            ❌ 训练参数
+        <!-- 훈련 파라미터 -->
+        <div style="background: linear-gradient(to bottom, #fef3c7, #fef9e7); border-left: 4px solid #f59e0b; padding: 6px; border-radius: 5px;">                         <h3 style="font-size: 10pt; font-weight: 700; color: #92400e; margin-bottom: 4px;">                                                                               ❌ 훈련 파라미터
           </h3>
-          <ul style="margin: 0; padding-left: 12px; font-size: 8.5pt; line-height: 1.25; color: #374151;">
-            <li>学习率（Learning rate）</li>
-            <li>批大小（Batch size）</li>
-            <li>训练轮数（Epochs）</li>
-            <li>优化器配置</li>
-            <li>学习率调度策略</li>
-            <li>早停（Early stopping）策略</li>
-            <li>Dropout率</li>
+          <ul style="margin: 0; padding-left: 12px; font-size: 8.5pt; line-height: 1.25; color: #374151;">                                                                  <li>학습률 (Learning rate)</li>
+            <li>배치 크기 (Batch size)</li>
+            <li>훈련 에포크 (Epochs)</li>
+            <li>옵티마이저 설정</li>
+            <li>학습률 스케줄링 전략</li>
+            <li>조기 종료 (Early stopping) 전략</li>
+            <li>Dropout 비율</li>
           </ul>
         </div>
       </div>
       
-      <!-- 数据处理细节 -->
-      <div style="background: linear-gradient(to bottom, #dbeafe, #f0f9ff); border-left: 4px solid #3b82f6; padding: 6px; border-radius: 5px; margin-bottom: 6px;">
-        <h3 style="font-size: 10pt; font-weight: 700; color: #1e3a8a; margin-bottom: 4px;">
-          ❌ 数据预处理细节
+      <!-- 데이터 처리 세부 사항 -->
+      <div style="background: linear-gradient(to bottom, #dbeafe, #f0f9ff); border-left: 4px solid #3b82f6; padding: 6px; border-radius: 5px; margin-bottom: 6px;">                                                                                     <h3 style="font-size: 10pt; font-weight: 700; color: #1e3a8a; margin-bottom: 4px;">                                                                               ❌ 데이터 전처리 세부 사항
         </h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 8.5pt;">
-          <div>
-            <strong style="color: #3b82f6;">归一化方法：</strong><br/>
-            <span style="color: #6b7280;">MinMax? StandardScaler? 范围？</span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 8.5pt;">                                                                      <div>
+            <strong style="color: #3b82f6;">정규화 방법:</strong><br/>
+            <span style="color: #6b7280;">MinMax? StandardScaler? 범위?</span>
           </div>
           <div>
-            <strong style="color: #3b82f6;">特征工程：</strong><br/>
-            <span style="color: #6b7280;">时间编码？周期性特征？</span>
+            <strong style="color: #3b82f6;">특성 공학:</strong><br/>
+            <span style="color: #6b7280;">시간 인코딩? 주기적 특성?</span>
           </div>
           <div>
-            <strong style="color: #3b82f6;">数据分割：</strong><br/>
-            <span style="color: #6b7280;">训练/验证/测试比例？</span>
+            <strong style="color: #3b82f6;">데이터 분할:</strong><br/>
+            <span style="color: #6b7280;">훈련/검증/테스트 비율?</span>
           </div>
         </div>
       </div>
       
-      <!-- 当前应对策略 -->
-      <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 6px; border-radius: 5px;">
-        <h3 style="font-size: 10pt; font-weight: 700; color: #1e3a8a; margin-bottom: 4px;">
-          💡 当前应对策略
+      <!-- 현재 대응 전략 -->
+      <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 6px; border-radius: 5px;">                                                                 <h3 style="font-size: 10pt; font-weight: 700; color: #1e3a8a; margin-bottom: 4px;">                                                                               💡 현재 대응 전략
         </h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 8.5pt; line-height: 1.25;">
-          <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">
-            <div style="font-size: 14pt; margin-bottom: 2px;">🔍</div>
-            <strong style="color: #3b82f6;">基于论文解读</strong><br/>
-            <span style="color: #6b7280; font-size: 8.5pt;">分析公式和图示</span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 8.5pt; line-height: 1.25;">                                                   <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">                                                                            <div style="font-size: 14pt; margin-bottom: 2px;">🔍</div>
+            <strong style="color: #3b82f6;">논문 해석 기반</strong><br/>
+            <span style="color: #6b7280; font-size: 8.5pt;">수식 및 도식 분석</span>
           </div>
-          <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">
-            <div style="font-size: 14pt; margin-bottom: 2px;">📚</div>
-            <strong style="color: #10b981;">常见实践</strong><br/>
-            <span style="color: #6b7280; font-size: 8.5pt;">参考领域标准</span>
+          <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">                                                                            <div style="font-size: 14pt; margin-bottom: 2px;">📚</div>
+            <strong style="color: #10b981;">일반적인 관행</strong><br/>
+            <span style="color: #6b7280; font-size: 8.5pt;">분야 표준 참고</span>
           </div>
-          <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">
-            <div style="font-size: 14pt; margin-bottom: 2px;">🧪</div>
-            <strong style="color: #f59e0b;">实验验证</strong><br/>
-            <span style="color: #6b7280; font-size: 8.5pt;">多次迭代调优</span>
+          <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">                                                                            <div style="font-size: 14pt; margin-bottom: 2px;">🧪</div>
+            <strong style="color: #f59e0b;">실험 검증</strong><br/>
+            <span style="color: #6b7280; font-size: 8.5pt;">반복적인 튜닝</span>
           </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 재현 문제 분석</div>
       <div class="page-info">16 / 18</div>
     </div>
   </div>
@@ -899,107 +883,73 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">解决方案</div>
+      <div class="section-indicator">솔루션</div>
       <div class="page-number">17</div>
     </div>
     
-    <h2 class="slide-title">已尝试的解决方案（10个主要尝试）</h2>
+    <h2 class="slide-title">시도된 솔루션 (10가지 주요 시도)</h2>
     
     <div class="content">
-      <!-- 成功的解决方案 -->
+      <!-- 성공적인 솔루션 -->
       <div style="margin-bottom: 10px;">
-        <h3 style="font-size: 12.5pt; font-weight: 700; color: #10b981; margin-bottom: 8px; border-left: 5px solid #10b981; padding-left: 8px;">
-          ✅ 成功修正（符合论文）
+        <h3 style="font-size: 12.5pt; font-weight: 700; color: #10b981; margin-bottom: 8px; border-left: 5px solid #10b981; padding-left: 8px;">                          ✅ 성공적인 수정 (논문 일치)
         </h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 8px; border-radius: 5px;">
-            <strong style="color: #047857; font-size: 10.5pt;">1️⃣ 修正注意力机制</strong>
-            <p style="font-size: 9.5pt; color: #374151; margin: 5px 0 0 0; line-height: 1.4;">
-              使用最终隐藏状态h_N计算相关性<br/>
-              <span style="color: #10b981;">✓ 符合论文公式1-2</span>
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 8px; border-radius: 5px;">                                                                   <strong style="color: #047857; font-size: 10.5pt;">1️⃣ Attention 메커니즘 수정</strong>                                                                                    <p style="font-size: 9.5pt; color: #374151; margin: 5px 0 0 0; line-height: 1.4;">                                                                                최종 은닉 상태 h_N을 사용하여 상관관계 계산<br/>
+              <span style="color: #10b981;">✓ 논문 수식 1-2와 일치</span>
             </p>
           </div>
           
-          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 8px; border-radius: 5px;">
-            <strong style="color: #047857; font-size: 10.5pt;">2️⃣ 修正状态分类器</strong>
-            <p style="font-size: 9.5pt; color: #374151; margin: 5px 0 0 0; line-height: 1.4;">
-              Sn鲁棒尺度估计 + α=1.4285<br/>
-              <span style="color: #10b981;">✓ 符合论文公式5-7</span>
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 8px; border-radius: 5px;">                                                                   <strong style="color: #047857; font-size: 10.5pt;">2️⃣ 상태 분류기 수정</strong>                                                                                    <p style="font-size: 9.5pt; color: #374151; margin: 5px 0 0 0; line-height: 1.4;">                                                                                Sn 로버스트 척도 추정 + α=1.4285<br/>
+              <span style="color: #10b981;">✓ 논문 수식 5-7과 일치</span>
             </p>
           </div>
           
-          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 8px; border-radius: 5px;">
-            <strong style="color: #047857; font-size: 10.5pt;">3️⃣ 修正归一化方法</strong>
-            <p style="font-size: 9.5pt; color: #374151; margin: 5px 0 0 0; line-height: 1.4;">
-              MinMaxScaler(0,1) + 目标变量归一化<br/>
-              <span style="color: #10b981;">✓ MAE降至0.03-0.04（对齐论文）</span>
-            </p>
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 8px; border-radius: 5px;">                                                                   <strong style="color: #047857; font-size: 10.5pt;">3️⃣ 정규화 방법 수정</strong>                                                                                    <p style="font-size: 9.5pt; color: #374151; margin: 5px 0 0 0; line-height: 1.4;">                                                                                MinMaxScaler(0,1) + 타겟 변수 정규화<br/>
+              <span style="color: #10b981;">✓ MAE 0.03-0.04로 감소 (논문 수준)</span>                                                                                           </p>
           </div>
           
-          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 8px; border-radius: 5px;">
-            <strong style="color: #047857; font-size: 10.5pt;">5️⃣ GlobalAveragePooling</strong>
-            <p style="font-size: 9.5pt; color: #374151; margin: 5px 0 0 0; line-height: 1.4;">
-              替代Flatten，参数量286K→131K<br/>
-              <span style="color: #10b981;">✓ MAE: 0.2906→0.0330</span>
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 8px; border-radius: 5px;">                                                                   <strong style="color: #047857; font-size: 10.5pt;">5️⃣ GlobalAveragePooling</strong>                                                                              <p style="font-size: 9.5pt; color: #374151; margin: 5px 0 0 0; line-height: 1.4;">                                                                                Flatten 대체, 파라미터 수 286K → 131K<br/>
+              <span style="color: #10b981;">✓ MAE: 0.2906 → 0.0330</span>
             </p>
           </div>
         </div>
       </div>
       
-      <!-- 部分改善的方案 -->
+      <!-- 부분 개선된 솔루션 -->
       <div style="margin-bottom: 10px;">
-        <h3 style="font-size: 12.5pt; font-weight: 700; color: #f59e0b; margin-bottom: 8px; border-left: 5px solid #f59e0b; padding-left: 8px;">
-          ⚠️ 部分改善（未达预期）
+        <h3 style="font-size: 12.5pt; font-weight: 700; color: #f59e0b; margin-bottom: 8px; border-left: 5px solid #f59e0b; padding-left: 8px;">                          ⚠️ 일부 개선 (기대 미달)
         </h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 8px; border-radius: 5px;">
-            <strong style="color: #92400e; font-size: 10pt;">4️⃣ LSTM输入来源</strong>
-            <p style="font-size: 9pt; color: #6b7280; margin: 4px 0 0 0; line-height: 1.35;">
-              MAE: 0.0337→0.0330<br/>
-              有改善但仍低于串联
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">                                                                                        <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 8px; border-radius: 5px;">                                                                   <strong style="color: #92400e; font-size: 10pt;">4️⃣ LSTM 입력 소스</strong>                                                                                        <p style="font-size: 9pt; color: #6b7280; margin: 4px 0 0 0; line-height: 1.35;">                                                                                 MAE: 0.0337 → 0.0330<br/>
+              개선되었으나 여전히 직렬 모델보다 낮음
             </p>
           </div>
           
-          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 8px; border-radius: 5px;">
-            <strong style="color: #92400e; font-size: 10pt;">6️⃣ 超参数搜索</strong>
-            <p style="font-size: 9pt; color: #6b7280; margin: 4px 0 0 0; line-height: 1.35;">
-              LSTM、CNN、Dropout等<br/>
-              部分配置有改善
+          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 8px; border-radius: 5px;">                                                                   <strong style="color: #92400e; font-size: 10pt;">6️⃣ 하이퍼파라미터 탐색</strong>                                                                                          <p style="font-size: 9pt; color: #6b7280; margin: 4px 0 0 0; line-height: 1.35;">                                                                                 LSTM, CNN, Dropout 등<br/>
+              일부 설정에서 개선 확인
             </p>
           </div>
           
-          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 8px; border-radius: 5px;">
-            <strong style="color: #92400e; font-size: 10pt;">7️⃣ Bidirectional LSTM</strong>
-            <p style="font-size: 9pt; color: #6b7280; margin: 4px 0 0 0; line-height: 1.35;">
-              性能略有改善<br/>
-              但训练时间翻倍
+          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 8px; border-radius: 5px;">                                                                   <strong style="color: #92400e; font-size: 10pt;">7️⃣ 양방향(Bidirectional) LSTM</strong>                                                                                  <p style="font-size: 9pt; color: #6b7280; margin: 4px 0 0 0; line-height: 1.35;">                                                                                 성능 소폭 개선<br/>
+              하지만 훈련 시간 2배 증가
             </p>
           </div>
         </div>
       </div>
       
-      <!-- 关键发现 -->
-      <div style="background: linear-gradient(to right, #dbeafe 0%, #f0f9ff 100%); border-left: 5px solid #3b82f6; padding: 10px 12px; border-radius: 5px;">
-        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">
-          🔍 关键发现
+      <!-- 핵심 발견 -->
+      <div style="background: linear-gradient(to right, #dbeafe 0%, #f0f9ff 100%); border-left: 5px solid #3b82f6; padding: 10px 12px; border-radius: 5px;">            <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">                                                                               💡 핵심 발견
         </h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 9.8pt; line-height: 1.45;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 9.8pt; line-height: 1.45;">                                                      <div>
+            <strong style="color: #3b82f6;">✓ 아키텍처 정확성:</strong> 모든 수정 사항이 논문 설명과 일치<br/>                                                                             <strong style="color: #3b82f6;">✓ 기술 구현:</strong> Attention, 상태 분류 등 핵심 모듈 정확성 확인<br/>                                                                       <strong style="color: #3b82f6;">✓ 데이터 처리:</strong> 정규화 방법, 평가 공간이 논문과 일치                                                                            </div>
           <div>
-            <strong style="color: #3b82f6;">✓ 架构正确性：</strong>所有修正都符合论文描述<br/>
-            <strong style="color: #3b82f6;">✓ 技术实现：</strong>注意力、状态分类等核心模块正确<br/>
-            <strong style="color: #3b82f6;">✓ 数据处理：</strong>归一化方法、评估空间对齐论文
-          </div>
-          <div>
-            <strong style="color: #ef4444;">✗ 性能差距：</strong>并行模型始终低于串联<br/>
-            <strong style="color: #ef4444;">✗ 提升幅度：</strong>+3.08% vs 论文声称的+34.84%<br/>
-            <strong style="color: #f59e0b;">? 根本原因：</strong>可能是对比基线不同
-          </div>
+            <strong style="color: #ef4444;">✗ 성능 격차:</strong> 병렬 모델이 직렬 모델보다 항상 성능이 낮음<br/>                                                                                 <strong style="color: #ef4444;">✗ 향상 폭:</strong> +3.08% vs 논문 주장 +34.84%<br/>                                                                          <strong style="color: #f59e0b;">? 근본 원인:</strong> 비교 기준(Baseline)이 다를 가능성                                                                                      </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 재현 문제 분석</div>
       <div class="page-info">17 / 18</div>
     </div>
   </div>
@@ -1008,73 +958,44 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">未来工作展望</div>
+      <div class="section-indicator">향후 연구 전망</div>
       <div class="page-number">18</div>
     </div>
     
-    <h2 class="slide-title">进一步研究：因果驱动的干预方案推荐系统</h2>
+    <h2 class="slide-title">심화 연구: 인과 기반 개입 방안 추천 시스템</h2>
     
     <div class="content">
-      <!-- 研究背景与动机 -->
-      <div style="background: #f0f4f8; padding: 10px 12px; border-radius: 6px; border-left: 4px solid #3b82f6; margin-bottom: 10px;">
-        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">📌 研究背景与动机</h3>
-        <p style="font-size: 10.5pt; line-height: 1.45; color: #374151; margin: 0;">
-          传统可解释能源预测系统主要聚焦于回答<strong>"为什么会发生负荷峰值（Why）"</strong>，但在真实能源管理场景中，更关键的问题是：<strong>"如果改变用电行为会发生什么（What-if）？应该采取哪种改变（Which action）？"</strong>
-        </p>
+      <!-- 연구 배경 및 동기 -->
+      <div style="background: #f0f4f8; padding: 10px 12px; border-radius: 6px; border-left: 4px solid #3b82f6; margin-bottom: 10px;">                                   <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">📌 연구 배경 및 동기</h3>                                                       <p style="font-size: 10.5pt; line-height: 1.45; color: #374151; margin: 0;">                                                                                      기존의 설명 가능한 에너지 예측 시스템은 주로 <strong>"부하 피크가 왜 발생했는가(Why)"</strong>에 초점을 맞춥니다. 하지만 실제 에너지 관리 현장에서는 <strong>"전력 사용 행동을 바꾸면 어떤 일이 일어나는가(What-if)? 어떤 변화를 취해야 하는가(Which action)?"</strong>가 더 중요한 질문입니다.                     </p>
       </div>
       
-      <!-- 核心研究目标 -->
+      <!-- 핵심 연구 목표 -->
       <div style="margin-bottom: 10px;">
-        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">🎯 核心研究目标</h3>
-        <p style="font-size: 10.5pt; line-height: 1.45; color: #374151; margin-bottom: 6px;">
-          将研究目标从<strong>因果解释（Causal Explanation）</strong>拓展为<strong>因果驱动的、可执行的、可在用户反馈下持续进化的决策推荐系统</strong>。
-        </p>
-        <div style="background: #eff6ff; padding: 8px 10px; border-radius: 5px; border-left: 3px solid #3b82f6;">
-          <p style="font-size: 9.8pt; line-height: 1.45; color: #1e3a8a; margin: 0;">
-            <strong>形式化问题：</strong>在给定上下文条件（季节、时间、建筑规模、当前负荷状态等）下，如何生成并推荐一组可执行的干预方案，在峰值削减、能耗降低、用户可接受性与安全约束之间取得最优平衡，并使系统在真实用户交互中越用越聪明。
-          </p>
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">🎯 핵심 연구 목표</h3>                                                         <p style="font-size: 10.5pt; line-height: 1.45; color: #374151; margin-bottom: 6px;">                                                                             연구 목표를 <strong>인과적 설명(Causal Explanation)</strong>에서 <strong>인과 기반의, 실행 가능한, 사용자 피드백을 통해 지속적으로 진화하는 의사결정 추천 시스템</strong>으로 확장합니다.                </p>
+        <div style="background: #eff6ff; padding: 8px 10px; border-radius: 5px; border-left: 3px solid #3b82f6;">                                                         <p style="font-size: 9.8pt; line-height: 1.45; color: #1e3a8a; margin: 0;">                                                                                       <strong>문제 정식화:</strong> 주어진 컨텍스트 조건(계절, 시간, 건물 규모, 현재 부하 상태 등) 하에서, 피크 절감, 에너지 소비 감소, 사용자 수용성 및 안전 제약 간의 최적 균형을 이루는 실행 가능한 개입 방안 세트를 생성 및 추천하고, 실제 사용자 상호작용을 통해 시스템을 더욱 지능적으로 만드는 방법.              </p>
         </div>
       </div>
       
-      <!-- 系统总体架构 -->
+      <!-- 전체 시스템 아키텍처 -->
       <div>
-        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">🔄 系统总体架构（六大模块）</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-          <div style="background: white; border: 1.5px solid #10b981; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #047857; font-size: 10.5pt;">① 上下文感知模块</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">编码环境信息（季节、时间、建筑类型、当前负荷）与模型内部状态（DLP、EDP、Attention类型）</p>
-          </div>
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">🔄 전체 시스템 아키텍처 (6대 모듈)</h3>                                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div style="background: white; border: 1.5px solid #10b981; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #047857; font-size: 10.5pt;">① 컨텍스트 인식 모듈</strong>                                                                                    <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">환경 정보(계절, 시간, 건물 유형, 현재 부하) 및 모델 내부 상태(DLP, EDP, Attention 유형) 인코딩</p>                                                                   </div>
           
-          <div style="background: white; border: 1.5px solid #3b82f6; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #1e40af; font-size: 10.5pt;">② 干预方案生成器</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">基于专家模板库实例化候选方案集合，仅干预可控变量（空调档位、设备启停）</p>
-          </div>
+          <div style="background: white; border: 1.5px solid #3b82f6; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #1e40af; font-size: 10.5pt;">② 개입 방안 생성기</strong>                                                                                    <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">전문가 템플릿 라이브러리 기반 후보 방안 집합 인스턴스화, 제어 가능한 변수(에어컨 설정, 장비 제어)만 개입</p>                                                                                    </div>
           
-          <div style="background: white; border: 1.5px solid #f59e0b; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #d97706; font-size: 10.5pt;">③ 因果效果评估</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">通过贝叶斯网络do-calculus计算<code style="background: #f9fafb; padding: 1px 4px;">P(Peak|do(π),c)</code>，评估干预效果而非相关性</p>
-          </div>
+          <div style="background: white; border: 1.5px solid #f59e0b; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #d97706; font-size: 10.5pt;">③ 인과 효과 평가</strong>                                                                                      <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">베이지안 네트워크 do-calculus를 통해 <code style="background: #f9fafb; padding: 1px 4px;">P(Peak|do(π),c)</code> 계산, 상관관계가 아닌 개입 효과 평가</p>                          </div>
           
-          <div style="background: white; border: 1.5px solid #6366f1; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #4f46e5; font-size: 10.5pt;">④ Slate Bandit推荐</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">上下文感知的方案排序，选择Top-K列表推荐，平衡探索与利用</p>
-          </div>
+          <div style="background: white; border: 1.5px solid #6366f1; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #4f46e5; font-size: 10.5pt;">④ Slate Bandit 추천</strong>                                                                                 <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">컨텍스트 인식 방안 정렬, Top-K 목록 추천 선택, 탐색과 활용의 균형</p>                   </div>
           
-          <div style="background: white; border: 1.5px solid #8b5cf6; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #7c3aed; font-size: 10.5pt;">⑤ 增强反馈采集</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">收集拒绝原因标签（太麻烦/不舒服/影响工作等）与执行确认信号</p>
-          </div>
+          <div style="background: white; border: 1.5px solid #8b5cf6; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #7c3aed; font-size: 10.5pt;">⑤ 강화된 피드백 수집</strong>                                                                                      <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">거부 원인 라벨(너무 번거로움/불편함/업무 지장 등) 및 실행 확인 신호 수집</p>                </div>
           
-          <div style="background: white; border: 1.5px solid #64748b; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #475569; font-size: 10.5pt;">⑥ 在线学习更新</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">Bandit策略更新 + 偏好模型更新 + 生成策略演化</p>
-          </div>
+          <div style="background: white; border: 1.5px solid #64748b; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #475569; font-size: 10.5pt;">⑥ 온라인 학습 업데이트</strong>                                                                                      <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">Bandit 전략 업데이트 + 선호도 모델 업데이트 + 생성 전략 진화</p>                              </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 향후 연구 전망</div>
       <div class="page-info">18 / 22</div>
     </div>
   </div>
@@ -1083,23 +1004,19 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">系统架构</div>
+      <div class="section-indicator">시스템 아키텍처</div>
       <div class="page-number">19</div>
     </div>
     
-    <h2 class="slide-title">因果-推荐-反馈闭环系统架构</h2>
+    <h2 class="slide-title">인과-추천-피드백 폐루프 시스템 아키텍처</h2>
     
-    <div class="content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80%;">
-      <div style="text-align: center; margin-bottom: 12px;">
-        <img src="images/自己的idea.png" alt="系统架构图" style="width: min(88%, 820px); height: auto; border-radius: 8px; box-shadow: 0 8px 18px rgba(15,23,42,0.18);">
-      </div>
-      <div style="font-size: 9.8pt; color: #475569; text-align: center; background: rgba(248,250,252,0.95); border: 1px solid #e2e8f0; border-radius: 20px; padding: 8px 18px;">
-        因果推断 + Slate Bandit + 增强反馈共同构成闭环：从感知上下文 → 生成/评估干预方案 → Top-K推荐 → 执行确认与在线自适应。
-      </div>
+    <div class="content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80%;">                                   <div style="text-align: center; margin-bottom: 12px;">
+        <img src="images/自己的idea.png" alt="시스템 아키텍처 다이어그램" style="width: min(88%, 820px); height: auto; border-radius: 8px; box-shadow: 0 8px 18px rgba(15,23,42,0.18);">                                                                              </div>
+      <div style="font-size: 9.8pt; color: #475569; text-align: center; background: rgba(248,250,252,0.95); border: 1px solid #e2e8f0; border-radius: 20px; padding: 8px 18px;">                                                                        인과 추론 + Slate Bandit + 강화된 피드백이 폐루프를 구성: 컨텍스트 인식 → 개입 방안 생성/평가 → Top-K 추천 → 실행 확인 및 온라인 적응.                                         </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 향후 연구 전망</div>
       <div class="page-info">19 / 22</div>
     </div>
   </div>
@@ -1108,47 +1025,31 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">系统架构</div>
+      <div class="section-indicator">시스템 아키텍처</div>
       <div class="page-number">20</div>
     </div>
     
-    <h2 class="slide-title">闭环执行与反馈路径</h2>
+    <h2 class="slide-title">폐루프 실행 및 피드백 경로</h2>
     
     <div class="content">
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; box-shadow: inset 0 0 0 1px rgba(15,23,42,0.02);">
-        <h3 style="font-size: 11.5pt; font-weight: 700; color: #0f172a; margin-bottom: 8px;">🧩 六大模块协同（文字概览）</h3>
-        <ul style="margin: 0; padding-left: 18px; font-size: 10.3pt; line-height: 1.6; color: #1f2937;">
-          <li><strong>Context Encoder</strong>：抽取季节、建筑形态、实时负荷与模型内部状态，生成稳健上下文。</li>
-          <li><strong>Intervention Generator + Causal Evaluator</strong>：基于模板库生成候选方案，并用BN do-calculus 估算峰值/能耗收益。</li>
-          <li><strong>Slate Bandit + Enhanced Feedback Module</strong>：以多目标奖励挑选Top-K方案，结合用户喜好/拒绝原因闭环自适应。</li>
-        </ul>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; box-shadow: inset 0 0 0 1px rgba(15,23,42,0.02);">                                                                       <h3 style="font-size: 11.5pt; font-weight: 700; color: #0f172a; margin-bottom: 8px;">🧩 6대 모듈 협업 (텍스트 개요)</h3>                                           <ul style="margin: 0; padding-left: 18px; font-size: 10.3pt; line-height: 1.6; color: #1f2937;">                                                                  <li><strong>Context Encoder</strong>: 계절, 건물 형태, 실시간 부하 및 모델 내부 상태를 추출하여 견고한 컨텍스트 생성.</li>                                                         <li><strong>Intervention Generator + Causal Evaluator</strong>: 템플릿 라이브러리 기반 후보 방안 생성 및 BN do-calculus로 피크/에너지 효율 이득 추정.</li>                             <li><strong>Slate Bandit + Enhanced Feedback Module</strong>: 다목적 보상으로 Top-K 방안 선택, 사용자 선호/거부 원인 결합하여 폐루프 적응.</li>                               </ul>
       </div>
 
-      <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 12px 16px; border-radius: 8px; margin-bottom: 14px;">
-        <h3 style="font-size: 11.5pt; font-weight: 700; margin-bottom: 8px;">🔄 完整信息流</h3>
-        <div style="font-size: 10.2pt; line-height: 1.55;">
-          <strong>上下文输入</strong> → <strong>方案生成</strong>（候选集合）→ <strong>因果干预评估</strong>（BN do-calculus）→ <strong>Bandit排序与Top-K推荐</strong> → <strong>用户反馈</strong>（选择/拒绝原因/点赞/执行确认）→ <strong>在线学习更新</strong>（Bandit策略 + 偏好模型 + 生成策略演化）
-        </div>
+      <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 12px 16px; border-radius: 8px; margin-bottom: 14px;">                   <h3 style="font-size: 11.5pt; font-weight: 700; margin-bottom: 8px;">🔄 전체 정보 흐름</h3>                                                                         <div style="font-size: 10.2pt; line-height: 1.55;">
+          <strong>컨텍스트 입력</strong> → <strong>방안 생성</strong> (후보 집합) → <strong>인과 개입 평가</strong> (BN do-calculus) → <strong>Bandit 정렬 및 Top-K 추천</strong> → <strong>사용자 피드백</strong> (선택/거부 원인/좋아요/실행 확인) → <strong>온라인 학습 업데이트</strong> (Bandit 전략 + 선호도 모델 + 생성 전략 진화)                               </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; font-size: 10pt; line-height: 1.5;">
-        <div style="background: #eef2ff; border-radius: 8px; padding: 12px; border-left: 3px solid #4338ca; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">
-          <strong style="color: #312e81;">上下文编码</strong>
-          <p style="margin: 6px 0 0 0; color: #1f2937;">多维输入（季节、建筑属性、实时负荷）经由上下文编码器生成状态摘要，驱动下游规划。</p>
-        </div>
-        <div style="background: #ecfdf5; border-radius: 8px; padding: 12px; border-left: 3px solid #059669; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">
-          <strong style="color: #065f46;">因果+Bandit融合</strong>
-          <p style="margin: 6px 0 0 0; color: #1f2937;">BN推断评估干预影响，Slate Bandit依据多目标奖励函数选择Top-K方案并持续在线更新。</p>
-        </div>
-        <div style="background: #fff7ed; border-radius: 8px; padding: 12px; border-left: 3px solid #ea580c; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">
-          <strong style="color: #7c2d12;">反馈闭环</strong>
-          <p style="margin: 6px 0 0 0; color: #1f2937;">采集用户喜好、拒绝原因与执行确认，触发动作用屏蔽与策略自适应，确保安全落地。</p>
-        </div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; font-size: 10pt; line-height: 1.5;">                                      <div style="background: #eef2ff; border-radius: 8px; padding: 12px; border-left: 3px solid #4338ca; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">                  <strong style="color: #312e81;">컨텍스트 인코딩</strong>
+          <p style="margin: 6px 0 0 0; color: #1f2937;">다차원 입력(계절, 건물 속성, 실시간 부하)이 컨텍스트 인코더를 통해 상태 요약을 생성하여 다운스트림 계획을 주도.</p>                            </div>
+        <div style="background: #ecfdf5; border-radius: 8px; padding: 12px; border-left: 3px solid #059669; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">                  <strong style="color: #065f46;">인과 + Bandit 융합</strong>
+          <p style="margin: 6px 0 0 0; color: #1f2937;">BN 추론으로 개입 영향 평가, Slate Bandit이 다목적 보상 함수에 따라 Top-K 방안을 선택하고 지속적으로 온라인 업데이트.</p>                             </div>
+        <div style="background: #fff7ed; border-radius: 8px; padding: 12px; border-left: 3px solid #ea580c; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">                  <strong style="color: #7c2d12;">피드백 폐루프</strong>
+          <p style="margin: 6px 0 0 0; color: #1f2937;">사용자 선호도, 거부 원인 및 실행 확인을 수집하여 동작 마스킹 및 전략 적응을 트리거하고 안전한 적용 보장.</p>                                </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 향후 연구 전망</div>
       <div class="page-info">20 / 22</div>
     </div>
   </div>
@@ -1157,59 +1058,35 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">关键技术创新</div>
+      <div class="section-indicator">핵심 기술 혁신</div>
       <div class="page-number">21</div>
     </div>
     
-    <h2 class="slide-title">Slate Bandit推荐机制</h2>
+    <h2 class="slide-title">Slate Bandit 추천 메커니즘</h2>
     
     <div class="content">
       <!-- Slate Bandit -->
       <div style="margin-bottom: 16px;">
-        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">🎯 基于Contextual Slate Bandit的Top-K推荐</h3>
-        <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 14px; border-radius: 6px; margin-bottom: 12px;">
-          <p style="font-size: 10.5pt; line-height: 1.55; color: #374151; margin: 0 0 10px 0;">
-            在给定上下文 <code style="background: white; padding: 1px 4px;">c</code> 下，从候选集合中选择 Top-K 方案列表（Slate）：<code style="background: white; padding: 1px 4px;">S = [π₁, π₂, ..., πₖ]</code>
-          </p>
-          <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 12px 14px; border-radius: 6px;">
-            <strong style="font-size: 11pt;">多目标奖励函数：</strong><br/>
-            <code style="background: rgba(255,255,255,0.2); padding: 6px 10px; border-radius: 4px; font-size: 10pt; display: inline-block; margin-top: 6px;">
-              r(π) = α·AcceptIntent + β·Like - γ·Dislike + λ·ΔPeak + μ·ΔEnergy - ρ·Cost - η·RejectionPenalty
-            </code>
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">🎯 Contextual Slate Bandit 기반 Top-K 추천</h3>                               <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 14px; border-radius: 6px; margin-bottom: 12px;">                                           <p style="font-size: 10.5pt; line-height: 1.55; color: #374151; margin: 0 0 10px 0;">                                                                             주어진 컨텍스트 <code style="background: white; padding: 1px 4px;">c</code> 하에서, 후보 집합으로부터 Top-K 방안 목록(Slate) 선택: <code style="background: white; padding: 1px 4px;">S = [π₁, π₂, ..., πₖ]</code>                                        </p>
+          <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 12px 14px; border-radius: 6px;">                                        <strong style="font-size: 11pt;">다목적 보상 함수:</strong><br/>
+            <code style="background: rgba(255,255,255,0.2); padding: 6px 10px; border-radius: 4px; font-size: 10pt; display: inline-block; margin-top: 6px;">                 r(π) = α·AcceptIntent + β·Like - γ·Dislike + λ·ΔPeak + μ·ΔEnergy - ρ·Cost - η·RejectionPenalty                                                                </code>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px;">
-          <div style="background: #eff6ff; padding: 12px; border-radius: 6px; border-left: 3px solid #3b82f6; min-height: 100px;">
-            <strong style="color: #1e40af; font-size: 10.5pt;">学习算法</strong>
-            <p style="font-size: 10pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.45;">采用Thompson Sampling / LinUCB，在不同上下文下学习高收益方案结构</p>
-          </div>
-          <div style="background: #fef9e7; padding: 12px; border-radius: 6px; border-left: 3px solid #f59e0b; min-height: 100px;">
-            <strong style="color: #92400e; font-size: 10.5pt;">探索-利用平衡</strong>
-            <p style="font-size: 10pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.45;">保持最小探索比例（20%），通过Action Masking确保安全性</p>
-          </div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px;">                                                    <div style="background: #eff6ff; padding: 12px; border-radius: 6px; border-left: 3px solid #3b82f6; min-height: 100px;">                                          <strong style="color: #1e40af; font-size: 10.5pt;">학습 알고리즘</strong>
+            <p style="font-size: 10pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.45;">Thompson Sampling / LinUCB 채택, 다양한 컨텍스트에서 고수익 방안 구조 학습</p>                                                                                        </div>
+          <div style="background: #fef9e7; padding: 12px; border-radius: 6px; border-left: 3px solid #f59e0b; min-height: 100px;">                                          <strong style="color: #92400e; font-size: 10.5pt;">탐색-활용 균형</strong>
+            <p style="font-size: 10pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.45;">최소 탐색 비율(20%) 유지, Action Masking을 통해 안전성 보장</p>                   </div>
         </div>
-        <div style="background: #fff; border: 1px dashed #cbd5f5; border-radius: 8px; padding: 14px;">
-          <h4 style="margin: 0 0 10px 0; font-size: 11pt; color: #1f2937;">执行与反馈管线</h4>
-          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; font-size: 9.8pt; line-height: 1.45; color: #374151;">
-            <div style="background: #eef2ff; border-radius: 6px; padding: 10px; border-top: 3px solid #4c1d95;">
-              <strong style="display: block; margin-bottom: 5px; color: #312e81;">信号融合</strong>
-              <span>上下文、预测置信度与业务约束拼接为bandit状态，驱动Slate构造。</span>
-            </div>
-            <div style="background: #ecfdf5; border-radius: 6px; padding: 10px; border-top: 3px solid #047857;">
-              <strong style="display: block; margin-bottom: 5px; color: #064e3b;">行动筛选</strong>
-              <span>对不可行/高风险动作进行Mask；关键指标超阈值时触发安全降级策略。</span>
-            </div>
-            <div style="background: #fff7ed; border-radius: 6px; padding: 10px; border-top: 3px solid #c2410c;">
-              <strong style="display: block; margin-bottom: 5px; color: #7c2d12;">反馈归因</strong>
-              <span>执行后采集接受、拒绝及峰值变化指标，更新奖励权重并记录可解释特征。</span>
-            </div>
+        <div style="background: #fff; border: 1px dashed #cbd5f5; border-radius: 8px; padding: 14px;">                                                                    <h4 style="margin: 0 0 10px 0; font-size: 11pt; color: #1f2937;">실행 및 피드백 파이프라인</h4>                                                                           <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; font-size: 9.8pt; line-height: 1.45; color: #374151;">                    <div style="background: #eef2ff; border-radius: 6px; padding: 10px; border-top: 3px solid #4c1d95;">                                                              <strong style="display: block; margin-bottom: 5px; color: #312e81;">신호 융합</strong>                                                                           <span>컨텍스트, 예측 신뢰도 및 비즈니스 제약을 bandit 상태로 결합하여 Slate 구성 주도.</span>                                                                                   </div>
+            <div style="background: #ecfdf5; border-radius: 6px; padding: 10px; border-top: 3px solid #047857;">                                                              <strong style="display: block; margin-bottom: 5px; color: #064e3b;">행동 필터링</strong>                                                                           <span>실행 불가/고위험 행동 Mask; 주요 지표 임계값 초과 시 안전 등급 하향 전략 트리거.</span>                                                                                 </div>
+            <div style="background: #fff7ed; border-radius: 6px; padding: 10px; border-top: 3px solid #c2410c;">                                                              <strong style="display: block; margin-bottom: 5px; color: #7c2d12;">피드백 귀인</strong>                                                                           <span>실행 후 수락, 거부 및 피크 변화 지표 수집, 보상 가중치 업데이트 및 설명 가능한 특징 기록.</span>                                                                               </div>
           </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 향후 연구 전망</div>
       <div class="page-info">21 / 22</div>
     </div>
   </div>
@@ -1218,79 +1095,57 @@
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">关键技术创新</div>
+      <div class="section-indicator">핵심 기술 혁신</div>
       <div class="page-number">22</div>
     </div>
     
-    <h2 class="slide-title">增强反馈与在线学习机制</h2>
+    <h2 class="slide-title">강화된 피드백 및 온라인 학습 메커니즘</h2>
     
     <div class="content">
-      <!-- 增强反馈 -->
+      <!-- 강화된 피드백 -->
       <div style="margin-bottom: 12px;">
-        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">💬 增强用户反馈建模（核心扩展）</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-          <div style="background: #fef9e7; border: 1.5px solid #f59e0b; padding: 10px; border-radius: 4px;">
-            <strong style="color: #92400e; font-size: 11pt;">① 拒绝原因分解（Preference Decomposition）</strong>
-            <p style="font-size: 9.5pt; color: #6b7280; margin: 5px 0 8px 0; line-height: 1.45;">
-              将"负反馈"从标量分解为多维偏好标签：
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">💬 강화된 사용자 피드백 모델링 (핵심 확장)</h3>                                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: #fef9e7; border: 1.5px solid #f59e0b; padding: 10px; border-radius: 4px;">                                                                <strong style="color: #92400e; font-size: 11pt;">① 거부 원인 분해 (Preference Decomposition)</strong>                                                            <p style="font-size: 9.5pt; color: #6b7280; margin: 5px 0 8px 0; line-height: 1.45;">                                                                             "부정 피드백"을 스칼라에서 다차원 선호도 라벨로 분해:
             </p>
-            <div style="background: white; padding: 8px; border-radius: 3px; font-size: 9.5pt; line-height: 1.45; color: #374151;">
-              <strong>RejectReason ∈</strong> {太麻烦, 不舒服, 影响工作, 不可信, 已经在做}<br/>
-              <div style="margin-top: 5px; padding: 6px; background: #fef3c7; border-radius: 2px;">
-                <strong style="color: #92400e;">系统作用：</strong><br/>
-                • 训练偏好模型并提供结构约束<br/>
-                • 约束多变量组合与调节幅度
+            <div style="background: white; padding: 8px; border-radius: 3px; font-size: 9.5pt; line-height: 1.45; color: #374151;">                                           <strong>RejectReason ∈</strong> {너무 번거로움, 불편함, 업무 지장, 신뢰 불가, 이미 수행 중}<br/>                                                                               <div style="margin-top: 5px; padding: 6px; background: #fef3c7; border-radius: 2px;">                                                                             <strong style="color: #92400e;">시스템 역할:</strong><br/>
+                • 선호도 모델 훈련 및 구조적 제약 제공<br/>
+                • 다변수 조합 및 조절 범위 제약
               </div>
             </div>
           </div>
           
-          <div style="background: #eff6ff; border: 1.5px solid #3b82f6; padding: 10px; border-radius: 4px;">
-            <strong style="color: #1e40af; font-size: 11pt;">② 执行确认（Intent vs Execution）</strong>
-            <p style="font-size: 9.5pt; color: #6b7280; margin: 5px 0 8px 0; line-height: 1.45;">
-              显式区分用户意愿与真实执行：
+          <div style="background: #eff6ff; border: 1.5px solid #3b82f6; padding: 10px; border-radius: 4px;">                                                                <strong style="color: #1e40af; font-size: 11pt;">② 실행 확인 (Intent vs Execution)</strong>                                                                     <p style="font-size: 9.5pt; color: #6b7280; margin: 5px 0 8px 0; line-height: 1.45;">                                                                             사용자 의향과 실제 실행을 명시적으로 구분:
             </p>
             <div style="background: white; padding: 8px; border-radius: 3px;">
-              <table style="width: 100%; font-size: 9.5pt; border-collapse: collapse;">
-                <tr style="border-bottom: 1px solid #e5e7eb;">
-                  <td style="padding: 5px; color: #3b82f6; font-weight: 600;">Accept-Intent</td>
-                  <td style="padding: 5px; color: #4b5563;">用户愿意执行</td>
+              <table style="width: 100%; font-size: 9.5pt; border-collapse: collapse;">                                                                                         <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td style="padding: 5px; color: #3b82f6; font-weight: 600;">Accept-Intent</td>                                                                                  <td style="padding: 5px; color: #4b5563;">사용자 실행 의향 있음</td>
                 </tr>
                 <tr>
-                  <td style="padding: 5px; color: #10b981; font-weight: 600;">Executed</td>
-                  <td style="padding: 5px; color: #4b5563;">真实执行确认</td>
+                  <td style="padding: 5px; color: #10b981; font-weight: 600;">Executed</td>                                                                                       <td style="padding: 5px; color: #4b5563;">실제 실행 확인</td>
                 </tr>
               </table>
-              <div style="margin-top: 5px; padding: 6px; background: #dbeafe; border-radius: 2px;">
-                <strong style="color: #1e40af; font-size: 9pt;">为什么必须区分？</strong><br/>
-                <span style="font-size: 9pt; color: #4b5563;">仅在Executed=1时，使用真实负荷变化更新因果效果评估，避免未执行方案污染</span>
-              </div>
+              <div style="margin-top: 5px; padding: 6px; background: #dbeafe; border-radius: 2px;">                                                                             <strong style="color: #1e40af; font-size: 9pt;">왜 구분이 필수적인가?</strong><br/>                                                                                  <span style="font-size: 9pt; color: #4b5563;">Executed=1일 때만 실제 부하 변화를 사용하여 인과 효과 평가를 업데이트, 미실행 방안으로 인한 오염 방지</span>                                   </div>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- 在线学习 -->
-      <div style="background: #f0fdf4; border: 2px solid #10b981; padding: 10px 12px; border-radius: 5px;">
-        <h3 style="font-size: 12pt; font-weight: 700; color: #047857; margin-bottom: 8px;">🔄 在线学习与生成策略演化</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 10pt; line-height: 1.45;">
+      <!-- 온라인 학습 -->
+      <div style="background: #f0fdf4; border: 2px solid #10b981; padding: 10px 12px; border-radius: 5px;">                                                             <h3 style="font-size: 12pt; font-weight: 700; color: #047857; margin-bottom: 8px;">🔄 온라인 학습 및 생성 전략 진화</h3>                                               <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 10pt; line-height: 1.45;">                                                   <div style="background: white; padding: 8px; border-radius: 3px;">
+            <strong style="color: #3b82f6;">Bandit 전략 업데이트</strong><br/>
+            <span style="color: #6b7280;">다양한 컨텍스트 하의 고수익 방안 구조 학습</span>                                                                                         </div>
           <div style="background: white; padding: 8px; border-radius: 3px;">
-            <strong style="color: #3b82f6;">Bandit策略更新</strong><br/>
-            <span style="color: #6b7280;">学习不同上下文下的高收益方案结构</span>
-          </div>
+            <strong style="color: #f59e0b;">선호도 모델 최적화</strong><br/>
+            <span style="color: #6b7280;">거부 원인 라벨에 기반하여 수용도 예측기 훈련</span>                                                                                         </div>
           <div style="background: white; padding: 8px; border-radius: 3px;">
-            <strong style="color: #f59e0b;">偏好模型优化</strong><br/>
-            <span style="color: #6b7280;">根据拒绝原因标签训练接受度预测器</span>
-          </div>
-          <div style="background: white; padding: 8px; border-radius: 3px;">
-            <strong style="color: #10b981;">模板权重调整</strong><br/>
-            <span style="color: #6b7280;">高收益模板被更频繁采样，问题模板降权</span>
-          </div>
+            <strong style="color: #10b981;">템플릿 가중치 조정</strong><br/>
+            <span style="color: #6b7280;">고수익 템플릿 빈도 증가, 문제 템플릿 가중치 감소</span>                                                                                     </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 향후 연구 전망</div>
       <div class="page-info">22 / 22</div>
     </div>
   </div>

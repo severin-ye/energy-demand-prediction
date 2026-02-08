@@ -30,11 +30,11 @@ echo "📝 合并所有页面..."
 # 创建合并的HTML文件
 cat > "$MERGED_HTML" << 'HEADER'
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>能源需求预测的因果可解释AI - 论文复现PPT</title>
+  <title>에너지 수요 예측을 위한 인과적 설명 가능한 AI - 논문 재현 PPT</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     @page {
@@ -102,7 +102,7 @@ if python3 -c "import weasyprint" 2>/dev/null; then
     python3 -c "
 from weasyprint import HTML
 HTML('$MERGED_HTML').write_pdf('$MERGED_PDF')
-" 2>/dev/null && SUCCESS=1
+" && SUCCESS=1
 
 # 如果没有WeasyPrint，尝试使用Chromium
 elif command -v chromium &> /dev/null; then

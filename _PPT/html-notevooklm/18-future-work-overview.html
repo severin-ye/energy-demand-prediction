@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>未来工作：研究目标</title>
+  <title>향후 연구: 연구 목표</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인쇄 시 스타일 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,78 +16,49 @@
 <body>
 
 <!-- ========================================
-  第18页 - 未来工作概览
+  제18페이지 - 향후 연구 전망
   ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">未来工作展望</div>
+      <div class="section-indicator">향후 연구 전망</div>
       <div class="page-number">18</div>
     </div>
     
-    <h2 class="slide-title">进一步研究：因果驱动的干预方案推荐系统</h2>
+    <h2 class="slide-title">심화 연구: 인과 기반 개입 방안 추천 시스템</h2>
     
     <div class="content">
-      <!-- 研究背景与动机 -->
-      <div style="background: #f0f4f8; padding: 10px 12px; border-radius: 6px; border-left: 4px solid #3b82f6; margin-bottom: 10px;">
-        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">📌 研究背景与动机</h3>
-        <p style="font-size: 10.5pt; line-height: 1.45; color: #374151; margin: 0;">
-          传统可解释能源预测系统主要聚焦于回答<strong>"为什么会发生负荷峰值（Why）"</strong>，但在真实能源管理场景中，更关键的问题是：<strong>"如果改变用电行为会发生什么（What-if）？应该采取哪种改变（Which action）？"</strong>
-        </p>
+      <!-- 연구 배경 및 동기 -->
+      <div style="background: #f0f4f8; padding: 10px 12px; border-radius: 6px; border-left: 4px solid #3b82f6; margin-bottom: 10px;">                                   <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">📌 연구 배경 및 동기</h3>                                                       <p style="font-size: 10.5pt; line-height: 1.45; color: #374151; margin: 0;">                                                                                      기존의 설명 가능한 에너지 예측 시스템은 주로 <strong>"부하 피크가 왜 발생했는가(Why)"</strong>에 초점을 맞춥니다. 하지만 실제 에너지 관리 현장에서는 <strong>"전력 사용 행동을 바꾸면 어떤 일이 일어나는가(What-if)? 어떤 변화를 취해야 하는가(Which action)?"</strong>가 더 중요한 질문입니다.                     </p>
       </div>
       
-      <!-- 核心研究目标 -->
+      <!-- 핵심 연구 목표 -->
       <div style="margin-bottom: 10px;">
-        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">🎯 核心研究目标</h3>
-        <p style="font-size: 10.5pt; line-height: 1.45; color: #374151; margin-bottom: 6px;">
-          将研究目标从<strong>因果解释（Causal Explanation）</strong>拓展为<strong>因果驱动的、可执行的、可在用户反馈下持续进化的决策推荐系统</strong>。
-        </p>
-        <div style="background: #eff6ff; padding: 8px 10px; border-radius: 5px; border-left: 3px solid #3b82f6;">
-          <p style="font-size: 9.8pt; line-height: 1.45; color: #1e3a8a; margin: 0;">
-            <strong>形式化问题：</strong>在给定上下文条件（季节、时间、建筑规模、当前负荷状态等）下，如何生成并推荐一组可执行的干预方案，在峰值削减、能耗降低、用户可接受性与安全约束之间取得最优平衡，并使系统在真实用户交互中越用越聪明。
-          </p>
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">🎯 핵심 연구 목표</h3>                                                         <p style="font-size: 10.5pt; line-height: 1.45; color: #374151; margin-bottom: 6px;">                                                                             연구 목표를 <strong>인과적 설명(Causal Explanation)</strong>에서 <strong>인과 기반의, 실행 가능한, 사용자 피드백을 통해 지속적으로 진화하는 의사결정 추천 시스템</strong>으로 확장합니다.                </p>
+        <div style="background: #eff6ff; padding: 8px 10px; border-radius: 5px; border-left: 3px solid #3b82f6;">                                                         <p style="font-size: 9.8pt; line-height: 1.45; color: #1e3a8a; margin: 0;">                                                                                       <strong>문제 정식화:</strong> 주어진 컨텍스트 조건(계절, 시간, 건물 규모, 현재 부하 상태 등) 하에서, 피크 절감, 에너지 소비 감소, 사용자 수용성 및 안전 제약 간의 최적 균형을 이루는 실행 가능한 개입 방안 세트를 생성 및 추천하고, 실제 사용자 상호작용을 통해 시스템을 더욱 지능적으로 만드는 방법.              </p>
         </div>
       </div>
       
-      <!-- 系统总体架构 -->
+      <!-- 전체 시스템 아키텍처 -->
       <div>
-        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">🔄 系统总体架构（六大模块）</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-          <div style="background: white; border: 1.5px solid #10b981; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #047857; font-size: 10.5pt;">① 上下文感知模块</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">编码环境信息（季节、时间、建筑类型、当前负荷）与模型内部状态（DLP、EDP、Attention类型）</p>
-          </div>
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">🔄 전체 시스템 아키텍처 (6대 모듈)</h3>                                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div style="background: white; border: 1.5px solid #10b981; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #047857; font-size: 10.5pt;">① 컨텍스트 인식 모듈</strong>                                                                                    <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">환경 정보(계절, 시간, 건물 유형, 현재 부하) 및 모델 내부 상태(DLP, EDP, Attention 유형) 인코딩</p>                                                                   </div>
           
-          <div style="background: white; border: 1.5px solid #3b82f6; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #1e40af; font-size: 10.5pt;">② 干预方案生成器</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">基于专家模板库实例化候选方案集合，仅干预可控变量（空调档位、设备启停）</p>
-          </div>
+          <div style="background: white; border: 1.5px solid #3b82f6; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #1e40af; font-size: 10.5pt;">② 개입 방안 생성기</strong>                                                                                    <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">전문가 템플릿 라이브러리 기반 후보 방안 집합 인스턴스화, 제어 가능한 변수(에어컨 설정, 장비 제어)만 개입</p>                                                                                    </div>
           
-          <div style="background: white; border: 1.5px solid #f59e0b; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #d97706; font-size: 10.5pt;">③ 因果效果评估</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">通过贝叶斯网络do-calculus计算<code style="background: #f9fafb; padding: 1px 4px;">P(Peak|do(π),c)</code>，评估干预效果而非相关性</p>
-          </div>
+          <div style="background: white; border: 1.5px solid #f59e0b; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #d97706; font-size: 10.5pt;">③ 인과 효과 평가</strong>                                                                                      <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">베이지안 네트워크 do-calculus를 통해 <code style="background: #f9fafb; padding: 1px 4px;">P(Peak|do(π),c)</code> 계산, 상관관계가 아닌 개입 효과 평가</p>                          </div>
           
-          <div style="background: white; border: 1.5px solid #6366f1; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #4f46e5; font-size: 10.5pt;">④ Slate Bandit推荐</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">上下文感知的方案排序，选择Top-K列表推荐，平衡探索与利用</p>
-          </div>
+          <div style="background: white; border: 1.5px solid #6366f1; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #4f46e5; font-size: 10.5pt;">④ Slate Bandit 추천</strong>                                                                                 <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">컨텍스트 인식 방안 정렬, Top-K 목록 추천 선택, 탐색과 활용의 균형</p>                   </div>
           
-          <div style="background: white; border: 1.5px solid #8b5cf6; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #7c3aed; font-size: 10.5pt;">⑤ 增强反馈采集</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">收集拒绝原因标签（太麻烦/不舒服/影响工作等）与执行确认信号</p>
-          </div>
+          <div style="background: white; border: 1.5px solid #8b5cf6; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #7c3aed; font-size: 10.5pt;">⑤ 강화된 피드백 수집</strong>                                                                                      <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">거부 원인 라벨(너무 번거로움/불편함/업무 지장 등) 및 실행 확인 신호 수집</p>                </div>
           
-          <div style="background: white; border: 1.5px solid #64748b; padding: 8px 10px; border-radius: 5px;">
-            <strong style="color: #475569; font-size: 10.5pt;">⑥ 在线学习更新</strong>
-            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">Bandit策略更新 + 偏好模型更新 + 生成策略演化</p>
-          </div>
+          <div style="background: white; border: 1.5px solid #64748b; padding: 8px 10px; border-radius: 5px;">                                                              <strong style="color: #475569; font-size: 10.5pt;">⑥ 온라인 학습 업데이트</strong>                                                                                      <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">Bandit 전략 업데이트 + 선호도 모델 업데이트 + 생성 전략 진화</p>                              </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 향후 연구 전망</div>
       <div class="page-info">18 / 22</div>
     </div>
   </div>

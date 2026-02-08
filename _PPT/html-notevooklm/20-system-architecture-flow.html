@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>系统架构：执行闭环</title>
+  <title>시스템 아키텍처: 실행 폐루프</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인쇄 시 스타일 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,52 +16,36 @@
 <body>
 
 <!-- ========================================
-     第20页 - 闭环执行路径
+     제20페이지 - 폐루프 실행 경로
      ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">系统架构</div>
+      <div class="section-indicator">시스템 아키텍처</div>
       <div class="page-number">20</div>
     </div>
     
-    <h2 class="slide-title">闭环执行与反馈路径</h2>
+    <h2 class="slide-title">폐루프 실행 및 피드백 경로</h2>
     
     <div class="content">
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; box-shadow: inset 0 0 0 1px rgba(15,23,42,0.02);">
-        <h3 style="font-size: 11.5pt; font-weight: 700; color: #0f172a; margin-bottom: 8px;">🧩 六大模块协同（文字概览）</h3>
-        <ul style="margin: 0; padding-left: 18px; font-size: 10.3pt; line-height: 1.6; color: #1f2937;">
-          <li><strong>Context Encoder</strong>：抽取季节、建筑形态、实时负荷与模型内部状态，生成稳健上下文。</li>
-          <li><strong>Intervention Generator + Causal Evaluator</strong>：基于模板库生成候选方案，并用BN do-calculus 估算峰值/能耗收益。</li>
-          <li><strong>Slate Bandit + Enhanced Feedback Module</strong>：以多目标奖励挑选Top-K方案，结合用户喜好/拒绝原因闭环自适应。</li>
-        </ul>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; box-shadow: inset 0 0 0 1px rgba(15,23,42,0.02);">                                                                       <h3 style="font-size: 11.5pt; font-weight: 700; color: #0f172a; margin-bottom: 8px;">🧩 6대 모듈 협업 (텍스트 개요)</h3>                                           <ul style="margin: 0; padding-left: 18px; font-size: 10.3pt; line-height: 1.6; color: #1f2937;">                                                                  <li><strong>Context Encoder</strong>: 계절, 건물 형태, 실시간 부하 및 모델 내부 상태를 추출하여 견고한 컨텍스트 생성.</li>                                                         <li><strong>Intervention Generator + Causal Evaluator</strong>: 템플릿 라이브러리 기반 후보 방안 생성 및 BN do-calculus로 피크/에너지 효율 이득 추정.</li>                             <li><strong>Slate Bandit + Enhanced Feedback Module</strong>: 다목적 보상으로 Top-K 방안 선택, 사용자 선호/거부 원인 결합하여 폐루프 적응.</li>                               </ul>
       </div>
 
-      <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 12px 16px; border-radius: 8px; margin-bottom: 14px;">
-        <h3 style="font-size: 11.5pt; font-weight: 700; margin-bottom: 8px;">🔄 完整信息流</h3>
-        <div style="font-size: 10.2pt; line-height: 1.55;">
-          <strong>上下文输入</strong> → <strong>方案生成</strong>（候选集合）→ <strong>因果干预评估</strong>（BN do-calculus）→ <strong>Bandit排序与Top-K推荐</strong> → <strong>用户反馈</strong>（选择/拒绝原因/点赞/执行确认）→ <strong>在线学习更新</strong>（Bandit策略 + 偏好模型 + 生成策略演化）
-        </div>
+      <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 12px 16px; border-radius: 8px; margin-bottom: 14px;">                   <h3 style="font-size: 11.5pt; font-weight: 700; margin-bottom: 8px;">🔄 전체 정보 흐름</h3>                                                                         <div style="font-size: 10.2pt; line-height: 1.55;">
+          <strong>컨텍스트 입력</strong> → <strong>방안 생성</strong> (후보 집합) → <strong>인과 개입 평가</strong> (BN do-calculus) → <strong>Bandit 정렬 및 Top-K 추천</strong> → <strong>사용자 피드백</strong> (선택/거부 원인/좋아요/실행 확인) → <strong>온라인 학습 업데이트</strong> (Bandit 전략 + 선호도 모델 + 생성 전략 진화)                               </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; font-size: 10pt; line-height: 1.5;">
-        <div style="background: #eef2ff; border-radius: 8px; padding: 12px; border-left: 3px solid #4338ca; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">
-          <strong style="color: #312e81;">上下文编码</strong>
-          <p style="margin: 6px 0 0 0; color: #1f2937;">多维输入（季节、建筑属性、实时负荷）经由上下文编码器生成状态摘要，驱动下游规划。</p>
-        </div>
-        <div style="background: #ecfdf5; border-radius: 8px; padding: 12px; border-left: 3px solid #059669; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">
-          <strong style="color: #065f46;">因果+Bandit融合</strong>
-          <p style="margin: 6px 0 0 0; color: #1f2937;">BN推断评估干预影响，Slate Bandit依据多目标奖励函数选择Top-K方案并持续在线更新。</p>
-        </div>
-        <div style="background: #fff7ed; border-radius: 8px; padding: 12px; border-left: 3px solid #ea580c; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">
-          <strong style="color: #7c2d12;">反馈闭环</strong>
-          <p style="margin: 6px 0 0 0; color: #1f2937;">采集用户喜好、拒绝原因与执行确认，触发动作用屏蔽与策略自适应，确保安全落地。</p>
-        </div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; font-size: 10pt; line-height: 1.5;">                                      <div style="background: #eef2ff; border-radius: 8px; padding: 12px; border-left: 3px solid #4338ca; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">                  <strong style="color: #312e81;">컨텍스트 인코딩</strong>
+          <p style="margin: 6px 0 0 0; color: #1f2937;">다차원 입력(계절, 건물 속성, 실시간 부하)이 컨텍스트 인코더를 통해 상태 요약을 생성하여 다운스트림 계획을 주도.</p>                            </div>
+        <div style="background: #ecfdf5; border-radius: 8px; padding: 12px; border-left: 3px solid #059669; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">                  <strong style="color: #065f46;">인과 + Bandit 융합</strong>
+          <p style="margin: 6px 0 0 0; color: #1f2937;">BN 추론으로 개입 영향 평가, Slate Bandit이 다목적 보상 함수에 따라 Top-K 방안을 선택하고 지속적으로 온라인 업데이트.</p>                             </div>
+        <div style="background: #fff7ed; border-radius: 8px; padding: 12px; border-left: 3px solid #ea580c; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">                  <strong style="color: #7c2d12;">피드백 폐루프</strong>
+          <p style="margin: 6px 0 0 0; color: #1f2937;">사용자 선호도, 거부 원인 및 실행 확인을 수집하여 동작 마스킹 및 전략 적응을 트리거하고 안전한 적용 보장.</p>                                </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 향후 연구 전망</div>
       <div class="page-info">20 / 22</div>
     </div>
   </div>

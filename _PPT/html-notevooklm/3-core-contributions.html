@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>论文核心贡献与复现目标</title>
+  <title>논문 핵심 기여 및 재현 목표</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인라인 중요 스타일 - 인쇄 시 정상 출력 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,24 +16,24 @@
 <body>
 
 <!-- ========================================
-     第3页 - 核心贡献与复现目标
+     제3페이지 - 핵심 기여 및 재현 목표
      ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">核心贡献</div>
+      <div class="section-indicator">핵심 기여</div>
       <div class="page-number">3</div>
     </div>
     
-    <h2 class="slide-title">论文核心贡献与复现目标</h2>
+    <h2 class="slide-title">논문 핵심 기여 및 재현 목표</h2>
     
     <div class="content">
       <div class="three-col" style="gap: 25px; margin-bottom: 35px;">
-        <!-- 第1个贡献：模型架构创新 -->
+        <!-- 첫 번째 기여: 모델 아키텍처 혁신 -->
         <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
           <div style="margin-bottom: 18px;">
             <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
-              1. 模型架构创新
+              1. 모델 아키텍처 혁신
             </h3>
             <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
               (Prediction)
@@ -42,19 +42,19 @@
           
           <ul style="margin-left: 0;">
             <li style="font-size: 13pt; line-height: 1.6; margin-bottom: 10px;">
-              提出并行（Parallel）CNN-LSTM-Attention 架构。
+              병렬(Parallel) CNN-LSTM-Attention 아키텍처 제안.
             </li>
             <li style="font-size: 13pt; line-height: 1.6;">
-              验证了并行提取空间（Spatial）和时间（Temporal）特征优于传统的串行（Serial）结构。
+              공간적(Spatial) 및 시간적(Temporal) 특징을 병렬 추출하는 것이 기존 직렬(Serial) 구조보다 우수함을 검증.
             </li>
           </ul>
         </div>
         
-        <!-- 第2个贡献：因果解释框架 -->
+        <!-- 두 번째 기여: 인과 설명 프레임워크 -->
         <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
           <div style="margin-bottom: 18px;">
             <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
-              2. 因果解释框架
+              2. 인과 설명 프레임워크
             </h3>
             <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
               (Explanation)
@@ -63,19 +63,19 @@
           
           <ul style="margin-left: 0;">
             <li style="font-size: 13pt; line-height: 1.6; margin-bottom: 10px;">
-              构建基于贝叶斯网络（Bayesian Network）的解释模块。
+              베이지안 네트워크(Bayesian Network) 기반 설명 모듈 구축.
             </li>
             <li style="font-size: 13pt; line-height: 1.6;">
-              创新性地将深度学习参数（DLP）（如 CAM 和 Attention Weights）纳入因果图。
+              CAM 및 Attention Weights 같은 딥러닝 파라미터(DLP)를 인과 관계 그래프에 혁신적으로 통합.
             </li>
           </ul>
         </div>
         
-        <!-- 第3个贡献：领域知识融合 -->
+        <!-- 세 번째 기여: 도메인 지식 융합 -->
         <div class="card" style="border: 3px solid #cbd5e1; background: white; padding: 25px;">
           <div style="margin-bottom: 18px;">
             <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin: 0;">
-              3. 领域知识融合
+              3. 도메인 지식 융합
             </h3>
             <p style="font-size: 14pt; font-weight: 600; color: #6b7280; margin: 0;">
               (Domain Knowledge)
@@ -84,23 +84,23 @@
           
           <ul style="margin-left: 0;">
             <li style="font-size: 13pt; line-height: 1.6;">
-              引入物理约束（Physical Constraints）限制贝叶斯网络的结构学习，避免虚假因果。
+              물리적 제약(Physical Constraints)을 도입하여 베이지안 네트워크 구조 학습을 제한하고 허위 인과관계를 방지.
             </li>
           </ul>
         </div>
       </div>
       
-      <!-- 复现目标 -->
+      <!-- 재현 목표 -->
       <div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 20px; margin-top: 30px;">
         <p style="font-size: 16pt; color: #1f2937; margin: 0; line-height: 1.5;">
-          <strong style="color: #1e3a8a; font-size: 17pt;">Reproduction Goal:</strong> 
-          验证上述架构在标准数据集上的有效性及解释的一致性。
+          <strong style="color: #1e3a8a; font-size: 17pt;">Reproduction Goal:</strong>
+          표준 데이터셋에서 상기 아키텍처의 유효성 및 설명 일관성을 검증.
         </p>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">3 / ??</div>
     </div>
   </div>

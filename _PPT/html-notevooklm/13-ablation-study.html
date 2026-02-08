@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>消融实验：各模块有效性验证</title>
+  <title>소거 실험(Ablation Study): 각 모듈의 유효성 검증</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인라인 중요 스타일 - 인쇄 시 정상 출력 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,51 +16,51 @@
 <body>
 
 <!-- ========================================
-     第13页 - 消融实验
+     제13페이지 - 소거 실험
      ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">消融实验</div>
+      <div class="section-indicator">소거 실험</div>
       <div class="page-number">13</div>
     </div>
     
-    <h2 class="slide-title">消融实验：各模块有效性验证</h2>
+    <h2 class="slide-title">소거 실험(Ablation Study): 각 모듈의 유효성 검증</h2>
     
     <div class="content">
-      <!-- 消融实验结果图 -->
+      <!-- 소거 실험 결과 차트 -->
       <div style="text-align: center; margin-bottom: 8px;">
-        <img src="images/11-消融实验结果RMSE与解释相似度.png" alt="消融实验结果" style="max-width: 100%; height: auto; object-fit: contain;">
+        <img src="images/11-消融实验结果RMSE与解释相似度.png" alt="소거 실험 결과" style="max-width: 100%; height: auto; object-fit: contain;">
       </div>
       
-      <!-- 底部验证结论 -->
+      <!-- 하단 검증 결론 -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-        <!-- 架构验证 -->
+        <!-- 아키텍처 검증 -->
         <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 10px 12px; border-radius: 4px;">
           <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">
-            1. 架构验证：
+            1. 아키텍처 검증:
           </h3>
           <ul style="margin-left: 16px; font-size: 10.5pt; line-height: 1.4;">
-            <li>串行结构 (s-c-l-a) 性能显著下降 -> 并行结构是关键。</li>
-            <li>Attention 机制带来轻微提升。</li>
+            <li>직렬 구조(s-c-l-a)의 성능이 현저히 하락 -> 병렬 구조가 핵심.</li>
+            <li>Attention 메커니즘은 약간의 성능 향상을 가져옴.</li>
           </ul>
         </div>
         
-        <!-- 解释验证 -->
+        <!-- 설명 검증 -->
         <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 10px 12px; border-radius: 4px;">
           <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">
-            2. 解释验证：
+            2. 설명 검증:
           </h3>
           <ul style="margin-left: 16px; font-size: 10.5pt; line-height: 1.4;">
-            <li>去除 DLP (Deep Learning Parameters) 导致解释一致性下降。</li>
-            <li>证明了将 Attention/CAM 纳入贝叶斯网络的必要性。</li>
+            <li>DLP(Deep Learning Parameters) 제거 시 설명 일관성 하락.</li>
+            <li>Attention/CAM을 베이지안 네트워크에 통합하는 것의 필요성 입증.</li>
           </ul>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">13 / ??</div>
     </div>
   </div>

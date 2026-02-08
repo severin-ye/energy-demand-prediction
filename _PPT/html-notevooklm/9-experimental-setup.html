@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>实验设置与环境</title>
+  <title>실험 설정 및 환경</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인라인 중요 스타일 - 인쇄 시 정상 출력 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,25 +16,25 @@
 <body>
 
 <!-- ========================================
-     第9页 - 实验设置
+     제9페이지 - 실험 설정
      ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">实验设置</div>
+      <div class="section-indicator">실험 설정</div>
       <div class="page-number">9</div>
     </div>
     
-    <h2 class="slide-title">实验设置与环境</h2>
+    <h2 class="slide-title">실험 설정 및 환경</h2>
     
     <div class="content">
-      <!-- 四宫格布局 -->
+      <!-- 4분할 격자 레이아웃 -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         
-        <!-- 左上：Datasets -->
+        <!-- 왼쪽 위: Datasets -->
         <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
           <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
-            Datasets（数据）
+            Datasets (데이터)
           </h3>
           
           <div style="margin-bottom: 8px;">
@@ -42,8 +42,8 @@
               1. UCI Household Electricity
             </p>
             <ul style="margin-left: 16px; font-size: 9.5pt; line-height: 1.3;">
-              <li>207万条数据，1分钟分辨率</li>
-              <li>包含 Kitchen, Laundry, HVAC 子计量</li>
+              <li>207만 개 데이터, 1분 해상도</li>
+              <li>Kitchen, Laundry, HVAC 서브 미터링 포함</li>
             </ul>
           </div>
           
@@ -52,29 +52,29 @@
               2. REFIT Dataset
             </p>
             <ul style="margin-left: 16px; font-size: 9.5pt; line-height: 1.3;">
-              <li>573万条数据，8秒分辨率</li>
-              <li>实验分辨率：15min（表3），四种分辨率（表4）</li>
+              <li>573만 개 데이터, 8초 해상도</li>
+              <li>실험 해상도: 15min (표 3), 4가지 해상도 (표 4)</li>
             </ul>
           </div>
         </div>
         
-        <!-- 右上：Training Specs -->
+        <!-- 오른쪽 위: Training Specs -->
         <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
           <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
-            Training Specs（训练参数）
+            Training Specs (학습 파라미터)
           </h3>
           
           <ul style="margin-left: 16px; font-size: 10pt; line-height: 1.35;">
-            <li><strong>Input Window (ω):</strong> 80 timestamps</li>
+            <li><strong>Input Window (ω):</strong> 80 타임스탬프</li>
             <li><strong>Prediction Horizon:</strong> <em>t</em>+1 (One-step ahead)</li>
-            <li><strong>Validation:</strong> Train/Test split consistent with source</li>
+            <li><strong>Validation:</strong> 원본과 동일한 Train/Test 분할</li>
           </ul>
         </div>
         
-        <!-- 左下：Metrics -->
+        <!-- 왼쪽 아래: Metrics -->
         <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
           <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
-            Metrics（评价指标）
+            Metrics (평가 지표)
           </h3>
           
           <ul style="margin-left: 16px; font-size: 10pt; line-height: 1.35;">
@@ -84,10 +84,10 @@
           </ul>
         </div>
         
-        <!-- 右下：Baselines -->
+        <!-- 오른쪽 아래: Baselines -->
         <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
           <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
-            Baselines（对比基线）
+            Baselines (비교 베이스라인)
           </h3>
           
           <ul style="margin-left: 16px; font-size: 10pt; line-height: 1.35;">
@@ -102,7 +102,7 @@
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">9 / ??</div>
     </div>
   </div>

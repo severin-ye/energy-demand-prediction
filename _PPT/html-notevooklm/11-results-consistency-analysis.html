@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>实验结果：解释一致性Consistency分析</title>
+  <title>실험 결과: 설명 일관성(Consistency) 분석</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인라인 중요 스타일 - 인쇄 시 정상 출력 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,32 +16,32 @@
 <body>
 
 <!-- ========================================
-     第11页 - 解释一致性分析
+     제11페이지 - 설명 일관성 분석
      ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">一致性评估</div>
+      <div class="section-indicator">일관성 평가</div>
       <div class="page-number">11</div>
     </div>
     
-    <h2 class="slide-title">实验结果：解释一致性（Consistency）分析</h2>
+    <h2 class="slide-title">실험 결과: 설명 일관성(Consistency) 분석</h2>
     
     <div class="content">
-      <!-- 评估方法说明 -->
+      <!-- 평가 방법 설명 -->
       <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 4px; margin-bottom: 18px;">
         <p style="font-size: 12.5pt; margin: 0; color: #1f2937;">
-          <strong>评估方法:</strong> 使用余弦相似度（Cosine Similarity）衡量不同样本下解释结构的一致性。
+          <strong>평가 방법:</strong> 코사인 유사도(Cosine Similarity)를 사용하여 다양한 샘플에서 설명 구조의 일관성을 측정.
         </p>
       </div>
       
       <div class="two-col" style="gap: 20px;">
-        <!-- 左侧：一致性得分对比图 -->
+        <!-- 왼쪽: 일관성 점수 비교 차트 -->
         <div>
-          <img src="images/8-一致性评分对比BN优于LIME与SHAP.png" alt="一致性评分对比" style="max-width: 100%; height: auto; object-fit: contain;">
+          <img src="images/8-一致性评分对比BN优于LIME与SHAP.png" alt="일관성 점수 비교" style="max-width: 100%; height: auto; object-fit: contain;">
         </div>
         
-        <!-- 右侧：Key Takeaways -->
+        <!-- 오른쪽: Key Takeaways -->
         <div style="display: flex; flex-direction: column; justify-content: center;">
           <h3 style="font-size: 18pt; font-weight: 700; color: #1e3a8a; margin-bottom: 14px; border-bottom: 2px solid #cbd5e1; padding-bottom: 8px;">
             Key Takeaways
@@ -49,13 +49,13 @@
           
           <ul style="margin-left: 0; font-size: 12.5pt; line-height: 1.6;">
             <li style="margin-bottom: 10px;">
-              <strong style="color: #64748b;">LIME:</strong> 存在局部扰动，解释不稳定。
+              <strong style="color: #64748b;">LIME:</strong> 국소적 교란(perturbation)이 존재하여 설명이 불안정함.
             </li>
             <li style="margin-bottom: 10px;">
-              <strong style="color: #475569;">SHAP:</strong> 表现良好，但计算开销巨大。
+              <strong style="color: #475569;">SHAP:</strong> 성능은 양호하나 계산 비용이 매우 큼.
             </li>
             <li>
-              <strong style="color: #1e3a8a;">Ours:</strong> 贝叶斯网络结构具有极高的鲁棒性，未出现扰动现象。
+              <strong style="color: #1e3a8a;">Ours:</strong> 베이지안 네트워크 구조는 매우 높은 강건성(Robustness)을 가지며 교란 현상이 나타나지 않음.
             </li>
           </ul>
         </div>
@@ -63,7 +63,7 @@
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">11 / ??</div>
     </div>
   </div>

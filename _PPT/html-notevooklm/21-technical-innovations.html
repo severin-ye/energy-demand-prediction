@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>关键技术创新</title>
+  <title>핵심 기술 혁신</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인쇄 시 스타일 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,64 +16,40 @@
 <body>
 
 <!-- ========================================
-  第21页 - 关键技术创新
+  제21페이지 - 핵심 기술 혁신
   ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">关键技术创新</div>
+      <div class="section-indicator">핵심 기술 혁신</div>
       <div class="page-number">21</div>
     </div>
     
-    <h2 class="slide-title">Slate Bandit推荐机制</h2>
+    <h2 class="slide-title">Slate Bandit 추천 메커니즘</h2>
     
     <div class="content">
       <!-- Slate Bandit -->
       <div style="margin-bottom: 16px;">
-        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">🎯 基于Contextual Slate Bandit的Top-K推荐</h3>
-        <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 14px; border-radius: 6px; margin-bottom: 12px;">
-          <p style="font-size: 10.5pt; line-height: 1.55; color: #374151; margin: 0 0 10px 0;">
-            在给定上下文 <code style="background: white; padding: 1px 4px;">c</code> 下，从候选集合中选择 Top-K 方案列表（Slate）：<code style="background: white; padding: 1px 4px;">S = [π₁, π₂, ..., πₖ]</code>
-          </p>
-          <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 12px 14px; border-radius: 6px;">
-            <strong style="font-size: 11pt;">多目标奖励函数：</strong><br/>
-            <code style="background: rgba(255,255,255,0.2); padding: 6px 10px; border-radius: 4px; font-size: 10pt; display: inline-block; margin-top: 6px;">
-              r(π) = α·AcceptIntent + β·Like - γ·Dislike + λ·ΔPeak + μ·ΔEnergy - ρ·Cost - η·RejectionPenalty
-            </code>
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">🎯 Contextual Slate Bandit 기반 Top-K 추천</h3>                               <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 14px; border-radius: 6px; margin-bottom: 12px;">                                           <p style="font-size: 10.5pt; line-height: 1.55; color: #374151; margin: 0 0 10px 0;">                                                                             주어진 컨텍스트 <code style="background: white; padding: 1px 4px;">c</code> 하에서, 후보 집합으로부터 Top-K 방안 목록(Slate) 선택: <code style="background: white; padding: 1px 4px;">S = [π₁, π₂, ..., πₖ]</code>                                        </p>
+          <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 12px 14px; border-radius: 6px;">                                        <strong style="font-size: 11pt;">다목적 보상 함수:</strong><br/>
+            <code style="background: rgba(255,255,255,0.2); padding: 6px 10px; border-radius: 4px; font-size: 10pt; display: inline-block; margin-top: 6px;">                 r(π) = α·AcceptIntent + β·Like - γ·Dislike + λ·ΔPeak + μ·ΔEnergy - ρ·Cost - η·RejectionPenalty                                                                </code>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px;">
-          <div style="background: #eff6ff; padding: 12px; border-radius: 6px; border-left: 3px solid #3b82f6; min-height: 100px;">
-            <strong style="color: #1e40af; font-size: 10.5pt;">学习算法</strong>
-            <p style="font-size: 10pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.45;">采用Thompson Sampling / LinUCB，在不同上下文下学习高收益方案结构</p>
-          </div>
-          <div style="background: #fef9e7; padding: 12px; border-radius: 6px; border-left: 3px solid #f59e0b; min-height: 100px;">
-            <strong style="color: #92400e; font-size: 10.5pt;">探索-利用平衡</strong>
-            <p style="font-size: 10pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.45;">保持最小探索比例（20%），通过Action Masking确保安全性</p>
-          </div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px;">                                                    <div style="background: #eff6ff; padding: 12px; border-radius: 6px; border-left: 3px solid #3b82f6; min-height: 100px;">                                          <strong style="color: #1e40af; font-size: 10.5pt;">학습 알고리즘</strong>
+            <p style="font-size: 10pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.45;">Thompson Sampling / LinUCB 채택, 다양한 컨텍스트에서 고수익 방안 구조 학습</p>                                                                                        </div>
+          <div style="background: #fef9e7; padding: 12px; border-radius: 6px; border-left: 3px solid #f59e0b; min-height: 100px;">                                          <strong style="color: #92400e; font-size: 10.5pt;">탐색-활용 균형</strong>
+            <p style="font-size: 10pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.45;">최소 탐색 비율(20%) 유지, Action Masking을 통해 안전성 보장</p>                   </div>
         </div>
-        <div style="background: #fff; border: 1px dashed #cbd5f5; border-radius: 8px; padding: 14px;">
-          <h4 style="margin: 0 0 10px 0; font-size: 11pt; color: #1f2937;">执行与反馈管线</h4>
-          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; font-size: 9.8pt; line-height: 1.45; color: #374151;">
-            <div style="background: #eef2ff; border-radius: 6px; padding: 10px; border-top: 3px solid #4c1d95;">
-              <strong style="display: block; margin-bottom: 5px; color: #312e81;">信号融合</strong>
-              <span>上下文、预测置信度与业务约束拼接为bandit状态，驱动Slate构造。</span>
-            </div>
-            <div style="background: #ecfdf5; border-radius: 6px; padding: 10px; border-top: 3px solid #047857;">
-              <strong style="display: block; margin-bottom: 5px; color: #064e3b;">行动筛选</strong>
-              <span>对不可行/高风险动作进行Mask；关键指标超阈值时触发安全降级策略。</span>
-            </div>
-            <div style="background: #fff7ed; border-radius: 6px; padding: 10px; border-top: 3px solid #c2410c;">
-              <strong style="display: block; margin-bottom: 5px; color: #7c2d12;">反馈归因</strong>
-              <span>执行后采集接受、拒绝及峰值变化指标，更新奖励权重并记录可解释特征。</span>
-            </div>
+        <div style="background: #fff; border: 1px dashed #cbd5f5; border-radius: 8px; padding: 14px;">                                                                    <h4 style="margin: 0 0 10px 0; font-size: 11pt; color: #1f2937;">실행 및 피드백 파이프라인</h4>                                                                           <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; font-size: 9.8pt; line-height: 1.45; color: #374151;">                    <div style="background: #eef2ff; border-radius: 6px; padding: 10px; border-top: 3px solid #4c1d95;">                                                              <strong style="display: block; margin-bottom: 5px; color: #312e81;">신호 융합</strong>                                                                           <span>컨텍스트, 예측 신뢰도 및 비즈니스 제약을 bandit 상태로 결합하여 Slate 구성 주도.</span>                                                                                   </div>
+            <div style="background: #ecfdf5; border-radius: 6px; padding: 10px; border-top: 3px solid #047857;">                                                              <strong style="display: block; margin-bottom: 5px; color: #064e3b;">행동 필터링</strong>                                                                           <span>실행 불가/고위험 행동 Mask; 주요 지표 임계값 초과 시 안전 등급 하향 전략 트리거.</span>                                                                                 </div>
+            <div style="background: #fff7ed; border-radius: 6px; padding: 10px; border-top: 3px solid #c2410c;">                                                              <strong style="display: block; margin-bottom: 5px; color: #7c2d12;">피드백 귀인</strong>                                                                           <span>실행 후 수락, 거부 및 피크 변화 지표 수집, 보상 가중치 업데이트 및 설명 가능한 특징 기록.</span>                                                                               </div>
           </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 향후 연구 전망</div>
       <div class="page-info">21 / 22</div>
     </div>
   </div>

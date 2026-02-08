@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>预测模型：Parallel CNN-LSTM with Attention</title>
+  <title>예측 모델: Parallel CNN-LSTM with Attention</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인라인 중요 스타일 - 인쇄 시 정상 출력 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,46 +16,46 @@
 <body>
 
 <!-- ========================================
-     第5页 - 预测模型架构详解
+     제5페이지 - 예측 모델 아키텍처 상세
      ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">预测模型</div>
+      <div class="section-indicator">예측 모델</div>
       <div class="page-number">5</div>
     </div>
     
-    <h2 class="slide-title">预测模型：Parallel CNN-LSTM with Attention</h2>
+    <h2 class="slide-title">예측 모델: Parallel CNN-LSTM with Attention</h2>
     
     <div class="content">
-      <!-- 预测模型架构图 -->
+      <!-- 예측 모델 아키텍처 다이어그램 -->
       <div style="text-align: center; margin-bottom: 12px;">
-        <img src="images/3-并行CNN-LSTM预测模型结构.png" alt="预测模型架构图" style="max-width: 90%; max-height: 220px; height: auto; object-fit: contain;">
+        <img src="images/3-并行CNN-LSTM预测模型结构.png" alt="예측 모델 아키텍처 다이어그램" style="max-width: 90%; max-height: 220px; height: auto; object-fit: contain;">
       </div>
       
-      <!-- 底部两栏：实现细节和关键公式 -->
+      <!-- 하단 두 컬럼: 구현 세부 사항 및 주요 공식 -->
       <div class="two-col" style="gap: 18px;">
-        <!-- 左侧：实现细节 -->
+        <!-- 왼쪽: 구현 세부 사항 -->
         <div>
           <h3 class="slide-section" style="margin-top: 0; font-size: 15pt;">Implementation Details:</h3>
           <ul style="font-size: 11.5pt; line-height: 1.45;">
-            <li><strong>CNN Branch:</strong> 1D Conv -> Max Pooling（提取短时波动与特征关系）。</li>
-            <li><strong>LSTM Branch:</strong> 处理序列长度 ω = 80。计算 Attention Weights (<em>a<sub>n</sub></em>) 和 Context Vector (<em>c<sub>n</sub></em>)。</li>
-            <li><strong>Feature Fusion:</strong> 将 CNN 输出与 LSTM Context Vector 拼接，而非串行级联。</li>
+            <li><strong>CNN Branch:</strong> 1D Conv -> Max Pooling (단기 변동 및 특성 관계 추출).</li>
+            <li><strong>LSTM Branch:</strong> 시퀀스 길이 ω = 80 처리. Attention Weights (<em>a<sub>n</sub></em>) 및 Context Vector (<em>c<sub>n</sub></em>) 계산.</li>
+            <li><strong>Feature Fusion:</strong> 직렬 연결(cascading)이 아닌 CNN 출력과 LSTM Context Vector 병합(concatenation).</li>
           </ul>
         </div>
         
-        <!-- 右侧：关键公式 -->
+        <!-- 오른쪽: 주요 공식 -->
         <div>
           <div style="text-align: center;">
-            <img src="images/4-关键公式注意力与特征融合.png" alt="关键公式" style="max-width: 85%; height: auto; object-fit: contain;">
+            <img src="images/4-关键公式注意力与特征融合.png" alt="주요 공식" style="max-width: 85%; height: auto; object-fit: contain;">
           </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">5 / ??</div>
     </div>
   </div>

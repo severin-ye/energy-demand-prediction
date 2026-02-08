@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>符号提取：连续变量的离散化策略</title>
+  <title>심볼 추출: 연속 변수의 이산화 전략</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인라인 중요 스타일 - 인쇄 시 정상 출력 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,45 +16,45 @@
 <body>
 
 <!-- ========================================
-     第6页 - 特征离散化策略
+     제6페이지 - 특징 이산화 전략
      ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">特征提取</div>
+      <div class="section-indicator">특징 추출</div>
       <div class="page-number">6</div>
     </div>
     
-    <h2 class="slide-title">符号提取：连续变量的离散化策略</h2>
+    <h2 class="slide-title">심볼 추출: 연속 변수의 이산화 전략</h2>
     
     <div class="content">
       <div class="col-6-4">
-        <!-- 左侧：流程图 -->
+        <!-- 왼쪽: 흐름도 -->
         <div style="display: flex; align-items: center; justify-content: center;">
-          <img src="images/5-特征离散化流程EDP与变量状态.png" alt="离散化流程图" style="max-width: 85%; height: auto; object-fit: contain;">
+          <img src="images/5-特征离散化流程EDP与变量状态.png" alt="이산화 흐름도" style="max-width: 85%; height: auto; object-fit: contain;">
         </div>
         
-        <!-- 右侧：步骤说明 -->
+        <!-- 오른쪽: 단계 설명 -->
         <div>
-          <h3 class="slide-section" style="margin-top: 0;">Step 1: 异常检测 (Outlier Detection)</h3>
+          <h3 class="slide-section" style="margin-top: 0;">Step 1: 이상치 탐지 (Outlier Detection)</h3>
           <ul style="font-size: 13pt; line-height: 1.6; margin-bottom: 25px;">
-            <li>使用 <strong>Sn scale estimator</strong> 定义三种能源需求模式 (EDP)。</li>
-            <li>相比传统 Z-score 对噪声更鲁棒。</li>
+            <li><strong>Sn scale estimator</strong>를 사용하여 세 가지 에너지 수요 패턴(EDP) 정의.</li>
+            <li>기존 Z-score 대비 노이즈에 더 강건함(Robust).</li>
           </ul>
           
-          <h3 class="slide-section" style="margin-top: 25px;">Step 2: 分位数离散化 (Quantile-based Discretization)</h3>
+          <h3 class="slide-section" style="margin-top: 25px;">Step 2: 분위수 기반 이산화 (Quantile-based Discretization)</h3>
           <ul style="font-size: 13pt; line-height: 1.6;">
-            <li>将连续变量划分为四个等级：<br/>
-              <strong>Low, Medium, High, Very High</strong>。
+            <li>연속 변수를 네 가지 등급으로 구분:<br/>
+              <strong>Low, Medium, High, Very High</strong>.
             </li>
-            <li>这种处理方式保留了数据的统计分布特性，同时简化了因果推理的复杂度。</li>
+            <li>이 방식은 데이터의 통계적 분포 특성을 유지하면서 인과 추론의 복잡성을 줄여줌.</li>
           </ul>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">6 / ??</div>
     </div>
   </div>

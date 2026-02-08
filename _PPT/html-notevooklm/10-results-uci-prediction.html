@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>实验结果：预测精度复现（UCI Dataset）</title>
+  <title>실험 결과: 예측 정확도 재현 (UCI Dataset)</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인라인 중요 스타일 - 인쇄 시 정상 출력 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,35 +16,35 @@
 <body>
 
 <!-- ========================================
-     第10页 - UCI数据集预测结果
+     제10페이지 - UCI 데이터셋 예측 결과
      ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">实验结果</div>
+      <div class="section-indicator">실험 결과</div>
       <div class="page-number">10</div>
     </div>
     
-    <h2 class="slide-title">实验结果：预测精度复现（UCI Dataset）</h2>
+    <h2 class="slide-title">실험 결과: 예측 정확도 재현 (UCI Dataset)</h2>
     
     <div class="content">
-      <!-- 预测结果与MSE对比图 -->
+      <!-- 예측 결과 및 MSE 비교 차트 -->
       <div style="text-align: center; margin-bottom: 10px;">
-        <img src="images/7-预测性能与MSE对比结果.png" alt="预测vs实际值及MSE对比" style="max-width: 100%; height: auto; object-fit: contain;">
+        <img src="images/7-预测性能与MSE对比结果.png" alt="예측 vs 실제 값 및 MSE 비교" style="max-width: 100%; height: auto; object-fit: contain;">
       </div>
       
-      <!-- 底部关键发现 -->
+      <!-- 하단 주요 발견 -->
       <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 12px 14px; border-radius: 4px;">
         <ul style="margin: 0; font-size: 11.5pt; line-height: 1.5;">
-          <li><strong>误差 &lt; 1%:</strong> 复现结果高度符合原论文数据。</li>
-          <li><strong>性能提升:</strong> 相较于先前模型（Kim&amp;Cho 2019, Bu&amp;Cho 2020），UCI数据集平均提升34.84%，REFIT提升13.63%。</li>
-          <li><strong>尖峰捕捉:</strong> 模型在 Peak Demand 区间表现出优异的拟合能力。</li>
+          <li><strong>오차 &lt; 1%:</strong> 재현 결과가 원본 논문 데이터와 매우 일치함.</li>
+          <li><strong>성능 향상:</strong> 이전 모델(Kim&amp;Cho 2019, Bu&amp;Cho 2020) 대비 UCI 데이터셋 평균 34.84% 향상, REFIT 13.63% 향상.</li>
+          <li><strong>피크 포착:</strong> 모델이 Peak Demand 구간에서 뛰어난 피팅 능력을 보임.</li>
         </ul>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">10 / ??</div>
     </div>
   </div>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>核心问题：论文缺少实现细节</title>
+  <title>핵심 문제: 논문 구현 세부 사항 누락</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인쇄 시 스타일 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,101 +16,85 @@
 <body>
 
 <!-- ========================================
-     第16页 - 核心问题2：实现细节缺失
+     제16페이지 - 핵심 문제 2: 구현 세부 사항 누락
      ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">核心问题2</div>
+      <div class="section-indicator">핵심 문제 2</div>
       <div class="page-number">16</div>
     </div>
     
-    <h2 class="slide-title">论文缺少关键实现细节</h2>
+    <h2 class="slide-title">논문의 핵심 구현 세부 사항 누락</h2>
     
     <div class="content">
-      <!-- 缺失细节清单 -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-        <!-- 模型架构细节 -->
-        <div style="background: linear-gradient(to bottom, #fee2e2, #fef2f2); border-left: 4px solid #ef4444; padding: 6px; border-radius: 5px;">
-          <h3 style="font-size: 10pt; font-weight: 700; color: #991b1b; margin-bottom: 4px;">
-            ❌ 模型架构细节
+      <!-- 누락된 세부 사항 목록 -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">                                                                        <!-- 모델 아키텍처 세부 사항 -->
+        <div style="background: linear-gradient(to bottom, #fee2e2, #fef2f2); border-left: 4px solid #ef4444; padding: 6px; border-radius: 5px;">                         <h3 style="font-size: 10pt; font-weight: 700; color: #991b1b; margin-bottom: 4px;">                                                                               ❌ 모델 아키텍처 세부 사항
           </h3>
-          <ul style="margin: 0; padding-left: 12px; font-size: 8.5pt; line-height: 1.25; color: #374151;">
-            <li>CNN卷积核大小、数量</li>
-            <li>具体的池化窗口大小</li>
-            <li>LSTM层数、单元数</li>
-            <li>Attention单元配置</li>
-            <li>Dense层结构</li>
-            <li>激活函数类型</li>
-            <li>权重初始化方法</li>
+          <ul style="margin: 0; padding-left: 12px; font-size: 8.5pt; line-height: 1.25; color: #374151;">                                                                  <li>CNN 커널 크기, 개수</li>
+            <li>구체적인 풀링 윈도우 크기</li>
+            <li>LSTM 레이어 수, 유닛 수</li>
+            <li>Attention 유닛 구성</li>
+            <li>Dense 레이어 구조</li>
+            <li>활성화 함수 유형</li>
+            <li>가중치 초기화 방법</li>
           </ul>
         </div>
         
-        <!-- 训练参数 -->
-        <div style="background: linear-gradient(to bottom, #fef3c7, #fef9e7); border-left: 4px solid #f59e0b; padding: 6px; border-radius: 5px;">
-          <h3 style="font-size: 10pt; font-weight: 700; color: #92400e; margin-bottom: 4px;">
-            ❌ 训练参数
+        <!-- 훈련 파라미터 -->
+        <div style="background: linear-gradient(to bottom, #fef3c7, #fef9e7); border-left: 4px solid #f59e0b; padding: 6px; border-radius: 5px;">                         <h3 style="font-size: 10pt; font-weight: 700; color: #92400e; margin-bottom: 4px;">                                                                               ❌ 훈련 파라미터
           </h3>
-          <ul style="margin: 0; padding-left: 12px; font-size: 8.5pt; line-height: 1.25; color: #374151;">
-            <li>学习率（Learning rate）</li>
-            <li>批大小（Batch size）</li>
-            <li>训练轮数（Epochs）</li>
-            <li>优化器配置</li>
-            <li>学习率调度策略</li>
-            <li>早停（Early stopping）策略</li>
-            <li>Dropout率</li>
+          <ul style="margin: 0; padding-left: 12px; font-size: 8.5pt; line-height: 1.25; color: #374151;">                                                                  <li>학습률 (Learning rate)</li>
+            <li>배치 크기 (Batch size)</li>
+            <li>훈련 에포크 (Epochs)</li>
+            <li>옵티마이저 설정</li>
+            <li>학습률 스케줄링 전략</li>
+            <li>조기 종료 (Early stopping) 전략</li>
+            <li>Dropout 비율</li>
           </ul>
         </div>
       </div>
       
-      <!-- 数据处理细节 -->
-      <div style="background: linear-gradient(to bottom, #dbeafe, #f0f9ff); border-left: 4px solid #3b82f6; padding: 6px; border-radius: 5px; margin-bottom: 6px;">
-        <h3 style="font-size: 10pt; font-weight: 700; color: #1e3a8a; margin-bottom: 4px;">
-          ❌ 数据预处理细节
+      <!-- 데이터 처리 세부 사항 -->
+      <div style="background: linear-gradient(to bottom, #dbeafe, #f0f9ff); border-left: 4px solid #3b82f6; padding: 6px; border-radius: 5px; margin-bottom: 6px;">                                                                                     <h3 style="font-size: 10pt; font-weight: 700; color: #1e3a8a; margin-bottom: 4px;">                                                                               ❌ 데이터 전처리 세부 사항
         </h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 8.5pt;">
-          <div>
-            <strong style="color: #3b82f6;">归一化方法：</strong><br/>
-            <span style="color: #6b7280;">MinMax? StandardScaler? 范围？</span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 8.5pt;">                                                                      <div>
+            <strong style="color: #3b82f6;">정규화 방법:</strong><br/>
+            <span style="color: #6b7280;">MinMax? StandardScaler? 범위?</span>
           </div>
           <div>
-            <strong style="color: #3b82f6;">特征工程：</strong><br/>
-            <span style="color: #6b7280;">时间编码？周期性特征？</span>
+            <strong style="color: #3b82f6;">특성 공학:</strong><br/>
+            <span style="color: #6b7280;">시간 인코딩? 주기적 특성?</span>
           </div>
           <div>
-            <strong style="color: #3b82f6;">数据分割：</strong><br/>
-            <span style="color: #6b7280;">训练/验证/测试比例？</span>
+            <strong style="color: #3b82f6;">데이터 분할:</strong><br/>
+            <span style="color: #6b7280;">훈련/검증/테스트 비율?</span>
           </div>
         </div>
       </div>
       
-      <!-- 当前应对策略 -->
-      <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 6px; border-radius: 5px;">
-        <h3 style="font-size: 10pt; font-weight: 700; color: #1e3a8a; margin-bottom: 4px;">
-          💡 当前应对策略
+      <!-- 현재 대응 전략 -->
+      <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 6px; border-radius: 5px;">                                                                 <h3 style="font-size: 10pt; font-weight: 700; color: #1e3a8a; margin-bottom: 4px;">                                                                               💡 현재 대응 전략
         </h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 8.5pt; line-height: 1.25;">
-          <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">
-            <div style="font-size: 14pt; margin-bottom: 2px;">🔍</div>
-            <strong style="color: #3b82f6;">基于论文解读</strong><br/>
-            <span style="color: #6b7280; font-size: 8.5pt;">分析公式和图示</span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 8.5pt; line-height: 1.25;">                                                   <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">                                                                            <div style="font-size: 14pt; margin-bottom: 2px;">🔍</div>
+            <strong style="color: #3b82f6;">논문 해석 기반</strong><br/>
+            <span style="color: #6b7280; font-size: 8.5pt;">수식 및 도식 분석</span>
           </div>
-          <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">
-            <div style="font-size: 14pt; margin-bottom: 2px;">📚</div>
-            <strong style="color: #10b981;">常见实践</strong><br/>
-            <span style="color: #6b7280; font-size: 8.5pt;">参考领域标准</span>
+          <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">                                                                            <div style="font-size: 14pt; margin-bottom: 2px;">📚</div>
+            <strong style="color: #10b981;">일반적인 관행</strong><br/>
+            <span style="color: #6b7280; font-size: 8.5pt;">분야 표준 참고</span>
           </div>
-          <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">
-            <div style="font-size: 14pt; margin-bottom: 2px;">🧪</div>
-            <strong style="color: #f59e0b;">实验验证</strong><br/>
-            <span style="color: #6b7280; font-size: 8.5pt;">多次迭代调优</span>
+          <div style="text-align: center; padding: 5px; background: white; border-radius: 4px;">                                                                            <div style="font-size: 14pt; margin-bottom: 2px;">🧪</div>
+            <strong style="color: #f59e0b;">실험 검증</strong><br/>
+            <span style="color: #6b7280; font-size: 8.5pt;">반복적인 튜닝</span>
           </div>
         </div>
       </div>
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="author">에너지 수요 예측을 위한 인과적 설명 가능한 AI - 재현 문제 분석</div>
       <div class="page-info">16 / 18</div>
     </div>
   </div>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>案例分析：峰值预警Peak Warning的因果推断</title>
+  <title>사례 연구: 피크 경고(Peak Warning)의 인과 추론</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* 内联关键样式确保打印时正常 */
+    /* 인라인 중요 스타일 - 인쇄 시 정상 출력 보장 */
     @page {
       size: 10in 7.5in;
       margin: 0;
@@ -16,53 +16,53 @@
 <body>
 
 <!-- ========================================
-     第12页 - Peak Warning案例分析
+     제12페이지 - Peak Warning 사례 연구
      ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
-      <div class="section-indicator">案例分析</div>
+      <div class="section-indicator">사례 연구</div>
       <div class="page-number">12</div>
     </div>
     
-    <h2 class="slide-title">案例分析：峰值预警（Peak Warning）的因果推断</h2>
+    <h2 class="slide-title">사례 연구: 피크 경고(Peak Warning)의 인과 추론</h2>
     
     <div class="content">
       <div class="col-6-4" style="gap: 18px;">
-        <!-- 左侧：贝叶斯网络图 -->
+        <!-- 왼쪽: 베이지안 네트워크 그림 -->
         <div>
-          <img src="images/9-贝叶斯网络推理案例峰值警告.png" alt="贝叶斯网络推理案例" style="max-width: 100%; height: auto; object-fit: contain;">
+          <img src="images/9-贝叶斯网络推理案例峰值警告.png" alt="베이지안 네트워크 추론 사례" style="max-width: 100%; height: auto; object-fit: contain;">
         </div>
         
-        <!-- 右侧：推理路径与分析 -->
+        <!-- 오른쪽: 추론 경로 및 분석 -->
         <div>
-          <!-- 场景说明 -->
+          <!-- 시나리오 설명 -->
           <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 10px; border-radius: 4px; margin-bottom: 12px;">
             <p style="font-size: 11.5pt; margin: 0; font-weight: 600; color: #1f2937;">
-              场景：模型预测 t+1 时刻将出现 Peak Warning。
+              시나리오: 모델이 t+1 시점에 피크 경고(Peak Warning)가 발생할 것으로 예측.
             </p>
           </div>
           
-          <!-- 推理路径 -->
+          <!-- 추론 경로 -->
           <div style="margin-bottom: 14px;">
             <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
-              推理路径（Inference Path）：
+              추론 경로 (Inference Path):
             </h3>
             <ol style="margin-left: 18px; font-size: 11.5pt; line-height: 1.5;">
-              <li><strong>DLP State:</strong> Early Attention (53%) 捕捉到特定时序模式。</li>
-              <li><strong>Appliance:</strong> Climate Control (空调) 处于 Very High 状态 (48%)。</li>
-              <li><strong>Result:</strong> 导致 Peak Warning 概率升至 100%。</li>
+              <li><strong>DLP State:</strong> Early Attention (53%)이 특정 시계열 패턴을 포착.</li>
+              <li><strong>Appliance:</strong> Climate Control (에어컨)이 Very High 상태 (48%).</li>
+              <li><strong>Result:</strong> 그 결과 Peak Warning 확률이 100%로 상승.</li>
             </ol>
           </div>
           
-          <!-- 敏感性分析 -->
+          <!-- 민감도 분석 -->
           <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 10px; border-radius: 4px;">
             <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
-              敏感性分析（Sensitivity）：
+              민감도 분석 (Sensitivity):
             </h3>
             <ul style="margin-left: 18px; font-size: 11.5pt; line-height: 1.5;">
-              <li>若将 Climate Control 降为 Low，Peak Warning 概率显著下降。</li>
-              <li><strong style="color: #059669;">Actionable Insight:</strong> 用户应调节空调设备以避免峰值电费。</li>
+              <li>Climate Control을 Low로 낮추면 Peak Warning 확률이 현저히 감소.</li>
+              <li><strong style="color: #059669;">Actionable Insight:</strong> 사용자는 피크 전기 요금을 피하기 위해 에어컨을 조절해야 함.</li>
             </ul>
           </div>
         </div>
@@ -70,7 +70,7 @@
     </div>
     
     <div class="footer">
-      <div class="author">能源需求预测的因果可解释AI</div>
+      <div class="author">에너지 수요 예측을 위한 인과관계 설명 가능한 AI</div>
       <div class="page-info">12 / ??</div>
     </div>
   </div>
