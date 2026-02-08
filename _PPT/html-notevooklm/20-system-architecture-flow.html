@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>系统架构：执行闭环</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 10in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第20页 - 闭环执行路径
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">系统架构</div>
+      <div class="page-number">20</div>
+    </div>
+    
+    <h2 class="slide-title">闭环执行与反馈路径</h2>
+    
+    <div class="content">
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; box-shadow: inset 0 0 0 1px rgba(15,23,42,0.02);">
+        <h3 style="font-size: 11.5pt; font-weight: 700; color: #0f172a; margin-bottom: 8px;">🧩 六大模块协同（文字概览）</h3>
+        <ul style="margin: 0; padding-left: 18px; font-size: 10.3pt; line-height: 1.6; color: #1f2937;">
+          <li><strong>Context Encoder</strong>：抽取季节、建筑形态、实时负荷与模型内部状态，生成稳健上下文。</li>
+          <li><strong>Intervention Generator + Causal Evaluator</strong>：基于模板库生成候选方案，并用BN do-calculus 估算峰值/能耗收益。</li>
+          <li><strong>Slate Bandit + Enhanced Feedback Module</strong>：以多目标奖励挑选Top-K方案，结合用户喜好/拒绝原因闭环自适应。</li>
+        </ul>
+      </div>
+
+      <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 12px 16px; border-radius: 8px; margin-bottom: 14px;">
+        <h3 style="font-size: 11.5pt; font-weight: 700; margin-bottom: 8px;">🔄 完整信息流</h3>
+        <div style="font-size: 10.2pt; line-height: 1.55;">
+          <strong>上下文输入</strong> → <strong>方案生成</strong>（候选集合）→ <strong>因果干预评估</strong>（BN do-calculus）→ <strong>Bandit排序与Top-K推荐</strong> → <strong>用户反馈</strong>（选择/拒绝原因/点赞/执行确认）→ <strong>在线学习更新</strong>（Bandit策略 + 偏好模型 + 生成策略演化）
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; font-size: 10pt; line-height: 1.5;">
+        <div style="background: #eef2ff; border-radius: 8px; padding: 12px; border-left: 3px solid #4338ca; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">
+          <strong style="color: #312e81;">上下文编码</strong>
+          <p style="margin: 6px 0 0 0; color: #1f2937;">多维输入（季节、建筑属性、实时负荷）经由上下文编码器生成状态摘要，驱动下游规划。</p>
+        </div>
+        <div style="background: #ecfdf5; border-radius: 8px; padding: 12px; border-left: 3px solid #059669; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">
+          <strong style="color: #065f46;">因果+Bandit融合</strong>
+          <p style="margin: 6px 0 0 0; color: #1f2937;">BN推断评估干预影响，Slate Bandit依据多目标奖励函数选择Top-K方案并持续在线更新。</p>
+        </div>
+        <div style="background: #fff7ed; border-radius: 8px; padding: 12px; border-left: 3px solid #ea580c; box-shadow: 0 1px 4px rgba(15,23,42,0.08);">
+          <strong style="color: #7c2d12;">反馈闭环</strong>
+          <p style="margin: 6px 0 0 0; color: #1f2937;">采集用户喜好、拒绝原因与执行确认，触发动作用屏蔽与策略自适应，确保安全落地。</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="page-info">20 / 22</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

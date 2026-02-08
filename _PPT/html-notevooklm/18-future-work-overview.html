@@ -16,8 +16,8 @@
 <body>
 
 <!-- ========================================
-     第19页 - 未来工作概览
-     ======================================== -->
+  第18页 - 未来工作概览
+  ======================================== -->
 <section class="slide">
   <div class="safe">
     <div class="header">
@@ -29,21 +29,21 @@
     
     <div class="content">
       <!-- 研究背景与动机 -->
-      <div style="background: #f0f4f8; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #3b82f6; margin-bottom: 14px;">
-        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">📌 研究背景与动机</h3>
-        <p style="font-size: 11pt; line-height: 1.6; color: #374151; margin: 0;">
+      <div style="background: #f0f4f8; padding: 10px 12px; border-radius: 6px; border-left: 4px solid #3b82f6; margin-bottom: 10px;">
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">📌 研究背景与动机</h3>
+        <p style="font-size: 10.5pt; line-height: 1.45; color: #374151; margin: 0;">
           传统可解释能源预测系统主要聚焦于回答<strong>"为什么会发生负荷峰值（Why）"</strong>，但在真实能源管理场景中，更关键的问题是：<strong>"如果改变用电行为会发生什么（What-if）？应该采取哪种改变（Which action）？"</strong>
         </p>
       </div>
       
       <!-- 核心研究目标 -->
-      <div style="margin-bottom: 14px;">
-        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">🎯 核心研究目标</h3>
-        <p style="font-size: 11pt; line-height: 1.6; color: #374151; margin-bottom: 10px;">
+      <div style="margin-bottom: 10px;">
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">🎯 核心研究目标</h3>
+        <p style="font-size: 10.5pt; line-height: 1.45; color: #374151; margin-bottom: 6px;">
           将研究目标从<strong>因果解释（Causal Explanation）</strong>拓展为<strong>因果驱动的、可执行的、可在用户反馈下持续进化的决策推荐系统</strong>。
         </p>
-        <div style="background: #eff6ff; padding: 12px 15px; border-radius: 5px; border-left: 3px solid #3b82f6;">
-          <p style="font-size: 10.5pt; line-height: 1.6; color: #1e3a8a; margin: 0;">
+        <div style="background: #eff6ff; padding: 8px 10px; border-radius: 5px; border-left: 3px solid #3b82f6;">
+          <p style="font-size: 9.8pt; line-height: 1.45; color: #1e3a8a; margin: 0;">
             <strong>形式化问题：</strong>在给定上下文条件（季节、时间、建筑规模、当前负荷状态等）下，如何生成并推荐一组可执行的干预方案，在峰值削减、能耗降低、用户可接受性与安全约束之间取得最优平衡，并使系统在真实用户交互中越用越聪明。
           </p>
         </div>
@@ -51,36 +51,36 @@
       
       <!-- 系统总体架构 -->
       <div>
-        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">🔄 系统总体架构（六大模块）</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-          <div style="background: white; border: 1.5px solid #10b981; padding: 10px 12px; border-radius: 5px;">
-            <strong style="color: #047857; font-size: 11pt;">① 上下文感知模块</strong>
-            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">编码环境信息（季节、时间、建筑类型、当前负荷）与模型内部状态（DLP、EDP、Attention类型）</p>
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 6px;">🔄 系统总体架构（六大模块）</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div style="background: white; border: 1.5px solid #10b981; padding: 8px 10px; border-radius: 5px;">
+            <strong style="color: #047857; font-size: 10.5pt;">① 上下文感知模块</strong>
+            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">编码环境信息（季节、时间、建筑类型、当前负荷）与模型内部状态（DLP、EDP、Attention类型）</p>
           </div>
           
-          <div style="background: white; border: 1.5px solid #3b82f6; padding: 10px 12px; border-radius: 5px;">
-            <strong style="color: #1e40af; font-size: 11pt;">② 干预方案生成器</strong>
-            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">基于专家模板库实例化候选方案集合，仅干预可控变量（空调档位、设备启停）</p>
+          <div style="background: white; border: 1.5px solid #3b82f6; padding: 8px 10px; border-radius: 5px;">
+            <strong style="color: #1e40af; font-size: 10.5pt;">② 干预方案生成器</strong>
+            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">基于专家模板库实例化候选方案集合，仅干预可控变量（空调档位、设备启停）</p>
           </div>
           
-          <div style="background: white; border: 1.5px solid #f59e0b; padding: 10px 12px; border-radius: 5px;">
-            <strong style="color: #d97706; font-size: 11pt;">③ 因果效果评估</strong>
-            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">通过贝叶斯网络do-calculus计算<code style="background: #f9fafb; padding: 1px 4px;">P(Peak|do(π),c)</code>，评估干预效果而非相关性</p>
+          <div style="background: white; border: 1.5px solid #f59e0b; padding: 8px 10px; border-radius: 5px;">
+            <strong style="color: #d97706; font-size: 10.5pt;">③ 因果效果评估</strong>
+            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">通过贝叶斯网络do-calculus计算<code style="background: #f9fafb; padding: 1px 4px;">P(Peak|do(π),c)</code>，评估干预效果而非相关性</p>
           </div>
           
-          <div style="background: white; border: 1.5px solid #6366f1; padding: 10px 12px; border-radius: 5px;">
-            <strong style="color: #4f46e5; font-size: 11pt;">④ Slate Bandit推荐</strong>
-            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">上下文感知的方案排序，选择Top-K列表推荐，平衡探索与利用</p>
+          <div style="background: white; border: 1.5px solid #6366f1; padding: 8px 10px; border-radius: 5px;">
+            <strong style="color: #4f46e5; font-size: 10.5pt;">④ Slate Bandit推荐</strong>
+            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">上下文感知的方案排序，选择Top-K列表推荐，平衡探索与利用</p>
           </div>
           
-          <div style="background: white; border: 1.5px solid #8b5cf6; padding: 10px 12px; border-radius: 5px;">
-            <strong style="color: #7c3aed; font-size: 11pt;">⑤ 增强反馈采集</strong>
-            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">收集拒绝原因标签（太麻烦/不舒服/影响工作等）与执行确认信号</p>
+          <div style="background: white; border: 1.5px solid #8b5cf6; padding: 8px 10px; border-radius: 5px;">
+            <strong style="color: #7c3aed; font-size: 10.5pt;">⑤ 增强反馈采集</strong>
+            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">收集拒绝原因标签（太麻烦/不舒服/影响工作等）与执行确认信号</p>
           </div>
           
-          <div style="background: white; border: 1.5px solid #64748b; padding: 10px 12px; border-radius: 5px;">
-            <strong style="color: #475569; font-size: 11pt;">⑥ 在线学习更新</strong>
-            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">Bandit策略更新 + 偏好模型更新 + 生成策略演化</p>
+          <div style="background: white; border: 1.5px solid #64748b; padding: 8px 10px; border-radius: 5px;">
+            <strong style="color: #475569; font-size: 10.5pt;">⑥ 在线学习更新</strong>
+            <p style="font-size: 9pt; color: #4b5563; margin: 4px 0 0 0; line-height: 1.4;">Bandit策略更新 + 偏好模型更新 + 生成策略演化</p>
           </div>
         </div>
       </div>
@@ -88,7 +88,7 @@
     
     <div class="footer">
       <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
-      <div class="page-info">18 / 20</div>
+      <div class="page-info">18 / 22</div>
     </div>
   </div>
 </section>

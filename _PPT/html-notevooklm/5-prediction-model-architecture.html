@@ -29,16 +29,16 @@
     
     <div class="content">
       <!-- 预测模型架构图 -->
-      <div style="text-align: center; margin-bottom: 20px;">
-        <img src="images/3-并行CNN-LSTM预测模型结构.png" alt="预测模型架构图" style="max-width: 100%; max-height: 300px; height: auto; object-fit: contain;">
+      <div style="text-align: center; margin-bottom: 12px;">
+        <img src="images/3-并行CNN-LSTM预测模型结构.png" alt="预测模型架构图" style="max-width: 90%; max-height: 220px; height: auto; object-fit: contain;">
       </div>
       
       <!-- 底部两栏：实现细节和关键公式 -->
-      <div class="two-col" style="gap: 25px;">
+      <div class="two-col" style="gap: 18px;">
         <!-- 左侧：实现细节 -->
         <div>
-          <h3 class="slide-section" style="margin-top: 0;">Implementation Details:</h3>
-          <ul style="font-size: 13pt; line-height: 1.6;">
+          <h3 class="slide-section" style="margin-top: 0; font-size: 15pt;">Implementation Details:</h3>
+          <ul style="font-size: 11.5pt; line-height: 1.45;">
             <li><strong>CNN Branch:</strong> 1D Conv -> Max Pooling（提取短时波动与特征关系）。</li>
             <li><strong>LSTM Branch:</strong> 处理序列长度 ω = 80。计算 Attention Weights (<em>a<sub>n</sub></em>) 和 Context Vector (<em>c<sub>n</sub></em>)。</li>
             <li><strong>Feature Fusion:</strong> 将 CNN 输出与 LSTM Context Vector 拼接，而非串行级联。</li>
@@ -48,7 +48,7 @@
         <!-- 右侧：关键公式 -->
         <div>
           <div style="text-align: center;">
-            <img src="images/4-关键公式注意力与特征融合.png" alt="关键公式" style="max-width: 100%; height: auto; object-fit: contain;">
+            <img src="images/4-关键公式注意力与特征融合.png" alt="关键公式" style="max-width: 85%; height: auto; object-fit: contain;">
           </div>
         </div>
       </div>

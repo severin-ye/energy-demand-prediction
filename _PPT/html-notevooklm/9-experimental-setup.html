@@ -29,29 +29,29 @@
     
     <div class="content">
       <!-- 四宫格布局 -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         
         <!-- 左上：Datasets -->
-        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 15px;">
-          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px; border-bottom: 2px solid #e5e7eb; padding-bottom: 6px;">
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
+          <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
             Datasets（数据）
           </h3>
           
-          <div style="margin-bottom: 12px;">
-            <p style="font-size: 11.5pt; font-weight: 600; color: #1f2937; margin-bottom: 6px;">
+          <div style="margin-bottom: 8px;">
+            <p style="font-size: 10.5pt; font-weight: 600; color: #1f2937; margin-bottom: 4px;">
               1. UCI Household Electricity
             </p>
-            <ul style="margin-left: 20px; font-size: 10.5pt; line-height: 1.4;">
+            <ul style="margin-left: 16px; font-size: 9.5pt; line-height: 1.3;">
               <li>207万条数据，1分钟分辨率</li>
               <li>包含 Kitchen, Laundry, HVAC 子计量</li>
             </ul>
           </div>
           
           <div>
-            <p style="font-size: 11.5pt; font-weight: 600; color: #1f2937; margin-bottom: 6px;">
+            <p style="font-size: 10.5pt; font-weight: 600; color: #1f2937; margin-bottom: 4px;">
               2. REFIT Dataset
             </p>
-            <ul style="margin-left: 20px; font-size: 10.5pt; line-height: 1.4;">
+            <ul style="margin-left: 16px; font-size: 9.5pt; line-height: 1.3;">
               <li>573万条数据，8秒分辨率</li>
               <li>重采样至 15min / 30min / 1h / 1d</li>
             </ul>
@@ -59,12 +59,12 @@
         </div>
         
         <!-- 右上：Training Specs -->
-        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 15px;">
-          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px; border-bottom: 2px solid #e5e7eb; padding-bottom: 6px;">
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
+          <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
             Training Specs（训练参数）
           </h3>
           
-          <ul style="margin-left: 20px; font-size: 11pt; line-height: 1.6;">
+          <ul style="margin-left: 16px; font-size: 10pt; line-height: 1.35;">
             <li><strong>Input Window (ω):</strong> 80 timestamps</li>
             <li><strong>Prediction Horizon:</strong> <em>t</em>+1 (One-step ahead)</li>
             <li><strong>Validation:</strong> Train/Test split consistent with source</li>
@@ -72,12 +72,12 @@
         </div>
         
         <!-- 左下：Metrics -->
-        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 15px;">
-          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px; border-bottom: 2px solid #e5e7eb; padding-bottom: 6px;">
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
+          <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
             Metrics（评价指标）
           </h3>
           
-          <ul style="margin-left: 20px; font-size: 11pt; line-height: 1.6;">
+          <ul style="margin-left: 16px; font-size: 10pt; line-height: 1.35;">
             <li><strong>MSE</strong> (Mean Squared Error)</li>
             <li><strong>RMSE</strong> (Root Mean Square Error)</li>
             <li><strong>MAE</strong> (Mean Absolute Error)</li>
@@ -85,12 +85,12 @@
         </div>
         
         <!-- 右下：Baselines -->
-        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 15px;">
-          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px; border-bottom: 2px solid #e5e7eb; padding-bottom: 6px;">
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 10px;">
+          <h3 style="font-size: 13.5pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px;">
             Baselines（对比基线）
           </h3>
           
-          <ul style="margin-left: 20px; font-size: 11pt; line-height: 1.6;">
+          <ul style="margin-left: 16px; font-size: 10pt; line-height: 1.35;">
             <li><strong>Statistical:</strong> ARIMA</li>
             <li><strong>ML:</strong> SVR</li>
             <li><strong>DL:</strong> CNN, LSTM, S-CNN-LSTM (Serial)</li>

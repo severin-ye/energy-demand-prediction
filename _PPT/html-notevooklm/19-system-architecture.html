@@ -27,24 +27,18 @@
     
     <h2 class="slide-title">因果-推荐-反馈闭环系统架构</h2>
     
-    <div class="content">
-      <!-- 系统架构图 -->
+    <div class="content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80%;">
       <div style="text-align: center; margin-bottom: 12px;">
-        <img src="images/自己的idea.png" alt="系统架构图" style="width: 100%; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <img src="images/自己的idea.png" alt="系统架构图" style="width: min(88%, 820px); height: auto; border-radius: 8px; box-shadow: 0 8px 18px rgba(15,23,42,0.18);">
       </div>
-      
-      <!-- 信息流说明 -->
-      <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 10px 14px; border-radius: 5px;">
-        <h3 style="font-size: 11pt; font-weight: 700; margin-bottom: 8px;">🔄 完整信息流</h3>
-        <div style="font-size: 10pt; line-height: 1.6;">
-          <strong>上下文输入</strong> → <strong>方案生成</strong>（候选集合）→ <strong>因果干预评估</strong>（BN do-calculus）→ <strong>Bandit排序与Top-K推荐</strong> → <strong>用户反馈</strong>（选择/拒绝原因/点赞/执行确认）→ <strong>在线学习更新</strong>（Bandit策略 + 偏好模型 + 生成策略演化）
-        </div>
+      <div style="font-size: 9.8pt; color: #475569; text-align: center; background: rgba(248,250,252,0.95); border: 1px solid #e2e8f0; border-radius: 20px; padding: 8px 18px;">
+        因果推断 + Slate Bandit + 增强反馈共同构成闭环：从感知上下文 → 生成/评估干预方案 → Top-K推荐 → 执行确认与在线自适应。
       </div>
     </div>
     
     <div class="footer">
       <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
-      <div class="page-info">19 / 20</div>
+      <div class="page-info">19 / 22</div>
     </div>
   </div>
 </section>
