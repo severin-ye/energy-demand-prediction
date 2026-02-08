@@ -8,7 +8,7 @@
   <style>
     /* 内联关键样式确保打印时正常 */
     @page {
-      size: 13.333in 7.5in;
+      size: 10in 7.5in;
       margin: 0;
     }
   </style>
@@ -29,29 +29,29 @@
     
     <div class="content">
       <!-- 消融实验结果图 -->
-      <div style="text-align: center; margin-bottom: 25px;">
+      <div style="text-align: center; margin-bottom: 12px;">
         <img src="images/11-消融实验结果RMSE与解释相似度.png" alt="消融实验结果" style="max-width: 100%; height: auto; object-fit: contain;">
       </div>
       
       <!-- 底部验证结论 -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
         <!-- 架构验证 -->
-        <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 18px 20px; border-radius: 4px;">
-          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px;">
+        <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 12px 15px; border-radius: 4px;">
+          <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
             1. 架构验证：
           </h3>
-          <ul style="margin-left: 20px; font-size: 13pt; line-height: 1.9;">
+          <ul style="margin-left: 18px; font-size: 11pt; line-height: 1.5;">
             <li>串行结构 (s-c-l-a) 性能显著下降 -> 并行结构是关键。</li>
             <li>Attention 机制带来轻微提升。</li>
           </ul>
         </div>
         
         <!-- 解释验证 -->
-        <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 18px 20px; border-radius: 4px;">
-          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px;">
+        <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 12px 15px; border-radius: 4px;">
+          <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
             2. 解释验证：
           </h3>
-          <ul style="margin-left: 20px; font-size: 13pt; line-height: 1.9;">
+          <ul style="margin-left: 18px; font-size: 11pt; line-height: 1.5;">
             <li>去除 DLP (Deep Learning Parameters) 导致解释一致性下降。</li>
             <li>证明了将 Attention/CAM 纳入贝叶斯网络的必要性。</li>
           </ul>

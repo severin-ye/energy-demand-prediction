@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>核心问题：论文缺少实现细节</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 10in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第16页 - 核心问题2：实现细节缺失
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">核心问题2</div>
+      <div class="page-number">16</div>
+    </div>
+    
+    <h2 class="slide-title">论文缺少关键实现细节</h2>
+    
+    <div class="content">
+      <!-- 缺失细节清单 -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+        <!-- 模型架构细节 -->
+        <div style="background: linear-gradient(to bottom, #fee2e2, #fef2f2); border-left: 4px solid #ef4444; padding: 12px; border-radius: 5px;">
+          <h3 style="font-size: 12pt; font-weight: 700; color: #991b1b; margin-bottom: 10px;">
+            ❌ 模型架构细节
+          </h3>
+          <ul style="margin: 0; padding-left: 18px; font-size: 10pt; line-height: 1.6; color: #374151;">
+            <li>CNN卷积核大小、数量</li>
+            <li>具体的池化窗口大小</li>
+            <li>LSTM层数、单元数</li>
+            <li>Attention单元配置</li>
+            <li>Dense层结构</li>
+            <li>激活函数类型</li>
+            <li>权重初始化方法</li>
+          </ul>
+        </div>
+        
+        <!-- 训练参数 -->
+        <div style="background: linear-gradient(to bottom, #fef3c7, #fef9e7); border-left: 4px solid #f59e0b; padding: 12px; border-radius: 5px;">
+          <h3 style="font-size: 12pt; font-weight: 700; color: #92400e; margin-bottom: 10px;">
+            ❌ 训练参数
+          </h3>
+          <ul style="margin: 0; padding-left: 18px; font-size: 10pt; line-height: 1.6; color: #374151;">
+            <li>学习率（Learning rate）</li>
+            <li>批大小（Batch size）</li>
+            <li>训练轮数（Epochs）</li>
+            <li>优化器配置</li>
+            <li>学习率调度策略</li>
+            <li>早停（Early stopping）策略</li>
+            <li>Dropout率</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 数据处理细节 -->
+      <div style="background: linear-gradient(to bottom, #dbeafe, #f0f9ff); border-left: 4px solid #3b82f6; padding: 12px; border-radius: 5px; margin-bottom: 14px;">
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">
+          ❌ 数据预处理细节
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 10pt;">
+          <div>
+            <strong style="color: #3b82f6;">归一化方法：</strong><br/>
+            <span style="color: #6b7280;">MinMax? StandardScaler? 范围？</span>
+          </div>
+          <div>
+            <strong style="color: #3b82f6;">特征工程：</strong><br/>
+            <span style="color: #6b7280;">时间编码？周期性特征？</span>
+          </div>
+          <div>
+            <strong style="color: #3b82f6;">数据分割：</strong><br/>
+            <span style="color: #6b7280;">训练/验证/测试比例？</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 当前应对策略 -->
+      <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 12px; border-radius: 5px;">
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">
+          💡 当前应对策略
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 10pt; line-height: 1.5;">
+          <div style="text-align: center; padding: 10px; background: white; border-radius: 4px;">
+            <div style="font-size: 20pt; margin-bottom: 5px;">🔍</div>
+            <strong style="color: #3b82f6;">基于论文解读</strong><br/>
+            <span style="color: #6b7280; font-size: 9pt;">分析公式和图示</span>
+          </div>
+          <div style="text-align: center; padding: 10px; background: white; border-radius: 4px;">
+            <div style="font-size: 20pt; margin-bottom: 5px;">📚</div>
+            <strong style="color: #10b981;">常见实践</strong><br/>
+            <span style="color: #6b7280; font-size: 9pt;">参考领域标准</span>
+          </div>
+          <div style="text-align: center; padding: 10px; background: white; border-radius: 4px;">
+            <div style="font-size: 20pt; margin-bottom: 5px;">🧪</div>
+            <strong style="color: #f59e0b;">实验验证</strong><br/>
+            <span style="color: #6b7280; font-size: 9pt;">多次迭代调优</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="page-info">16 / 18</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

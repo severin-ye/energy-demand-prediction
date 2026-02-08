@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关键技术创新</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 10in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第21页 - 关键技术创新
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">关键技术创新</div>
+      <div class="page-number">20</div>
+    </div>
+    
+    <h2 class="slide-title">Slate Bandit推荐与增强反馈机制</h2>
+    
+    <div class="content">
+      <!-- Slate Bandit -->
+      <div style="margin-bottom: 14px;">
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">🎯 基于Contextual Slate Bandit的Top-K推荐</h3>
+        <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 12px; border-radius: 5px; margin-bottom: 10px;">
+          <p style="font-size: 10.5pt; line-height: 1.6; color: #374151; margin: 0 0 8px 0;">
+            在给定上下文 <code style="background: white; padding: 1px 4px;">c</code> 下，从候选集合中选择 Top-K 方案列表（Slate）：<code style="background: white; padding: 1px 4px;">S = [π₁, π₂, ..., πₖ]</code>
+          </p>
+          <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 10px 12px; border-radius: 4px;">
+            <strong style="font-size: 11pt;">多目标奖励函数：</strong><br/>
+            <code style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 3px; font-size: 10pt; display: inline-block; margin-top: 5px;">
+              r(π) = α·AcceptIntent + β·Like - γ·Dislike + λ·ΔPeak + μ·ΔEnergy - ρ·Cost - η·RejectionPenalty
+            </code>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: #eff6ff; padding: 10px; border-radius: 4px; border-left: 3px solid #3b82f6;">
+            <strong style="color: #1e40af; font-size: 10pt;">学习算法</strong>
+            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">采用Thompson Sampling / LinUCB，在不同上下文下学习高收益方案结构</p>
+          </div>
+          <div style="background: #fef9e7; padding: 10px; border-radius: 4px; border-left: 3px solid #f59e0b;">
+            <strong style="color: #92400e; font-size: 10pt;">探索-利用平衡</strong>
+            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">保持最小探索比例（20%），通过Action Masking确保安全性</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 增强反馈 -->
+      <div style="margin-bottom: 14px;">
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">💬 增强用户反馈建模（核心扩展）</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: #fef9e7; border: 1.5px solid #f59e0b; padding: 10px; border-radius: 4px;">
+            <strong style="color: #92400e; font-size: 11pt;">① 拒绝原因分解（Preference Decomposition）</strong>
+            <p style="font-size: 9.5pt; color: #6b7280; margin: 6px 0 8px 0; line-height: 1.5;">
+              将"负反馈"从标量分解为多维偏好标签：
+            </p>
+            <div style="background: white; padding: 8px; border-radius: 3px; font-size: 9.5pt; line-height: 1.6; color: #374151;">
+              <strong>RejectReason ∈</strong> {太麻烦, 不舒服, 影响工作, 不可信, 已经在做}<br/>
+              <div style="margin-top: 6px; padding: 6px; background: #fef3c7; border-radius: 2px;">
+                <strong style="color: #92400e;">系统作用：</strong><br/>
+                • 训练偏好预测模型 P(AcceptIntent|c,π)<br/>
+                • 为生成器提供结构性约束<br/>
+                • "太麻烦" → 限制多变量组合<br/>
+                • "不舒服" → 减小调节幅度
+              </div>
+            </div>
+          </div>
+          
+          <div style="background: #eff6ff; border: 1.5px solid #3b82f6; padding: 10px; border-radius: 4px;">
+            <strong style="color: #1e40af; font-size: 11pt;">② 执行确认（Intent vs Execution）</strong>
+            <p style="font-size: 9.5pt; color: #6b7280; margin: 6px 0 8px 0; line-height: 1.5;">
+              显式区分用户意愿与真实执行：
+            </p>
+            <div style="background: white; padding: 8px; border-radius: 3px;">
+              <table style="width: 100%; font-size: 9.5pt; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td style="padding: 5px; color: #3b82f6; font-weight: 600;">Accept-Intent</td>
+                  <td style="padding: 5px; color: #4b5563;">用户愿意执行</td>
+                </tr>
+                <tr>
+                  <td style="padding: 5px; color: #10b981; font-weight: 600;">Executed</td>
+                  <td style="padding: 5px; color: #4b5563;">真实执行确认</td>
+                </tr>
+              </table>
+              <div style="margin-top: 6px; padding: 6px; background: #dbeafe; border-radius: 2px;">
+                <strong style="color: #1e40af; font-size: 9pt;">为什么必须区分？</strong><br/>
+                <span style="font-size: 9pt; color: #4b5563;">仅在Executed=1时，使用真实负荷变化更新因果效果评估，避免未执行方案污染</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 在线学习 -->
+      <div style="background: #f0fdf4; border: 2px solid #10b981; padding: 10px 12px; border-radius: 5px;">
+        <h3 style="font-size: 12pt; font-weight: 700; color: #047857; margin-bottom: 8px;">🔄 在线学习与生成策略演化</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 9.5pt; line-height: 1.5;">
+          <div style="background: white; padding: 8px; border-radius: 3px;">
+            <strong style="color: #3b82f6;">Bandit策略更新</strong><br/>
+            <span style="color: #6b7280;">学习不同上下文下的高收益方案结构</span>
+          </div>
+          <div style="background: white; padding: 8px; border-radius: 3px;">
+            <strong style="color: #f59e0b;">偏好模型优化</strong><br/>
+            <span style="color: #6b7280;">根据拒绝原因标签训练接受度预测器</span>
+          </div>
+          <div style="background: white; padding: 8px; border-radius: 3px;">
+            <strong style="color: #10b981;">模板权重调整</strong><br/>
+            <span style="color: #6b7280;">高收益模板被更频繁采样，问题模板降权</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="page-info">20 / 20</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

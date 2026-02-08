@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>已尝试的解决方案</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 内联关键样式确保打印时正常 */
+    @page {
+      size: 10in 7.5in;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========================================
+     第17页 - 已尝试的解决方案
+     ======================================== -->
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">解决方案</div>
+      <div class="page-number">17</div>
+    </div>
+    
+    <h2 class="slide-title">已尝试的解决方案（10个主要尝试）</h2>
+    
+    <div class="content">
+      <!-- 成功的解决方案 -->
+      <div style="margin-bottom: 14px;">
+        <h3 style="font-size: 14pt; font-weight: 700; color: #10b981; margin-bottom: 10px; border-left: 5px solid #10b981; padding-left: 10px;">
+          ✅ 成功修正（符合论文）
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 10px; border-radius: 5px;">
+            <strong style="color: #047857; font-size: 11.5pt;">1️⃣ 修正注意力机制</strong>
+            <p style="font-size: 10pt; color: #374151; margin: 6px 0 0 0; line-height: 1.5;">
+              使用最终隐藏状态h_N计算相关性<br/>
+              <span style="color: #10b981;">✓ 符合论文公式1-2</span>
+            </p>
+          </div>
+          
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 10px; border-radius: 5px;">
+            <strong style="color: #047857; font-size: 11.5pt;">2️⃣ 修正状态分类器</strong>
+            <p style="font-size: 10pt; color: #374151; margin: 6px 0 0 0; line-height: 1.5;">
+              Sn鲁棒尺度估计 + α=1.4285<br/>
+              <span style="color: #10b981;">✓ 符合论文公式5-7</span>
+            </p>
+          </div>
+          
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 10px; border-radius: 5px;">
+            <strong style="color: #047857; font-size: 11.5pt;">3️⃣ 修正归一化方法</strong>
+            <p style="font-size: 10pt; color: #374151; margin: 6px 0 0 0; line-height: 1.5;">
+              MinMaxScaler(0,1) + 目标变量归一化<br/>
+              <span style="color: #10b981;">✓ MAE降至0.03-0.04（对齐论文）</span>
+            </p>
+          </div>
+          
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 10px; border-radius: 5px;">
+            <strong style="color: #047857; font-size: 11.5pt;">5️⃣ GlobalAveragePooling</strong>
+            <p style="font-size: 10pt; color: #374151; margin: 6px 0 0 0; line-height: 1.5;">
+              替代Flatten，参数量286K→131K<br/>
+              <span style="color: #10b981;">✓ MAE: 0.2906→0.0330</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 部分改善的方案 -->
+      <div style="margin-bottom: 14px;">
+        <h3 style="font-size: 14pt; font-weight: 700; color: #f59e0b; margin-bottom: 10px; border-left: 5px solid #f59e0b; padding-left: 10px;">
+          ⚠️ 部分改善（未达预期）
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 10px; border-radius: 5px;">
+            <strong style="color: #92400e; font-size: 11pt;">4️⃣ LSTM输入来源</strong>
+            <p style="font-size: 9.5pt; color: #6b7280; margin: 5px 0 0 0; line-height: 1.4;">
+              MAE: 0.0337→0.0330<br/>
+              有改善但仍低于串联
+            </p>
+          </div>
+          
+          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 10px; border-radius: 5px;">
+            <strong style="color: #92400e; font-size: 11pt;">6️⃣ 超参数搜索</strong>
+            <p style="font-size: 9.5pt; color: #6b7280; margin: 5px 0 0 0; line-height: 1.4;">
+              LSTM、CNN、Dropout等<br/>
+              部分配置有改善
+            </p>
+          </div>
+          
+          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 10px; border-radius: 5px;">
+            <strong style="color: #92400e; font-size: 11pt;">7️⃣ Bidirectional LSTM</strong>
+            <p style="font-size: 9.5pt; color: #6b7280; margin: 5px 0 0 0; line-height: 1.4;">
+              性能略有改善<br/>
+              但训练时间翻倍
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 关键发现 -->
+      <div style="background: linear-gradient(to right, #dbeafe 0%, #f0f9ff 100%); border-left: 5px solid #3b82f6; padding: 12px 15px; border-radius: 5px;">
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
+          🔍 关键发现
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 10.5pt; line-height: 1.6;">
+          <div>
+            <strong style="color: #3b82f6;">✓ 架构正确性：</strong>所有修正都符合论文描述<br/>
+            <strong style="color: #3b82f6;">✓ 技术实现：</strong>注意力、状态分类等核心模块正确<br/>
+            <strong style="color: #3b82f6;">✓ 数据处理：</strong>归一化方法、评估空间对齐论文
+          </div>
+          <div>
+            <strong style="color: #ef4444;">✗ 性能差距：</strong>并行模型始终低于串联<br/>
+            <strong style="color: #ef4444;">✗ 提升幅度：</strong>+3.08% vs 论文声称的+34.84%<br/>
+            <strong style="color: #f59e0b;">? 根本原因：</strong>可能是对比基线不同
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="page-info">17 / 18</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

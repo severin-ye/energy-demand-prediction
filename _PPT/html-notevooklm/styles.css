@@ -1,12 +1,12 @@
 /* ============================================
    能源预测论文复现 PPT 样式系统
-   16:9 比例 (13.333in × 7.5in)
+   4:3 比例 (10in × 7.5in)
    ============================================ */
 
 /* ========== 全局变量 ========== */
 :root {
   /* 尺寸 */
-  --slide-width: 13.333in;
+  --slide-width: 10in;
   --slide-height: 7.5in;
   --safe-x: 0.6in;
   --safe-y: 0.5in;
@@ -46,7 +46,7 @@
 
 /* ========== 打印设置 ========== */
 @page {
-  size: 13.333in 7.5in;
+  size: 10in 7.5in;
   margin: 0;
 }
 
@@ -206,7 +206,16 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: visible;
+  overflow: hidden;
+  max-height: 6in;
+}
+
+/* 打印时确保不溢出 */
+@media print {
+  .content {
+    max-height: 6in !important;
+    overflow: hidden !important;
+  }
 }
 
 /* ========== 列表样式 ========== */

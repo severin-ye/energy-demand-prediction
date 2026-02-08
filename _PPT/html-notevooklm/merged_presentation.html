@@ -76,20 +76,20 @@
       <div class="col-6-4">
         <!-- 左侧文字内容 -->
         <div>
-          <h3 class="slide-section">Context</h3>
-          <ul>
+          <h3 class="slide-section" style="font-size: 15pt;">Context</h3>
+          <ul style="font-size: 11pt; line-height: 1.5; margin: 8px 0;">
             <li>能源需求预测（Energy Demand Prediction）对减少温室气体排放和电力管理至关重要。</li>
           </ul>
           
-          <h3 class="slide-section" style="margin-top: 25px;">Problem Definition</h3>
-          <ul>
+          <h3 class="slide-section" style="margin-top: 15px; font-size: 15pt;">Problem Definition</h3>
+          <ul style="font-size: 11pt; line-height: 1.5; margin: 8px 0;">
             <li><strong>深度学习困境：</strong>CNN-LSTM 等模型精度高，但缺乏可解释性（Black-box nature）。</li>
             <li><strong>现有 XAI 局限：</strong>SHAP 和 LIME 等主流方法主要关注特征的相关性（Correlation）而非因果性（Causality）。</li>
             <li><strong>用户需求：</strong>终端用户需要可执行的洞察（Actionable Insights），例如"为何会出现<span style="color: #f59e0b; font-weight: 600;">峰值预警</span>？"。</li>
           </ul>
           
-          <h3 class="slide-section" style="margin-top: 25px;">Research Motivation</h3>
-          <ul>
+          <h3 class="slide-section" style="margin-top: 15px; font-size: 15pt;">Research Motivation</h3>
+          <ul style="font-size: 11pt; line-height: 1.5; margin: 8px 0;">
             <li>提出一种混合框架，旨在保持深度学习高精度的同时，通过贝叶斯网络揭示变量间及模型参数的因果机制。</li>
           </ul>
         </div>
@@ -345,13 +345,13 @@
     
     <div class="content">
       <!-- CAM与Attention聚类模式图 -->
-      <div style="text-align: center; margin-bottom: 25px;">
+      <div style="text-align: center; margin-bottom: 12px;">
         <img src="images/6-CAM与Attention聚类模式.png" alt="CAM与Attention聚类模式" style="max-width: 100%; height: auto; object-fit: contain;">
       </div>
       
       <!-- 底部说明 -->
-      <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 18px 20px; border-radius: 4px;">
-        <ul style="margin: 0; font-size: 13pt; line-height: 1.8;">
+      <div style="background: #f0f9ff; border-left: 4px solid #3b82f6; padding: 12px 15px; border-radius: 4px;">
+        <ul style="margin: 0; font-size: 11pt; line-height: 1.5;">
           <li><strong>Class Activation Map (CAM):</strong> 使用 K-means 聚类识别激活模式，映射设备使用的增减。</li>
           <li><strong>Attention Weights:</strong> 基于累积聚类（Cumulative Clustering）识别时序关注点。</li>
           <li><strong>意义:</strong> 将神经网络的"黑盒"参数转化为贝叶斯网络中的可解释节点。</li>
@@ -377,29 +377,29 @@
     
     <div class="content">
       <!-- 四宫格布局 -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
         
         <!-- 左上：Datasets -->
-        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 25px;">
-          <h3 style="font-size: 20pt; font-weight: 700; color: #1e3a8a; margin-bottom: 20px; border-bottom: 3px solid #e5e7eb; padding-bottom: 10px;">
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 15px;">
+          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px; border-bottom: 2px solid #e5e7eb; padding-bottom: 6px;">
             Datasets（数据）
           </h3>
           
-          <div style="margin-bottom: 20px;">
-            <p style="font-size: 14pt; font-weight: 600; color: #1f2937; margin-bottom: 10px;">
+          <div style="margin-bottom: 12px;">
+            <p style="font-size: 11.5pt; font-weight: 600; color: #1f2937; margin-bottom: 6px;">
               1. UCI Household Electricity
             </p>
-            <ul style="margin-left: 25px; font-size: 13pt; line-height: 1.7;">
+            <ul style="margin-left: 20px; font-size: 10.5pt; line-height: 1.4;">
               <li>207万条数据，1分钟分辨率</li>
               <li>包含 Kitchen, Laundry, HVAC 子计量</li>
             </ul>
           </div>
           
           <div>
-            <p style="font-size: 14pt; font-weight: 600; color: #1f2937; margin-bottom: 10px;">
+            <p style="font-size: 11.5pt; font-weight: 600; color: #1f2937; margin-bottom: 6px;">
               2. REFIT Dataset
             </p>
-            <ul style="margin-left: 25px; font-size: 13pt; line-height: 1.7;">
+            <ul style="margin-left: 20px; font-size: 10.5pt; line-height: 1.4;">
               <li>573万条数据，8秒分辨率</li>
               <li>重采样至 15min / 30min / 1h / 1d</li>
             </ul>
@@ -407,12 +407,12 @@
         </div>
         
         <!-- 右上：Training Specs -->
-        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 25px;">
-          <h3 style="font-size: 20pt; font-weight: 700; color: #1e3a8a; margin-bottom: 20px; border-bottom: 3px solid #e5e7eb; padding-bottom: 10px;">
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 15px;">
+          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px; border-bottom: 2px solid #e5e7eb; padding-bottom: 6px;">
             Training Specs（训练参数）
           </h3>
           
-          <ul style="margin-left: 25px; font-size: 13pt; line-height: 2;">
+          <ul style="margin-left: 20px; font-size: 11pt; line-height: 1.6;">
             <li><strong>Input Window (ω):</strong> 80 timestamps</li>
             <li><strong>Prediction Horizon:</strong> <em>t</em>+1 (One-step ahead)</li>
             <li><strong>Validation:</strong> Train/Test split consistent with source</li>
@@ -420,12 +420,12 @@
         </div>
         
         <!-- 左下：Metrics -->
-        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 25px;">
-          <h3 style="font-size: 20pt; font-weight: 700; color: #1e3a8a; margin-bottom: 20px; border-bottom: 3px solid #e5e7eb; padding-bottom: 10px;">
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 15px;">
+          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px; border-bottom: 2px solid #e5e7eb; padding-bottom: 6px;">
             Metrics（评价指标）
           </h3>
           
-          <ul style="margin-left: 25px; font-size: 13pt; line-height: 2;">
+          <ul style="margin-left: 20px; font-size: 11pt; line-height: 1.6;">
             <li><strong>MSE</strong> (Mean Squared Error)</li>
             <li><strong>RMSE</strong> (Root Mean Square Error)</li>
             <li><strong>MAE</strong> (Mean Absolute Error)</li>
@@ -433,12 +433,12 @@
         </div>
         
         <!-- 右下：Baselines -->
-        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 25px;">
-          <h3 style="font-size: 20pt; font-weight: 700; color: #1e3a8a; margin-bottom: 20px; border-bottom: 3px solid #e5e7eb; padding-bottom: 10px;">
+        <div class="card" style="background: white; border: 2px solid #cbd5e1; padding: 15px;">
+          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px; border-bottom: 2px solid #e5e7eb; padding-bottom: 6px;">
             Baselines（对比基线）
           </h3>
           
-          <ul style="margin-left: 25px; font-size: 13pt; line-height: 2;">
+          <ul style="margin-left: 20px; font-size: 11pt; line-height: 1.6;">
             <li><strong>Statistical:</strong> ARIMA</li>
             <li><strong>ML:</strong> SVR</li>
             <li><strong>DL:</strong> CNN, LSTM, S-CNN-LSTM (Serial)</li>
@@ -608,29 +608,29 @@
     
     <div class="content">
       <!-- 消融实验结果图 -->
-      <div style="text-align: center; margin-bottom: 25px;">
+      <div style="text-align: center; margin-bottom: 12px;">
         <img src="images/11-消融实验结果RMSE与解释相似度.png" alt="消融实验结果" style="max-width: 100%; height: auto; object-fit: contain;">
       </div>
       
       <!-- 底部验证结论 -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
         <!-- 架构验证 -->
-        <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 18px 20px; border-radius: 4px;">
-          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px;">
+        <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 12px 15px; border-radius: 4px;">
+          <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
             1. 架构验证：
           </h3>
-          <ul style="margin-left: 20px; font-size: 13pt; line-height: 1.9;">
+          <ul style="margin-left: 18px; font-size: 11pt; line-height: 1.5;">
             <li>串行结构 (s-c-l-a) 性能显著下降 -> 并行结构是关键。</li>
             <li>Attention 机制带来轻微提升。</li>
           </ul>
         </div>
         
         <!-- 解释验证 -->
-        <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 18px 20px; border-radius: 4px;">
-          <h3 style="font-size: 16pt; font-weight: 700; color: #1e3a8a; margin-bottom: 12px;">
+        <div style="background: #d1fae5; border-left: 4px solid #10b981; padding: 12px 15px; border-radius: 4px;">
+          <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
             2. 解释验证：
           </h3>
-          <ul style="margin-left: 20px; font-size: 13pt; line-height: 1.9;">
+          <ul style="margin-left: 18px; font-size: 11pt; line-height: 1.5;">
             <li>去除 DLP (Deep Learning Parameters) 导致解释一致性下降。</li>
             <li>证明了将 Attention/CAM 纳入贝叶斯网络的必要性。</li>
           </ul>
@@ -641,6 +641,581 @@
     <div class="footer">
       <div class="author">能源需求预测的因果可解释AI</div>
       <div class="page-info">13 / ??</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">复现问题总结</div>
+      <div class="page-number">14</div>
+    </div>
+    
+    <h2 class="slide-title">论文复现：执行摘要</h2>
+    
+    <div class="content">
+      <!-- 复现目标 -->
+      <div style="background: linear-gradient(to right, #dbeafe 0%, #f0f9ff 100%); border-left: 5px solid #3b82f6; padding: 14px 18px; border-radius: 6px; margin-bottom: 15px;">
+        <h3 style="font-size: 15pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
+          📋 复现目标
+        </h3>
+        <p style="font-size: 12pt; line-height: 1.5; color: #374151; margin: 0;">
+          复现论文提出的因果可解释AI系统：<strong>并行CNN-LSTM-Attention</strong>架构 + <strong>贝叶斯网络</strong>因果解释，验证在UCI数据集上相比串联基线提升 <strong style="color: #ef4444;">34.84%</strong> 的性能。
+        </p>
+      </div>
+      
+      <!-- 核心问题 -->
+      <div style="background: linear-gradient(to right, #fee2e2 0%, #fef2f2 100%); border-left: 5px solid #ef4444; padding: 14px 18px; border-radius: 6px; margin-bottom: 15px;">
+        <h3 style="font-size: 15pt; font-weight: 700; color: #991b1b; margin-bottom: 12px;">
+          ⚠️ 核心问题
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div>
+            <p style="font-size: 11pt; color: #6b7280; margin-bottom: 5px;">论文声称：</p>
+            <p style="font-size: 20pt; font-weight: 800; color: #10b981; margin: 0;">+34.84%</p>
+            <p style="font-size: 11pt; color: #6b7280; margin-top: 5px;">并行架构 vs 串联基线</p>
+          </div>
+          <div>
+            <p style="font-size: 11pt; color: #6b7280; margin-bottom: 5px;">实际结果：</p>
+            <p style="font-size: 20pt; font-weight: 800; color: #ef4444; margin: 0;">-6.8%</p>
+            <p style="font-size: 11pt; color: #6b7280; margin-top: 5px;">并行反而比串联差</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 主要挑战 -->
+      <div style="background: #f9fafb; border: 2px solid #e5e7eb; padding: 14px 18px; border-radius: 6px;">
+        <h3 style="font-size: 14pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">
+          🔍 主要挑战（共20个问题）
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 11.5pt; line-height: 1.6;">
+          <div>
+            <span style="color: #10b981; font-weight: 700;">✅</span> 架构已对齐，但性能未达预期<br/>
+            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 论文缺少大量实现细节<br/>
+            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 串联+注意力表现最好（与论文相反）
+          </div>
+          <div>
+            <span style="color: #ef4444; font-weight: 700;">❌</span> 未找到论文对比的真实基线<br/>
+            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 归一化方法经历多次修正<br/>
+            <span style="color: #f59e0b; font-weight: 700;">⚠️</span> 超参数配置主要基于猜测
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="page-info">14 / 18</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">核心问题1</div>
+      <div class="page-number">15</div>
+    </div>
+    
+    <h2 class="slide-title">为什么并行模型性能低于串联？</h2>
+    
+    <div class="content">
+      <!-- 实验结果对比表 -->
+      <div style="margin-bottom: 16px;">
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">
+          📊 公平对比实验结果（相同训练条件）
+        </h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 11pt;">
+          <thead>
+            <tr style="background: linear-gradient(to right, #1e3a8a, #3b82f6); color: white;">
+              <th style="padding: 8px; text-align: left; border: 1px solid #e5e7eb;">模型</th>
+              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">验证MAE</th>
+              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">测试MAE</th>
+              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">vs Baseline</th>
+              <th style="padding: 8px; text-align: center; border: 1px solid #e5e7eb;">论文预期</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background: #f9fafb;">
+              <td style="padding: 7px; border: 1px solid #e5e7eb;"><strong>S-CNN-LSTM (baseline)</strong></td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;">0.030823</td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;">0.031296</td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;">-</td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;">-</td>
+            </tr>
+            <tr style="background: #d1fae5;">
+              <td style="padding: 7px; border: 1px solid #e5e7eb;"><strong>S-CNN-LSTM-Att</strong></td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;"><strong>0.029874</strong></td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;"><strong>0.029918</strong></td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb; color: #10b981; font-weight: 700;">✅ +3.08%</td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;">-</td>
+            </tr>
+            <tr style="background: #fee2e2;">
+              <td style="padding: 7px; border: 1px solid #e5e7eb;"><strong>P-CNN-LSTM-Att (论文)</strong></td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;">0.035662</td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb;">0.035467</td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb; color: #ef4444; font-weight: 700;">❌ -15.70%</td>
+              <td style="padding: 7px; text-align: center; border: 1px solid #e5e7eb; color: #10b981; font-weight: 700;">✅ +34.84%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- 可能原因分析 -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <!-- 最可能原因 -->
+        <div style="background: linear-gradient(to bottom, #fef3c7, #fef9e7); border-left: 4px solid #f59e0b; padding: 12px; border-radius: 5px;">
+          <h3 style="font-size: 12pt; font-weight: 700; color: #92400e; margin-bottom: 8px;">
+            ⭐⭐⭐⭐⭐ 最可能原因（90%）
+          </h3>
+          <p style="font-size: 10.5pt; line-height: 1.5; color: #374151; margin: 0;">
+            <strong style="color: #dc2626;">对比基线不同</strong><br/>
+            论文对比的是Kim & Cho (2019)的2019年旧方法，而我们实现的串联CNN-LSTM已经是优化过的<strong>强基线</strong>。<br/><br/>
+            如果论文基线是简单LSTM，34.84%提升是合理的。
+          </p>
+        </div>
+        
+        <!-- 其他原因 -->
+        <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 12px; border-radius: 5px;">
+          <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
+            其他可能原因
+          </h3>
+          <ul style="margin: 0; padding-left: 18px; font-size: 10pt; line-height: 1.6;">
+            <li><strong>超参数未对齐</strong> (60%概率) - CNN filters、LSTM units等配置</li>
+            <li><strong>数据预处理差异</strong> (40%概率) - 时间特征工程、归一化细节</li>
+            <li><strong>架构细节差异</strong> (30%概率) - 权重初始化、激活函数</li>
+            <li><strong>训练策略差异</strong> (30%概率) - 学习率调度、数据增强</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="page-info">15 / 18</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">核心问题2</div>
+      <div class="page-number">16</div>
+    </div>
+    
+    <h2 class="slide-title">论文缺少关键实现细节</h2>
+    
+    <div class="content">
+      <!-- 缺失细节清单 -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+        <!-- 模型架构细节 -->
+        <div style="background: linear-gradient(to bottom, #fee2e2, #fef2f2); border-left: 4px solid #ef4444; padding: 12px; border-radius: 5px;">
+          <h3 style="font-size: 12pt; font-weight: 700; color: #991b1b; margin-bottom: 10px;">
+            ❌ 模型架构细节
+          </h3>
+          <ul style="margin: 0; padding-left: 18px; font-size: 10pt; line-height: 1.6; color: #374151;">
+            <li>CNN卷积核大小、数量</li>
+            <li>具体的池化窗口大小</li>
+            <li>LSTM层数、单元数</li>
+            <li>Attention单元配置</li>
+            <li>Dense层结构</li>
+            <li>激活函数类型</li>
+            <li>权重初始化方法</li>
+          </ul>
+        </div>
+        
+        <!-- 训练参数 -->
+        <div style="background: linear-gradient(to bottom, #fef3c7, #fef9e7); border-left: 4px solid #f59e0b; padding: 12px; border-radius: 5px;">
+          <h3 style="font-size: 12pt; font-weight: 700; color: #92400e; margin-bottom: 10px;">
+            ❌ 训练参数
+          </h3>
+          <ul style="margin: 0; padding-left: 18px; font-size: 10pt; line-height: 1.6; color: #374151;">
+            <li>学习率（Learning rate）</li>
+            <li>批大小（Batch size）</li>
+            <li>训练轮数（Epochs）</li>
+            <li>优化器配置</li>
+            <li>学习率调度策略</li>
+            <li>早停（Early stopping）策略</li>
+            <li>Dropout率</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- 数据处理细节 -->
+      <div style="background: linear-gradient(to bottom, #dbeafe, #f0f9ff); border-left: 4px solid #3b82f6; padding: 12px; border-radius: 5px; margin-bottom: 14px;">
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">
+          ❌ 数据预处理细节
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 10pt;">
+          <div>
+            <strong style="color: #3b82f6;">归一化方法：</strong><br/>
+            <span style="color: #6b7280;">MinMax? StandardScaler? 范围？</span>
+          </div>
+          <div>
+            <strong style="color: #3b82f6;">特征工程：</strong><br/>
+            <span style="color: #6b7280;">时间编码？周期性特征？</span>
+          </div>
+          <div>
+            <strong style="color: #3b82f6;">数据分割：</strong><br/>
+            <span style="color: #6b7280;">训练/验证/测试比例？</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 当前应对策略 -->
+      <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 12px; border-radius: 5px;">
+        <h3 style="font-size: 12pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">
+          💡 当前应对策略
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 10pt; line-height: 1.5;">
+          <div style="text-align: center; padding: 10px; background: white; border-radius: 4px;">
+            <div style="font-size: 20pt; margin-bottom: 5px;">🔍</div>
+            <strong style="color: #3b82f6;">基于论文解读</strong><br/>
+            <span style="color: #6b7280; font-size: 9pt;">分析公式和图示</span>
+          </div>
+          <div style="text-align: center; padding: 10px; background: white; border-radius: 4px;">
+            <div style="font-size: 20pt; margin-bottom: 5px;">📚</div>
+            <strong style="color: #10b981;">常见实践</strong><br/>
+            <span style="color: #6b7280; font-size: 9pt;">参考领域标准</span>
+          </div>
+          <div style="text-align: center; padding: 10px; background: white; border-radius: 4px;">
+            <div style="font-size: 20pt; margin-bottom: 5px;">🧪</div>
+            <strong style="color: #f59e0b;">实验验证</strong><br/>
+            <span style="color: #6b7280; font-size: 9pt;">多次迭代调优</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="page-info">16 / 18</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">解决方案</div>
+      <div class="page-number">17</div>
+    </div>
+    
+    <h2 class="slide-title">已尝试的解决方案（10个主要尝试）</h2>
+    
+    <div class="content">
+      <!-- 成功的解决方案 -->
+      <div style="margin-bottom: 14px;">
+        <h3 style="font-size: 14pt; font-weight: 700; color: #10b981; margin-bottom: 10px; border-left: 5px solid #10b981; padding-left: 10px;">
+          ✅ 成功修正（符合论文）
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 10px; border-radius: 5px;">
+            <strong style="color: #047857; font-size: 11.5pt;">1️⃣ 修正注意力机制</strong>
+            <p style="font-size: 10pt; color: #374151; margin: 6px 0 0 0; line-height: 1.5;">
+              使用最终隐藏状态h_N计算相关性<br/>
+              <span style="color: #10b981;">✓ 符合论文公式1-2</span>
+            </p>
+          </div>
+          
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 10px; border-radius: 5px;">
+            <strong style="color: #047857; font-size: 11.5pt;">2️⃣ 修正状态分类器</strong>
+            <p style="font-size: 10pt; color: #374151; margin: 6px 0 0 0; line-height: 1.5;">
+              Sn鲁棒尺度估计 + α=1.4285<br/>
+              <span style="color: #10b981;">✓ 符合论文公式5-7</span>
+            </p>
+          </div>
+          
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 10px; border-radius: 5px;">
+            <strong style="color: #047857; font-size: 11.5pt;">3️⃣ 修正归一化方法</strong>
+            <p style="font-size: 10pt; color: #374151; margin: 6px 0 0 0; line-height: 1.5;">
+              MinMaxScaler(0,1) + 目标变量归一化<br/>
+              <span style="color: #10b981;">✓ MAE降至0.03-0.04（对齐论文）</span>
+            </p>
+          </div>
+          
+          <div style="background: #ecfdf5; border: 1px solid #10b981; padding: 10px; border-radius: 5px;">
+            <strong style="color: #047857; font-size: 11.5pt;">5️⃣ GlobalAveragePooling</strong>
+            <p style="font-size: 10pt; color: #374151; margin: 6px 0 0 0; line-height: 1.5;">
+              替代Flatten，参数量286K→131K<br/>
+              <span style="color: #10b981;">✓ MAE: 0.2906→0.0330</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 部分改善的方案 -->
+      <div style="margin-bottom: 14px;">
+        <h3 style="font-size: 14pt; font-weight: 700; color: #f59e0b; margin-bottom: 10px; border-left: 5px solid #f59e0b; padding-left: 10px;">
+          ⚠️ 部分改善（未达预期）
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 10px; border-radius: 5px;">
+            <strong style="color: #92400e; font-size: 11pt;">4️⃣ LSTM输入来源</strong>
+            <p style="font-size: 9.5pt; color: #6b7280; margin: 5px 0 0 0; line-height: 1.4;">
+              MAE: 0.0337→0.0330<br/>
+              有改善但仍低于串联
+            </p>
+          </div>
+          
+          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 10px; border-radius: 5px;">
+            <strong style="color: #92400e; font-size: 11pt;">6️⃣ 超参数搜索</strong>
+            <p style="font-size: 9.5pt; color: #6b7280; margin: 5px 0 0 0; line-height: 1.4;">
+              LSTM、CNN、Dropout等<br/>
+              部分配置有改善
+            </p>
+          </div>
+          
+          <div style="background: #fffbeb; border: 1px solid #f59e0b; padding: 10px; border-radius: 5px;">
+            <strong style="color: #92400e; font-size: 11pt;">7️⃣ Bidirectional LSTM</strong>
+            <p style="font-size: 9.5pt; color: #6b7280; margin: 5px 0 0 0; line-height: 1.4;">
+              性能略有改善<br/>
+              但训练时间翻倍
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 关键发现 -->
+      <div style="background: linear-gradient(to right, #dbeafe 0%, #f0f9ff 100%); border-left: 5px solid #3b82f6; padding: 12px 15px; border-radius: 5px;">
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">
+          🔍 关键发现
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 10.5pt; line-height: 1.6;">
+          <div>
+            <strong style="color: #3b82f6;">✓ 架构正确性：</strong>所有修正都符合论文描述<br/>
+            <strong style="color: #3b82f6;">✓ 技术实现：</strong>注意力、状态分类等核心模块正确<br/>
+            <strong style="color: #3b82f6;">✓ 数据处理：</strong>归一化方法、评估空间对齐论文
+          </div>
+          <div>
+            <strong style="color: #ef4444;">✗ 性能差距：</strong>并行模型始终低于串联<br/>
+            <strong style="color: #ef4444;">✗ 提升幅度：</strong>+3.08% vs 论文声称的+34.84%<br/>
+            <strong style="color: #f59e0b;">? 根本原因：</strong>可能是对比基线不同
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 复现问题分析</div>
+      <div class="page-info">17 / 18</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">未来工作展望</div>
+      <div class="page-number">18</div>
+    </div>
+    
+    <h2 class="slide-title">进一步研究：因果驱动的干预方案推荐系统</h2>
+    
+    <div class="content">
+      <!-- 研究背景与动机 -->
+      <div style="background: #f0f4f8; padding: 14px 18px; border-radius: 6px; border-left: 4px solid #3b82f6; margin-bottom: 14px;">
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">📌 研究背景与动机</h3>
+        <p style="font-size: 11pt; line-height: 1.6; color: #374151; margin: 0;">
+          传统可解释能源预测系统主要聚焦于回答<strong>"为什么会发生负荷峰值（Why）"</strong>，但在真实能源管理场景中，更关键的问题是：<strong>"如果改变用电行为会发生什么（What-if）？应该采取哪种改变（Which action）？"</strong>
+        </p>
+      </div>
+      
+      <!-- 核心研究目标 -->
+      <div style="margin-bottom: 14px;">
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">🎯 核心研究目标</h3>
+        <p style="font-size: 11pt; line-height: 1.6; color: #374151; margin-bottom: 10px;">
+          将研究目标从<strong>因果解释（Causal Explanation）</strong>拓展为<strong>因果驱动的、可执行的、可在用户反馈下持续进化的决策推荐系统</strong>。
+        </p>
+        <div style="background: #eff6ff; padding: 12px 15px; border-radius: 5px; border-left: 3px solid #3b82f6;">
+          <p style="font-size: 10.5pt; line-height: 1.6; color: #1e3a8a; margin: 0;">
+            <strong>形式化问题：</strong>在给定上下文条件（季节、时间、建筑规模、当前负荷状态等）下，如何生成并推荐一组可执行的干预方案，在峰值削减、能耗降低、用户可接受性与安全约束之间取得最优平衡，并使系统在真实用户交互中越用越聪明。
+          </p>
+        </div>
+      </div>
+      
+      <!-- 系统总体架构 -->
+      <div>
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">🔄 系统总体架构（六大模块）</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: white; border: 1.5px solid #10b981; padding: 10px 12px; border-radius: 5px;">
+            <strong style="color: #047857; font-size: 11pt;">① 上下文感知模块</strong>
+            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">编码环境信息（季节、时间、建筑类型、当前负荷）与模型内部状态（DLP、EDP、Attention类型）</p>
+          </div>
+          
+          <div style="background: white; border: 1.5px solid #3b82f6; padding: 10px 12px; border-radius: 5px;">
+            <strong style="color: #1e40af; font-size: 11pt;">② 干预方案生成器</strong>
+            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">基于专家模板库实例化候选方案集合，仅干预可控变量（空调档位、设备启停）</p>
+          </div>
+          
+          <div style="background: white; border: 1.5px solid #f59e0b; padding: 10px 12px; border-radius: 5px;">
+            <strong style="color: #d97706; font-size: 11pt;">③ 因果效果评估</strong>
+            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">通过贝叶斯网络do-calculus计算<code style="background: #f9fafb; padding: 1px 4px;">P(Peak|do(π),c)</code>，评估干预效果而非相关性</p>
+          </div>
+          
+          <div style="background: white; border: 1.5px solid #6366f1; padding: 10px 12px; border-radius: 5px;">
+            <strong style="color: #4f46e5; font-size: 11pt;">④ Slate Bandit推荐</strong>
+            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">上下文感知的方案排序，选择Top-K列表推荐，平衡探索与利用</p>
+          </div>
+          
+          <div style="background: white; border: 1.5px solid #8b5cf6; padding: 10px 12px; border-radius: 5px;">
+            <strong style="color: #7c3aed; font-size: 11pt;">⑤ 增强反馈采集</strong>
+            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">收集拒绝原因标签（太麻烦/不舒服/影响工作等）与执行确认信号</p>
+          </div>
+          
+          <div style="background: white; border: 1.5px solid #64748b; padding: 10px 12px; border-radius: 5px;">
+            <strong style="color: #475569; font-size: 11pt;">⑥ 在线学习更新</strong>
+            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">Bandit策略更新 + 偏好模型更新 + 生成策略演化</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="page-info">18 / 20</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">系统架构</div>
+      <div class="page-number">19</div>
+    </div>
+    
+    <h2 class="slide-title">因果-推荐-反馈闭环系统架构</h2>
+    
+    <div class="content">
+      <!-- 系统架构图 -->
+      <div style="text-align: center; margin-bottom: 12px;">
+        <img src="images/自己的idea.png" alt="系统架构图" style="width: 100%; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      </div>
+      
+      <!-- 信息流说明 -->
+      <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 10px 14px; border-radius: 5px;">
+        <h3 style="font-size: 11pt; font-weight: 700; margin-bottom: 8px;">🔄 完整信息流</h3>
+        <div style="font-size: 10pt; line-height: 1.6;">
+          <strong>上下文输入</strong> → <strong>方案生成</strong>（候选集合）→ <strong>因果干预评估</strong>（BN do-calculus）→ <strong>Bandit排序与Top-K推荐</strong> → <strong>用户反馈</strong>（选择/拒绝原因/点赞/执行确认）→ <strong>在线学习更新</strong>（Bandit策略 + 偏好模型 + 生成策略演化）
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="page-info">19 / 20</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="safe">
+    <div class="header">
+      <div class="section-indicator">关键技术创新</div>
+      <div class="page-number">20</div>
+    </div>
+    
+    <h2 class="slide-title">Slate Bandit推荐与增强反馈机制</h2>
+    
+    <div class="content">
+      <!-- Slate Bandit -->
+      <div style="margin-bottom: 14px;">
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">🎯 基于Contextual Slate Bandit的Top-K推荐</h3>
+        <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; padding: 12px; border-radius: 5px; margin-bottom: 10px;">
+          <p style="font-size: 10.5pt; line-height: 1.6; color: #374151; margin: 0 0 8px 0;">
+            在给定上下文 <code style="background: white; padding: 1px 4px;">c</code> 下，从候选集合中选择 Top-K 方案列表（Slate）：<code style="background: white; padding: 1px 4px;">S = [π₁, π₂, ..., πₖ]</code>
+          </p>
+          <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 10px 12px; border-radius: 4px;">
+            <strong style="font-size: 11pt;">多目标奖励函数：</strong><br/>
+            <code style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 3px; font-size: 10pt; display: inline-block; margin-top: 5px;">
+              r(π) = α·AcceptIntent + β·Like - γ·Dislike + λ·ΔPeak + μ·ΔEnergy - ρ·Cost - η·RejectionPenalty
+            </code>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: #eff6ff; padding: 10px; border-radius: 4px; border-left: 3px solid #3b82f6;">
+            <strong style="color: #1e40af; font-size: 10pt;">学习算法</strong>
+            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">采用Thompson Sampling / LinUCB，在不同上下文下学习高收益方案结构</p>
+          </div>
+          <div style="background: #fef9e7; padding: 10px; border-radius: 4px; border-left: 3px solid #f59e0b;">
+            <strong style="color: #92400e; font-size: 10pt;">探索-利用平衡</strong>
+            <p style="font-size: 9.5pt; color: #4b5563; margin: 5px 0 0 0; line-height: 1.5;">保持最小探索比例（20%），通过Action Masking确保安全性</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 增强反馈 -->
+      <div style="margin-bottom: 14px;">
+        <h3 style="font-size: 13pt; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">💬 增强用户反馈建模（核心扩展）</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: #fef9e7; border: 1.5px solid #f59e0b; padding: 10px; border-radius: 4px;">
+            <strong style="color: #92400e; font-size: 11pt;">① 拒绝原因分解（Preference Decomposition）</strong>
+            <p style="font-size: 9.5pt; color: #6b7280; margin: 6px 0 8px 0; line-height: 1.5;">
+              将"负反馈"从标量分解为多维偏好标签：
+            </p>
+            <div style="background: white; padding: 8px; border-radius: 3px; font-size: 9.5pt; line-height: 1.6; color: #374151;">
+              <strong>RejectReason ∈</strong> {太麻烦, 不舒服, 影响工作, 不可信, 已经在做}<br/>
+              <div style="margin-top: 6px; padding: 6px; background: #fef3c7; border-radius: 2px;">
+                <strong style="color: #92400e;">系统作用：</strong><br/>
+                • 训练偏好预测模型 P(AcceptIntent|c,π)<br/>
+                • 为生成器提供结构性约束<br/>
+                • "太麻烦" → 限制多变量组合<br/>
+                • "不舒服" → 减小调节幅度
+              </div>
+            </div>
+          </div>
+          
+          <div style="background: #eff6ff; border: 1.5px solid #3b82f6; padding: 10px; border-radius: 4px;">
+            <strong style="color: #1e40af; font-size: 11pt;">② 执行确认（Intent vs Execution）</strong>
+            <p style="font-size: 9.5pt; color: #6b7280; margin: 6px 0 8px 0; line-height: 1.5;">
+              显式区分用户意愿与真实执行：
+            </p>
+            <div style="background: white; padding: 8px; border-radius: 3px;">
+              <table style="width: 100%; font-size: 9.5pt; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #e5e7eb;">
+                  <td style="padding: 5px; color: #3b82f6; font-weight: 600;">Accept-Intent</td>
+                  <td style="padding: 5px; color: #4b5563;">用户愿意执行</td>
+                </tr>
+                <tr>
+                  <td style="padding: 5px; color: #10b981; font-weight: 600;">Executed</td>
+                  <td style="padding: 5px; color: #4b5563;">真实执行确认</td>
+                </tr>
+              </table>
+              <div style="margin-top: 6px; padding: 6px; background: #dbeafe; border-radius: 2px;">
+                <strong style="color: #1e40af; font-size: 9pt;">为什么必须区分？</strong><br/>
+                <span style="font-size: 9pt; color: #4b5563;">仅在Executed=1时，使用真实负荷变化更新因果效果评估，避免未执行方案污染</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 在线学习 -->
+      <div style="background: #f0fdf4; border: 2px solid #10b981; padding: 10px 12px; border-radius: 5px;">
+        <h3 style="font-size: 12pt; font-weight: 700; color: #047857; margin-bottom: 8px;">🔄 在线学习与生成策略演化</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; font-size: 9.5pt; line-height: 1.5;">
+          <div style="background: white; padding: 8px; border-radius: 3px;">
+            <strong style="color: #3b82f6;">Bandit策略更新</strong><br/>
+            <span style="color: #6b7280;">学习不同上下文下的高收益方案结构</span>
+          </div>
+          <div style="background: white; padding: 8px; border-radius: 3px;">
+            <strong style="color: #f59e0b;">偏好模型优化</strong><br/>
+            <span style="color: #6b7280;">根据拒绝原因标签训练接受度预测器</span>
+          </div>
+          <div style="background: white; padding: 8px; border-radius: 3px;">
+            <strong style="color: #10b981;">模板权重调整</strong><br/>
+            <span style="color: #6b7280;">高收益模板被更频繁采样，问题模板降权</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <div class="author">能源需求预测的因果可解释AI - 未来工作展望</div>
+      <div class="page-info">20 / 20</div>
     </div>
   </div>
 </section>
